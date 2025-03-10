@@ -1,0 +1,41 @@
+.form-title-deco {
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.in-field {
+  height: 35px;
+  margin-top: 10px;
+  border-radius: 6px;
+  text-indent: 5px;
+  background-color: white;
+}
+
+.dropdown-field {
+  height: 40px;
+  border-radius: 6px;
+}
+
+.form-bg {
+  background-color: #e6e6e6;
+  padding: 6px 1px 2px 15px;
+  /* border-radius: 10px; */
+}
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.example-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#myGrid {
+  flex: 1 1 0px;
+  width: 100%;
+}
+
+.rbt-input-hint-container input {
+  border: none !important;
+}
