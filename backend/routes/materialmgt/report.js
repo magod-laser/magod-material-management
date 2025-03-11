@@ -216,11 +216,12 @@ SELECT GROUP_CONCAT( distinct (m.RV_No)) as RV_No, m.RV_Date, GROUP_CONCAT( dist
       WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
       GROUP BY m1.RV_No, m1.Material
        */
-reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
-  try {
-    let date = req.query.date;
-    misQueryMod(
-      `SELECT m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, 
+
+
+
+// Bodheesh vc: 11/03/2025 replaced for resolving bug http://localhost:4025/MaterialManagement/Reports/DailyReports material purchase tab value not showing
+      /*
+        `SELECT m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, 
                                 m.CustDocuNo, d.Material, d.TotalWeightCalculated,
                                 d.TotalWeight, d.qty 
                                 FROM 
@@ -231,6 +232,30 @@ reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
                                 GROUP BY m1.Material) as d,magodmis.material_receipt_register m, mtrlreceiptdetails m1
                                 WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
                                 and m1.Material = d.Material limit 1`,
+                                */
+
+
+reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
+  try {
+    let date = req.query.date;
+    misQueryMod(
+      `SELECT 
+        m.RV_No,
+        m.RV_Date,
+        m.Cust_Code,
+        m.Customer,
+        m.CustDocuNo,
+        m1.Material,
+        SUM(m1.TotalWeightCalculated) as TotalWeightCalculated,
+        SUM(m1.TotalWeight) as TotalWeight,
+        SUM(m1.Qty) as qty
+      FROM magodmis.material_receipt_register m
+      INNER JOIN magodmis.mtrlreceiptdetails m1 ON m.RvID = m1.RvID 
+      WHERE m.RV_No NOT LIKE 'Draft' 
+      AND m.RV_Date = '${date}'
+      AND m.Cust_Code = '0000'
+      GROUP BY m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, m.CustDocuNo, m1.Material
+      ORDER BY m1.Material`,
       (err, data) => {
         if (err) logger.error(err);
         res.send(data);
@@ -241,6 +266,15 @@ reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
   }
 });
 
+/*
+SELECT GROUP_CONCAT( distinct (m.RV_No)) as RV_No, m.RV_Date, GROUP_CONCAT( distinct (m.Cust_Code)) as Cust_Code, 
+      GROUP_CONCAT( distinct (m.Customer)) as Customer, GROUP_CONCAT( distinct (m.CustDocuNo)) as CustDocuNo, 
+      m1.Material, sum(m1.TotalWeightCalculated) as TotalWeightCalculated,
+      sum(m1.TotalWeight) as TotalWeight, sum(m1.Qty) as qty 
+      FROM magodmis.material_receipt_register m,magodmis.mtrlreceiptdetails m1 
+      WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
+      GROUP BY m1.RV_No, m1.Material
+       */
 //monthly report
 reportRouter.get(
   "/getMonthlyReportMaterialPurchaseDetails",
