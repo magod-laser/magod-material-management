@@ -125,7 +125,7 @@ function PrintIVListProfileCutting({
             width: "100%",
           }}
         >
-          <Modal.Title>Material : Floor Issue</Modal.Title>
+          <Modal.Title>Material : Shop Floor Issue</Modal.Title>
           <button className="button-style" onClick={savePdfToServer}>
             Save to Server
           </button>

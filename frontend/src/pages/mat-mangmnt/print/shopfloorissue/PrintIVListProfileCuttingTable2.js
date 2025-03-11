@@ -256,7 +256,7 @@ const PrintIVListProfileCuttingTable2 = ({
           <View>
             <View style={{ justifyContent: "center" }}>
               <Text style={[styles.title1, { textDecoration: "underline" }]}>
-                Material : Floor Issue
+              Material : Shop Floor Issue
               </Text>
             </View>
 
