@@ -149,7 +149,7 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
         <Modal.Footer>
           <button
             className="button-style"
-            style={{ width: "80px", backgroundColor: "gray" }}
+            style={{ width: "80px" }}
             onClick={handleCancel}
           >
             Cancel

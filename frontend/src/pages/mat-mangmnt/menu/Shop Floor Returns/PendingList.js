@@ -453,12 +453,51 @@ function PendingList(props) {
     }
   };
 
+  // const returnScrap = () => {
+  //   console.log("=selectedSecondTableRows", selectedSecondTableRows);
+
+  //   if (selectedSecondTableRows.length === 0) {
+  //     toast.error("Select Material to return to Stock");
+  //   } else {
+  //     setShow(true);
+  //   }
+  // };
+
+  // VEERANA 11032025
+
   const returnScrap = () => {
+    console.log("=selectedSecondTableRows", selectedSecondTableRows);
+
     if (selectedSecondTableRows.length === 0) {
       toast.error("Select Material to return to Stock");
-    } else {
-      setShow(true);
+      return;
     }
+
+    // Function to extract the number part from ShapeMtrlID
+    const extractMtrlIDPart = (ShapeMtrlID) => {
+      const parts = ShapeMtrlID.split("/");
+      return parts[1]; // Extract the second part (e.g., "5837")
+    };
+
+    // Get the part of the ShapeMtrlID from the first row
+    const firstShapeMtrlIDPart = extractMtrlIDPart(
+      selectedSecondTableRows[0].ShapeMtrlID
+    );
+
+    // Check if all ShapeMtrlID parts are the same
+    const allSameMtrlIDPart = selectedSecondTableRows.every(
+      (row) => extractMtrlIDPart(row.ShapeMtrlID) === firstShapeMtrlIDPart
+    );
+
+    if (!allSameMtrlIDPart) {
+      toast.error(
+        "Please Check the ShapeMtrlID you selected"
+      );
+      return;
+    }
+
+    // Proceed if all parts match
+    setShow(true);
   };
 
   const scrapModal = (data) => {

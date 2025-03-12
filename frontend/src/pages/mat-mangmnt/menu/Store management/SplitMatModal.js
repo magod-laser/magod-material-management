@@ -23,12 +23,14 @@ function SplitMatModal({ open, setOpen }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          {/* variant="secondary" */}
+          <button className="button-style" onClick={handleClose}>
             yes
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
+          </button>
+          {/* variant="primary" */}
+          <button className="button-style" onClick={handleClose}>
             No
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>

@@ -822,6 +822,7 @@ function OpenButtonDraftPartList() {
             <input
               className="input-disabled mt-1"
               type="text"
+              autoComplete="off"
               name="reference"
               value={formHeader.reference}
               onChange={InputHeaderEvent}
@@ -985,7 +986,12 @@ function OpenButtonDraftPartList() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  value={inputPart.unitWeight}
+                  // value={inputPart.unitWeight}
+                  value={
+                    inputPart.unitWeight === "0" || inputPart.unitWeight === 0
+                      ? ""
+                      : inputPart.unitWeight
+                  }
                   onChange={changePartHandle}
                   //onKeyUp={changePartHandle1}
                   onKeyDown={blockInvalidChar}
@@ -1005,7 +1011,12 @@ function OpenButtonDraftPartList() {
                   name="qtyReceived"
                   min="0"
                   //value={tempVal}
-                  value={inputPart.qtyReceived}
+                  // value={inputPart.qtyReceived}
+                  value={
+                    inputPart.qtyReceived === "0" || inputPart.qtyReceived === 0
+                      ? ""
+                      : inputPart.qtyReceived
+                  }
                   onChange={changePartHandle}
                   onKeyDown={blockInvalidQtyChar}
                   disabled={boolVal4}
@@ -1022,7 +1033,12 @@ function OpenButtonDraftPartList() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyAccepted"
-                  value={inputPart.qtyAccepted}
+                  // value={inputPart.qtyAccepted};
+                  value={
+                    inputPart.qtyAccepted === "0" || inputPart.qtyAccepted === 0
+                      ? ""
+                      : inputPart.qtyAccepted
+                  }
                   onChange={changePartHandle}
                   onKeyDown={blockInvalidQtyChar}
                   min="0"

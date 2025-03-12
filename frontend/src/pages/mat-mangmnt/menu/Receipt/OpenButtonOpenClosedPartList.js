@@ -304,6 +304,7 @@ function OpenButtonOpenClosedPartList() {
             <input
               className="input-disabled mt-1"
               type="text"
+              autoComplete="off"
               name="reference"
               value={formHeader.CustDocuNo}
               disabled={boolVal}

@@ -157,21 +157,33 @@ function OpenButtonDraftSheetUnit(props) {
       text: unitLabel1 !== "" ? para1Label : "",
       dataField: "dynamicPara1",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: unitLabel2 !== "" ? para2Label : "",
       dataField: "dynamicPara2",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: unitLabel3 !== "" ? para3Label : "",
       dataField: "dynamicPara3",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Qty",
       dataField: "qty",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Inspected",
@@ -946,7 +958,7 @@ function OpenButtonDraftSheetUnit(props) {
             );
             setMaterialArray(newArray);
 
-            // console.log("NewArray", newArray);
+            console.log("==NewArray", newArray);
 
             await delay(500);
 
@@ -1004,6 +1016,8 @@ function OpenButtonDraftSheetUnit(props) {
     await delay(500);
   };
 
+  console.log("==", materialArray);
+
   const selectRow = {
     mode: "radio",
     clickToSelect: true,
@@ -1022,7 +1036,7 @@ function OpenButtonDraftSheetUnit(props) {
 
       const url1 = endpoints.getMtrlReceiptDetailsByID + "?id=" + row.id;
       getRequest(url1, async (data2) => {
-        // console.log("data2", data2);
+        console.log("data2", data2);
         data2?.forEach((obj) => {
           obj.id = obj.Mtrl_Rv_id;
           obj.mtrlRvId = obj.Mtrl_Rv_id;
@@ -1034,19 +1048,27 @@ function OpenButtonDraftSheetUnit(props) {
           obj.shapeMtrlId = obj.ShapeMtrlID;
           obj.shapeID = obj.ShapeID;
           obj.dynamicPara1 = obj.DynamicPara1;
+          // obj.dynamicPara1 = parseInt(obj.DynamicPara1);
           obj.dynamicPara2 = obj.DynamicPara2;
+          // obj.dynamicPara2 = parseInt(obj.DynamicPara2);
           obj.dynamicPara3 = obj.DynamicPara3;
+          // obj.dynamicPara3 = parseInt(obj.DynamicPara3);
           obj.qty = obj.Qty;
           obj.inspected = obj.Inspected;
           obj.accepted = obj.Accepted;
+          // obj.accepted = parseInt(obj.Accepted);
+          console.log("obj.accepted", obj.accepted);
+
           obj.totalWeightCalculated = obj.TotalWeightCalculated;
           obj.totalWeight = obj.TotalWeight;
           obj.locationNo = obj.LocationNo;
           obj.updated = obj.UpDated;
           obj.qtyRejected = obj.QtyRejected;
           obj.qtyUsed = obj.QtyUsed;
+          // obj.qtyUsed = parseInt(obj.QtyUsed);
           obj.qtyReturned = obj.QtyReturned;
         });
+        console.log("data3", data2);
         setMtrlArray(data2);
         data2?.map(async (obj) => {
           // console.log("Data2", data2);
@@ -1060,18 +1082,18 @@ function OpenButtonDraftSheetUnit(props) {
               srl: obj.Srl,
               mtrlCode: obj.Mtrl_Code,
               custCode: obj.Cust_Code,
-              dynamicPara1: obj.DynamicPara1,
-              dynamicPara2: obj.DynamicPara2,
-              dynamicPara3: obj.DynamicPara3,
+              dynamicPara1: parseInt(obj.DynamicPara1),
+              dynamicPara2: parseInt(obj.DynamicPara2),
+              dynamicPara3: parseInt(obj.DynamicPara3),
               shapeID: obj.ShapeID,
-              qty: obj.Qty,
+              qty: parseInt(obj.Qty),
               inspected: obj.Inspected,
               locationNo: obj.LocationNo,
               updated: obj.UpDated,
-              accepted: obj.Accepted,
+              accepted: parseInt(obj.Accepted),
               totalWeightCalculated: obj.TotalWeightCalculated,
               totalWeight: obj.TotalWeight,
-              qtyUsed: obj.QtyUsed,
+              qtyUsed: parseInt(obj.QtyUsed),
               qtyReturned: obj.QtyReturned,
             });
 
@@ -1428,7 +1450,7 @@ function OpenButtonDraftSheetUnit(props) {
       postRequest(endpoints.deleteMtrlReceiptDetails, inputPart, (data) => {
         if (data.affectedRows !== 0) {
           const newArray = materialArray.filter((p) => p.id !== inputPart.id);
-          // console.log("newArray", newArray);
+          console.log("newArray", newArray);
           setMaterialArray(newArray);
           toast.success("Material Deleted");
           setInputPart({
@@ -1618,8 +1640,14 @@ function OpenButtonDraftSheetUnit(props) {
               type="number"
               onKeyDown={blockInvalidChar}
               min="0"
+              autoComplete="off"
               name="weight"
-              value={formHeader.weight}
+              // value={formHeader.weight}
+              value={
+                inputPart.totalWeight === "0" || inputPart.totalWeight === 0
+                  ? ""
+                  : inputPart.totalWeight
+              }
               onChange={InputHeaderEvent}
               disabled={boolVal4}
             />
@@ -1941,9 +1969,15 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5 || materialArray.length === 0}
-                            min="0"
+                            // min="0"
                             onKeyDown={blockInvalidChar}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
@@ -1963,8 +1997,14 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
-                            min="0"
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
+                            // min="0"
                             onKeyDown={blockInvalidChar}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
@@ -1990,7 +2030,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidChar}
@@ -2012,7 +2058,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
                             min="0"
                             onKeyDown={blockInvalidChar}
                             onChange={(e) => {
@@ -2039,7 +2091,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidChar}
@@ -2070,7 +2128,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidChar}
@@ -2092,7 +2156,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
                             min="0"
                             onKeyDown={blockInvalidChar}
                             onChange={(e) => {
@@ -2115,7 +2185,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara3"
-                            value={inputPart.dynamicPara3}
+                            // value={inputPart.dynamicPara3}
+                            value={
+                              inputPart.dynamicPara3 === "0" ||
+                              inputPart.dynamicPara3 === 0
+                                ? ""
+                                : inputPart.dynamicPara3
+                            }
                             min="0"
                             onKeyDown={blockInvalidChar}
                             onChange={(e) => {
@@ -2142,7 +2218,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidChar}
@@ -2169,7 +2251,13 @@ function OpenButtonDraftSheetUnit(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidChar}
@@ -2199,7 +2287,12 @@ function OpenButtonDraftSheetUnit(props) {
                         type="number"
                         name="qty"
                         // value={(inputPart.qty = Math.floor(inputPart.qty))}
-                        value={inputPart.qty}
+                        // value={inputPart.qty}
+                        value={
+                          inputPart.qty === "0" || inputPart.qty === 0
+                            ? ""
+                            : inputPart.qty
+                        }
                         disabled={boolVal4 || materialArray.length === 0}
                         onKeyDown={blockInvalidQtyChar}
                         min="0"
@@ -2238,7 +2331,12 @@ function OpenButtonDraftSheetUnit(props) {
                         // value={
                         //   (inputPart.accepted = Math.floor(inputPart.accepted))
                         // }
-                        value={inputPart.accepted}
+                        // value={inputPart.accepted}
+                        value={
+                          inputPart.accepted === "0" || inputPart.accepted === 0
+                            ? ""
+                            : inputPart.accepted
+                        }
                         disabled={boolVal4 || !boolVal5}
                         min="0"
                         onChange={(e) => {
@@ -2312,7 +2410,13 @@ function OpenButtonDraftSheetUnit(props) {
                       <input
                         className="input-disabled mt-1"
                         name="totalWeightCalculated"
-                        value={inputPart.totalWeightCalculated}
+                        // value={inputPart.totalWeightCalculated}
+                        value={
+                          inputPart.totalWeightCalculated === "0" ||
+                          inputPart.totalWeightCalculated === 0
+                            ? ""
+                            : inputPart.totalWeightCalculated
+                        }
                         disabled={true}
                       />
                     </div>
@@ -2327,7 +2431,13 @@ function OpenButtonDraftSheetUnit(props) {
                         className="input-disabled mt-1"
                         name="totalWeight"
                         min="0"
-                        value={inputPart.totalWeight}
+                        // value={inputPart.totalWeight}
+                        value={
+                          inputPart.totalWeight === "0" ||
+                          inputPart.totalWeight === 0
+                            ? ""
+                            : inputPart.totalWeight
+                        }
                         onChange={changeMaterialHandle}
                         onKeyDown={blockInvalidChar}
                         disabled={boolVal4 || materialArray.length === 0}

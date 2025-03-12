@@ -51,7 +51,8 @@ function ModalComp({ open, setOpen, setShow, row, scrapModal, setRow }) {
           </button>
           <button
             className="button-style"
-            style={{ width: "80px", backgroundColor: "gray" }}
+            // , backgroundColor: "gray"
+            style={{ width: "80px" }}
             onClick={handleClose}
           >
             No

@@ -445,9 +445,9 @@ function CreateDCYesNoModal(props) {
             Yes
           </button>
           <button
-            className="btn btn-secondary"
+            className="button-style"
             onClick={handleNo}
-            style={{ fontSize: "12px" }}
+            style={{ width: "10%", fontSize: "12px" }}
           >
             No
           </button>

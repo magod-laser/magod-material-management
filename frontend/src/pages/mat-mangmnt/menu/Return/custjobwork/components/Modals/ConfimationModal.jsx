@@ -41,7 +41,8 @@ export default function ConfirmationModal(props) {
 
           <button
             className="button-style m-0"
-            style={{ width: "60px", background: "rgb(173, 173, 173)" }}
+            // background: "rgb(173, 173, 173)"
+            style={{ width: "60px" }}
             onClick={closeModal}
           >
             No

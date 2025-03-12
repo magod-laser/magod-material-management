@@ -12,15 +12,18 @@ function LocationLisModal({ open, setOpen }) {
     <>
       <Modal show={open} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title  style={{fontSize:'14px'}}>Magod Material Accounting</Modal.Title>
+          <Modal.Title style={{ fontSize: "14px" }}>
+            Magod Material Accounting
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{fontSize:'12px'}}>
+        <Modal.Body style={{ fontSize: "12px" }}>
           <Form>Location Information Saved </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose} style={{fontSize:'12px'}}>
+          {/* variant="secondary" */}
+          <button className="button-style" onClick={handleClose} style={{ fontSize: "12px" }}>
             Okay
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>

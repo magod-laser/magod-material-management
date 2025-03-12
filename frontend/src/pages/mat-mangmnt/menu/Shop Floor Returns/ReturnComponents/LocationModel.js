@@ -92,6 +92,8 @@ function LocationModel({ show, setShow, scrapModal }) {
               <div className="col-md-11 ">
                 <label className="form-label">Scrap Weight</label>
                 <input
+                  autoComplete="off"
+                  style={{ fontSize: "12px" }}
                   type="text"
                   name="scrapWeight"
                   value={row.scrapWeight}
@@ -131,7 +133,8 @@ function LocationModel({ show, setShow, scrapModal }) {
 
           <button
             className="button-style"
-            style={{ width: "80px", backgroundColor: "gray" }}
+            // backgroundColor: "gray"
+            style={{ width: "80px" }}
             onClick={handleClose}
           >
             Cancel

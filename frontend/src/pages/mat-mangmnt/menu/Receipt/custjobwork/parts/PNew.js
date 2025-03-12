@@ -356,6 +356,8 @@ function PNew() {
       inputPart.qtyReturned = 0;
       inputPart.qtyIssued = 0;
       inputPart.unitWeight = 0;
+      // inputPart.unitWeight = inputPart.unitWeight === 0 ? "" : "";
+     
       inputPart.custBomId = formHeader.customer;
 
       //insert blank row in table
@@ -785,12 +787,14 @@ function PNew() {
             <input
               className="input-disabled mt-1"
               required="required"
+              autoComplete="off"
               type="number"
               name="weight"
-              value={formHeader.weight}
+              // value={formHeader.weight}
+              value={formHeader.weight === "0" ? "" : formHeader.weight}
               onChange={InputHeaderEvent}
               onKeyDown={blockInvalidChar}
-              min="0"
+              // min="0"
               disabled={boolVal4}
             />
           </div>
@@ -830,6 +834,7 @@ function PNew() {
             <input
               className="input-disabled mt-1"
               type="text"
+              autoComplete="off"
               name="reference"
               value={formHeader.reference}
               onChange={InputHeaderEvent}
@@ -993,7 +998,12 @@ function PNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  value={inputPart.unitWeight}
+                  // value={inputPart.unitWeight}
+                  value={
+                    inputPart.unitWeight === "0" || inputPart.unitWeight === 0
+                      ? ""
+                      : inputPart.unitWeight
+                  }
                   onChange={changePartHandle}
                   //onKeyUp={changePartHandle1}
                   onKeyDown={blockInvalidChar}
@@ -1014,7 +1024,12 @@ function PNew() {
                   //value={tempVal}
                   onKeyDown={blockInvalidQtyChar}
                   min="0"
-                  value={inputPart.qtyReceived}
+                  // value={inputPart.qtyReceived}
+                  value={
+                    inputPart.qtyReceived === "0" || inputPart.qtyReceived === 0
+                      ? ""
+                      : inputPart.qtyReceived
+                  }
                   onChange={changePartHandle}
                   disabled={boolVal3 || boolVal4}
                 />
@@ -1029,7 +1044,12 @@ function PNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyAccepted"
-                  value={inputPart.qtyAccepted}
+                  // value={inputPart.qtyAccepted}
+                  value={
+                    inputPart.qtyAccepted === "0" || inputPart.qtyAccepted === 0
+                      ? ""
+                      : inputPart.qtyAccepted
+                  }
                   onChange={changePartHandle}
                   onKeyDown={blockInvalidQtyChar}
                   min="0"

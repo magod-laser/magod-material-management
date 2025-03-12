@@ -20,20 +20,22 @@ function ChangeLocationModal({ open, setOpen }) {
           <Form>Are you sure you want to shift a material "material" ?</Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
+          <button
+            // variant="secondary"
+            className="button-style"
             onClick={handleClose}
             style={{ fontSize: "12px" }}
           >
             yes
-          </Button>
-          <Button
-            variant="primary"
+          </button>
+          <button
+            // variant="primary"
+            className="button-style"
             onClick={handleClose}
             style={{ fontSize: "12px" }}
           >
             No
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>

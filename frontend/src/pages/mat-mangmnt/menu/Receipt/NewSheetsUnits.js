@@ -154,22 +154,34 @@ function NewSheetsUnits(props) {
       text: unitLabel1 !== "" ? para1Label : "",
       dataField: "dynamicPara1",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     // + "(" + unitLabel1 + ")"
     {
       text: unitLabel2 !== "" ? para2Label : "",
       dataField: "dynamicPara2",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: unitLabel3 !== "" ? para3Label : "",
       dataField: "dynamicPara3",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Qty",
       dataField: "qty",
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Inspected",
@@ -752,13 +764,10 @@ function NewSheetsUnits(props) {
       );
     } else if (parseFloat(inputPart.accepted) > parseFloat(inputPart.qty)) {
       toast.error("Accepted value should be less than or equal to Received");
-    } 
-    else if(parseFloat(inputPart.totalWeight) === 0){
-      toast.error("Total weight should not be 0, Please check")
+    } else if (parseFloat(inputPart.totalWeight) === 0) {
+      toast.error("Total weight should not be 0, Please check");
       return;
-    }
-    
-    else {
+    } else {
       if (saveUpdateCount == 0) {
         formHeader.receiptDate = formatDate(new Date(), 10);
         formHeader.rvDate = currDate;
@@ -773,8 +782,7 @@ function NewSheetsUnits(props) {
             materialArray[i].mtrlCode == "" ||
             // materialArray[i].locationNo == "" ||
             materialArray[i].qty == "" ||
-            materialArray[i].accepted == "" 
-            
+            materialArray[i].accepted == ""
           ) {
             flag1 = 1;
           }
@@ -784,8 +792,7 @@ function NewSheetsUnits(props) {
           ) {
             flag1 = 2;
           }
-          if(materialArray.totalWeight === 0.00)
-          {
+          if (materialArray.totalWeight === 0.0) {
             flag1 = 3;
           }
         }
@@ -795,11 +802,9 @@ function NewSheetsUnits(props) {
           toast.error(
             "Accepted value should be less than or equal to Received"
           );
-        } 
-        else if (flag1 === 3){
-          toast.error ("Total weight should not be 0, Please check");
-        }
-        else {
+        } else if (flag1 === 3) {
+          toast.error("Total weight should not be 0, Please check");
+        } else {
           //to update data
           updateHeaderFunction();
         }
@@ -1203,7 +1208,6 @@ function NewSheetsUnits(props) {
 
   const changeMaterialHandle = async (e, id) => {
     const { value, name } = e.target;
-    
 
     const formattedValue =
       name === "totalWeight" ? value.replace(/(\.\d{3})\d+/, "$1") : value;
@@ -1251,14 +1255,12 @@ function NewSheetsUnits(props) {
           toast.error(
             "Accepted value should be less than or equal to Received"
           );
-        } 
-      //  else if (parseFloat( inputPart.totalWeight) === 0.0 ) {
-      //     toast.error(
-      //       "totalWeight should not be 0"
-      //     );
-      //   } 
-        
-       
+        }
+        //  else if (parseFloat( inputPart.totalWeight) === 0.0 ) {
+        //     toast.error(
+        //       "totalWeight should not be 0"
+        //     );
+        //   }
         else {
           // let url = endpoints.getRowByMtrlCode + "?code=" + inputPart.mtrlCode;
           // getRequest(url, async (data) => {
@@ -1313,7 +1315,7 @@ function NewSheetsUnits(props) {
             );
             setMaterialArray(newArray);
 
-            // console.log("NewArray", newArray);
+            console.log("NewArray", newArray);
 
             await delay(500);
 
@@ -1346,14 +1348,11 @@ function NewSheetsUnits(props) {
       }
     }
 
-    if (name === "totalWeight"){
+    if (name === "totalWeight") {
       if (parseFloat(inputPart.totalWeight) === 0) {
-        toast.error("total weight should not be 0")
-        
+        toast.error("total weight should not be 0");
       }
-
     }
-
 
     const newArray = materialArray.map((p) =>
       p.id === id
@@ -1465,18 +1464,18 @@ function NewSheetsUnits(props) {
               srl: obj.Srl,
               mtrlCode: obj.Mtrl_Code,
               custCode: obj.Cust_Code,
-              dynamicPara1: obj.DynamicPara1,
-              dynamicPara2: obj.DynamicPara2,
-              dynamicPara3: obj.DynamicPara3,
+              dynamicPara1: parseInt(obj.DynamicPara1),
+              dynamicPara2: parseInt(obj.DynamicPara2),
+              dynamicPara3: parseInt(obj.DynamicPara3),
               shapeID: obj.ShapeID,
-              qty: obj.Qty,
+              qty: parseInt(obj.Qty),
               inspected: obj.Inspected,
               locationNo: obj.LocationNo,
               updated: obj.UpDated,
-              accepted: obj.Accepted,
+              accepted: parseInt(obj.Accepted),
               totalWeightCalculated: obj.TotalWeightCalculated,
               totalWeight: obj.TotalWeight,
-              qtyUsed: obj.QtyUsed,
+              qtyUsed: parseInt(obj.QtyUsed),
               qtyReturned: obj.QtyReturned,
             });
 
@@ -2092,10 +2091,16 @@ function NewSheetsUnits(props) {
               className="input-disabled mt-1"
               type="number"
               name="weight"
+              autoComplete="off"
               onKeyDown={blockInvalidChar}
               min="0"
               required
-              value={formHeader.weight}
+              // value={formHeader.weight}
+              value={
+                formHeader.weight === "0" || formHeader.weight === 0
+                  ? ""
+                  : formHeader.weight
+              }
               onChange={InputHeaderEvent}
               disabled={boolVal4}
             />
@@ -2155,6 +2160,7 @@ function NewSheetsUnits(props) {
             <input
               className="input-disabled mt-1"
               type="text"
+              autoComplete="off"
               name="reference"
               value={formHeader.reference}
               onChange={InputHeaderEvent}
@@ -2464,7 +2470,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5 || materialArray.length === 0}
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
@@ -2486,7 +2498,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
                             onChange={(e) => {
@@ -2513,7 +2531,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
@@ -2535,7 +2559,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
                             onChange={(e) => {
@@ -2562,7 +2592,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
@@ -2593,7 +2629,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
@@ -2615,7 +2657,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara2"
-                            value={inputPart.dynamicPara2}
+                            // value={inputPart.dynamicPara2}
+                            value={
+                              inputPart.dynamicPara2 === "0" ||
+                              inputPart.dynamicPara2 === 0
+                                ? ""
+                                : inputPart.dynamicPara2
+                            }
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
                             onChange={(e) => {
@@ -2638,7 +2686,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-1"
                             name="dynamicPara3"
-                            value={inputPart.dynamicPara3}
+                            // value={inputPart.dynamicPara3}
+                            value={
+                              inputPart.dynamicPara3 === "0" ||
+                              inputPart.dynamicPara3 === 0
+                                ? ""
+                                : inputPart.dynamicPara3
+                            }
                             min="0"
                             onKeyDown={blockInvalidQtyChar}
                             onChange={(e) => {
@@ -2665,7 +2719,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             disabled={boolVal5}
                             onKeyDown={blockInvalidQtyChar}
                             min="0"
@@ -2692,7 +2752,13 @@ function NewSheetsUnits(props) {
                             type="number"
                             className="input-disabled mt-2"
                             name="dynamicPara1"
-                            value={inputPart.dynamicPara1}
+                            // value={inputPart.dynamicPara1}
+                            value={
+                              inputPart.dynamicPara1 === "0" ||
+                              inputPart.dynamicPara1 === 0
+                                ? ""
+                                : inputPart.dynamicPara1
+                            }
                             onKeyDown={blockInvalidQtyChar}
                             disabled={boolVal5}
                             min="0"
@@ -2726,7 +2792,12 @@ function NewSheetsUnits(props) {
                         type="number"
                         name="qty"
                         // defaultValue={0}
-                        value={inputPart.qty}
+                        // value={inputPart.qty}
+                        value={
+                          inputPart.qty === "0" || inputPart.qty === 0
+                            ? ""
+                            : inputPart.qty
+                        }
                         // value={(inputPart.qty = Math.floor(inputPart.qty))}
                         onKeyDown={blockInvalidQtyChar}
                         disabled={
@@ -2765,7 +2836,12 @@ function NewSheetsUnits(props) {
                         type="number"
                         name="accepted"
                         // defaultValue={0}
-                        value={inputPart.accepted}
+                        // value={inputPart.accepted}
+                        value={
+                          inputPart.accepted === "0" || inputPart.accepted === 0
+                            ? ""
+                            : inputPart.accepted
+                        }
                         disabled={boolVal3 || boolVal4 || !boolVal5}
                         min="0"
                         onKeyDown={blockInvalidQtyChar}
@@ -2809,7 +2885,13 @@ function NewSheetsUnits(props) {
                       <input
                         className="input-disabled mt-1"
                         name="totalWeightCalculated"
-                        value={inputPart.totalWeightCalculated}
+                        // value={inputPart.totalWeightCalculated}
+                        value={
+                          inputPart.totalWeightCalculated === "0" ||
+                          inputPart.totalWeightCalculated === 0
+                            ? ""
+                            : inputPart.totalWeightCalculated
+                        }
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
                         }}
@@ -2826,7 +2908,14 @@ function NewSheetsUnits(props) {
                         type="number"
                         className="input-disabled mt-1"
                         name="totalWeight"
-                        value={inputPart.totalWeight}
+                        autoComplete="off"
+                        // value={inputPart.totalWeight}
+                        value={
+                          inputPart.totalWeight === "0" ||
+                          inputPart.totalWeight === 0
+                            ? ""
+                            : inputPart.totalWeight
+                        }
                         onKeyDown={blockInvalidChar}
                         min="0"
                         onChange={(e) => {

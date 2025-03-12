@@ -153,12 +153,18 @@ function PurchasePartsNew() {
       dataField: "qtyReceived",
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Qty Accepted",
       dataField: "qtyAccepted",
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
+      formatter: (cellContent) => {
+        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+      },
     },
     {
       text: "Qty Rejected",
@@ -166,6 +172,7 @@ function PurchasePartsNew() {
       formatter: (celContent, row) => <div className="">{qtyRejected}</div>,
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
+      
     },
   ];
 
@@ -683,7 +690,13 @@ function PurchasePartsNew() {
                 className="input-disabled mt-1"
                 type="text"
                 name="weight"
-                value={formHeader.weight}
+                // value={formHeader.weight}
+                // value={formHeader.weight === 0 ? "" : formHeader.weight}
+                value={
+                  formHeader.weight === "0" || formHeader.weight === 0
+                    ? ""
+                    : formHeader.weight
+                }
                 onChange={InputHeaderEvent}
                 onKeyDown={blockInvalidChar}
                 disabled={boolVal4}
@@ -729,6 +742,7 @@ function PurchasePartsNew() {
             <input
               className="input-disabled mt-1"
               type="text"
+              autoComplete="off"
               name="reference"
               value={formHeader.reference}
               onChange={InputHeaderEvent}
@@ -903,7 +917,12 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  value={inputPart.unitWeight}
+                  // value={inputPart.unitWeight}
+                  value={
+                    inputPart.unitWeight === "0" || inputPart.unitWeight === 0
+                      ? ""
+                      : inputPart.unitWeight
+                  }
                   onChange={changePartHandle}
                   //onKeyUp={changePartHandle1}
                   onKeyDown={blockInvalidChar}
@@ -922,7 +941,12 @@ function PurchasePartsNew() {
                   type="number"
                   name="qtyReceived"
                   //value={tempVal}
-                  value={inputPart.qtyReceived}
+                  // value={inputPart.qtyReceived}
+                  value={
+                    inputPart.qtyReceived === "0" || inputPart.qtyReceived === 0
+                      ? ""
+                      : inputPart.qtyReceived
+                  }
                   onKeyDown={blockInvalidQtyChar}
                   onChange={changePartHandle}
                   disabled={boolVal3 | boolVal4}
@@ -936,7 +960,12 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyAccepted"
-                  value={inputPart.qtyAccepted}
+                  // value={inputPart.qtyAccepted}
+                  value={
+                    inputPart.qtyAccepted === "0" || inputPart.qtyAccepted === 0
+                      ? ""
+                      : inputPart.qtyAccepted
+                  }
                   onKeyDown={blockInvalidQtyChar}
                   onChange={changePartHandle}
                   min="0"

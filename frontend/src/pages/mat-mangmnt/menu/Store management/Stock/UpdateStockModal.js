@@ -20,13 +20,14 @@ function UpdateStockModal({ open, setOpen }) {
           <Form>Stock Ledger Updated</Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
+          <button
+            // variant="secondary"
+            className="button-style"
             onClick={handleClose}
             style={{ fontSize: "12px" }}
           >
             Okay
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>
