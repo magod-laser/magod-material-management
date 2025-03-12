@@ -1644,9 +1644,9 @@ function OpenButtonDraftSheetUnit(props) {
               name="weight"
               // value={formHeader.weight}
               value={
-                inputPart.totalWeight === "0" || inputPart.totalWeight === 0
+                formHeader.weight === "0" || formHeader.weight === 0
                   ? ""
-                  : inputPart.totalWeight
+                  : formHeader.weight
               }
               onChange={InputHeaderEvent}
               disabled={boolVal4}
