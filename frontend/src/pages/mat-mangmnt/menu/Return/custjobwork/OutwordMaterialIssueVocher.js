@@ -421,28 +421,12 @@ function OutwordMaterialIssueVocher(props) {
 	};
 
 	const updateChange = (key, value, field) => {
-		const newArray = [];
-
-		for (let i = 0; i < outData.length; i++) {
-			const element = outData[i];
-
-			if (i === key) {
-				element[field] = value;
+		const newArray = outData.map((item) => {
+			if (item.Srl === key) {
+				return { ...item, [field]: value };
 			}
-			// console.log("element", element);
-
-			newArray.push(element);
-
-			// if(i===key){
-
-			// }else{
-
-			//   setOutData([element])
-			// }
-		}
-
-		// console.log("new", newArray);
-
+			return item;
+		});
 		setOutData(newArray);
 	};
 
@@ -451,14 +435,9 @@ function OutwordMaterialIssueVocher(props) {
 	// }
 
 	const handleChangeWeightTotalCal = () => {
-		let newTotalWeight = 0;
-		for (let i = 0; i < outData.length; i++) {
-			const element = outData[i];
-			// console.log("elemet@@@@@@@@@@@@@@", element.TotalWeightCalculated);
-			newTotalWeight =
-				parseFloat(newTotalWeight) + parseFloat(element.TotalWeight);
-		}
-
+		const newTotalWeight = outData.reduce((sum, element) => 
+			sum + parseFloat(element.TotalWeight || 0), 0
+		);
 		setFormHeader({
 			...formHeader,
 			TotalWeight: newTotalWeight,
@@ -1055,9 +1034,9 @@ function OutwordMaterialIssueVocher(props) {
 								</tr>
 							</thead>
 							<tbody>
-								{sortedData().map((val, key) => (
+								{sortedData().map((val) => (
 									<tr>
-										<td>{key + 1}</td>
+										<td>{val.Srl}</td>
 										<td>{val.MtrlDescription}</td>
 										<td>{val.Material} </td>
 										<td>{parseInt(val?.Qty)}</td>
@@ -1085,7 +1064,7 @@ function OutwordMaterialIssueVocher(props) {
 														}
 
 														updateChange(
-															key,
+															val.Srl,
 															e.target.value || 0,
 															"TotalWeight"
 														);
@@ -1131,36 +1110,7 @@ function OutwordMaterialIssueVocher(props) {
 															? "input-disabled"
 															: ""
 													}
-													onClick={() => updateChange(key, 1, "UpDated")}
-													// onChange={(e) => {
-													//   // console.log("checkbox clicked", e.target.value);
-
-													//   const newArray = [];
-
-													//   for (let i = 0; i < outData.length; i++) {
-													//     const element = outData[i];
-
-													//     if (i === key) {
-													//       element.UpDated = 1;
-													//     }
-													//     console.log("element", element);
-
-													//     newArray.push(element);
-
-													//     // if(i===key){
-
-													//     // }else{
-
-													//     //   setOutData([element])
-													//     // }
-													//   }
-
-													//   console.log("new", newArray);
-
-													//   setOutData(newArray);
-
-													//   // console.log("setOutData", outData[key].UpDated);
-													// }}
+													onClick={() => updateChange(val.Srl, 1, "UpDated")}
 												/>
 											) : (
 												<input
@@ -1178,12 +1128,7 @@ function OutwordMaterialIssueVocher(props) {
 															? "input-disabled"
 															: ""
 													}
-													onClick={() => updateChange(key, 0, "UpDated")}
-
-													// onChange={(e) => {
-													//   // console.log("checkbox clicked", e.target.value);
-													//   // console.log("setOutData", outData);
-													// }}
+													onClick={() => updateChange(val.Srl, 0, "UpDated")}
 												/>
 											)}
 										</td>
