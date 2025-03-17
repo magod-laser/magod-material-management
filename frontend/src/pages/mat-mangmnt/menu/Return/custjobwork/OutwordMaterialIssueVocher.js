@@ -428,21 +428,29 @@ function OutwordMaterialIssueVocher(props) {
 			return item;
 		});
 		setOutData(newArray);
+		// Calculate new total after updating outData
+		const newTotalWeight = newArray.reduce((sum, element) => 
+			sum + (element.TotalWeight ? parseFloat(element.TotalWeight) : 0), 0
+		);
+		setFormHeader({
+			...formHeader,
+			TotalWeight: newTotalWeight || '',  // Use empty string instead of 0
+		});
 	};
 
 	// const updateTotalWeight = (key, value)=>{
 
 	// }
 
-	const handleChangeWeightTotalCal = () => {
-		const newTotalWeight = outData.reduce((sum, element) => 
-			sum + parseFloat(element.TotalWeight || 0), 0
-		);
-		setFormHeader({
-			...formHeader,
-			TotalWeight: newTotalWeight,
-		});
-	};
+	// const handleChangeWeightTotalCal = () => {
+	// 	const newTotalWeight = outData.reduce((sum, element) => 
+	// 		sum + parseFloat(element.TotalWeight || 0), 0
+	// 	);
+	// 	setFormHeader({
+	// 		...formHeader,
+	// 		TotalWeight: newTotalWeight,
+	// 	});
+	// };
 
 	// const handleSave = () => {
 	//   const type = "sheets";
@@ -1046,7 +1054,7 @@ function OutwordMaterialIssueVocher(props) {
 											<input
 												type="number"
 												// min="0"
-												value={val?.TotalWeight}
+												value={val.TotalWeight || ''} // Use empty string instead of undefined/0
 												onKeyDown={numbValidations}
 												onChange={(e) => {
 													if (
@@ -1065,10 +1073,9 @@ function OutwordMaterialIssueVocher(props) {
 
 														updateChange(
 															val.Srl,
-															e.target.value || 0,
+															e.target.value || '',  // Use empty string instead of 0
 															"TotalWeight"
 														);
-														handleChangeWeightTotalCal();
 													} else {
 														toast.warning(
 															"Total Weight can't be greater then 10Cr"
