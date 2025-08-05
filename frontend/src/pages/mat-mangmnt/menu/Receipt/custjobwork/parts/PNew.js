@@ -357,7 +357,7 @@ function PNew() {
       inputPart.qtyIssued = 0;
       inputPart.unitWeight = 0;
       // inputPart.unitWeight = inputPart.unitWeight === 0 ? "" : "";
-     
+
       inputPart.custBomId = formHeader.customer;
 
       //insert blank row in table

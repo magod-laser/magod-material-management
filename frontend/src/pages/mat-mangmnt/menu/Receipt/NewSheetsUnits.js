@@ -1033,10 +1033,10 @@ function NewSheetsUnits(props) {
           id: id,
           srl: srl,
           mtrlCode: "",
-          dynamicPara1: "",
-          dynamicPara2: "",
-          dynamicPara3: "",
-          qty: "",
+          dynamicPara1: 0,
+          dynamicPara2: 0,
+          dynamicPara3: 0,
+          qty: 0,
           inspected: "",
           locationNo: "",
           updated: "",
@@ -1679,8 +1679,6 @@ function NewSheetsUnits(props) {
           accepted: mtrlStock.accepted,
           // qtyAccepted: mtrlStock.qtyAccepted,
         };
-
-        console.log("newRow", newRow);
 
         postRequest(endpoints.insertMtrlStockList, newRow, async (data) => {
           if (data.affectedRows !== 0) {

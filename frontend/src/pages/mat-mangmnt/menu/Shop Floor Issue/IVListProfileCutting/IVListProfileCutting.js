@@ -16,8 +16,10 @@ function IVListProfileCutting(props) {
   const [issueIDVal, setIssueIDVal] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(1000);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
+    setLoading(true);
     let url =
       props.type === "closed"
         ? endpoints.getMaterialIssueVoucherList + "?status=Closed"
@@ -33,6 +35,7 @@ function IVListProfileCutting(props) {
       }
 
       setTableData(data);
+      setLoading(false);
     });
   };
   useEffect(() => {
@@ -154,6 +157,13 @@ function IVListProfileCutting(props) {
                 //pagination={paginationFactory()}
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? (
+                    <div className="text-center py-2">Loading...</div>
+                  ) : (
+                    "No issue vouchers found."
+                  )
+                }
               ></BootstrapTable>
             </div>
 
@@ -188,11 +198,7 @@ function IVListProfileCutting(props) {
             <div className="ip-box form-bg" style={{ height: "400px" }}>
               <div className="row justify-content-center mt-2">
                 <button
-                  onClick={openButton} /*() =>
-                            nav(
-                              "/materialmanagement/shopfloorissue/ivlistprofilecutting/closed/shopmatissuevocher"
-                            )
-                          }*/
+                  onClick={openButton}
                   className="button-style"
                   style={{ width: "55px" }}
                 >

@@ -13,16 +13,17 @@ function ShopIssueIVList(props) {
   const [tableData, setTableData] = useState([]);
   const [rowData, setRowData] = useState({});
   const [issueIDVal, setIssueIDVal] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
+    setLoading(true);
     let url =
       props.type === "closed"
         ? endpoints.getPartIssueVoucherList + "?status=Closed"
         : endpoints.getPartIssueVoucherList + "?status=Created";
     getRequest(url, (data) => {
-      console.log("data123==",data);
-      
       setTableData(data);
+      setLoading(false);
     });
   };
   useEffect(() => {
@@ -140,6 +141,13 @@ function ShopIssueIVList(props) {
                 //pagination={paginationFactory()}
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? (
+                    <div className="text-center py-2">Loading...</div>
+                  ) : (
+                    "No issue vouchers found."
+                  )
+                }
               ></BootstrapTable>
             </div>
           </div>
