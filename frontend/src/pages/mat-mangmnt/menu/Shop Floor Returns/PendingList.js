@@ -490,9 +490,7 @@ function PendingList(props) {
     );
 
     if (!allSameMtrlIDPart) {
-      toast.error(
-        "Please Check the ShapeMtrlID you selected"
-      );
+      toast.error("Please Check the ShapeMtrlID you selected");
       return;
     }
 

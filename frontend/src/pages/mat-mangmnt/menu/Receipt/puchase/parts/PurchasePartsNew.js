@@ -172,7 +172,6 @@ function PurchasePartsNew() {
       formatter: (celContent, row) => <div className="">{qtyRejected}</div>,
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
-      
     },
   ];
 
@@ -292,10 +291,10 @@ function PurchasePartsNew() {
         let newRow = {
           id: id,
           partId: "",
-          unitWeight: "",
-          qtyReceived: "",
-          qtyAccepted: "",
-          qtyRejected: "",
+          unitWeight: 0,
+          qtyReceived: 0,
+          qtyAccepted: 0,
+          qtyRejected: 0,
         };
         //setPartArray(newRow);
         setPartArray([...partArray, newRow]);
