@@ -1,7 +1,9 @@
 import { Fragment, useState, useEffect } from "react";
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer, pdf } from "@react-pdf/renderer";
 import PrintMonthlyTable from "./PrintMonthlyTable";
 import { Modal } from "react-bootstrap";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 import { postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
@@ -16,6 +18,43 @@ function PrintMonthlyReport(props) {
     });
   }
 
+  const savePdfToServer = async () => {
+    try {
+      const adjustment = "MonthlyReport";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintMonthlyTable
+          date={props.date}
+          thirdTab={props.thirdTab}
+          fourthTab={props.fourthTab}
+          totalobj={props.totalobj}
+          purchaseDetails={props.purchaseDetails}
+          saleDetails={props.saleDetails}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
   useEffect(() => {
     fetchPDFData();
   }, []);
@@ -24,7 +63,19 @@ function PrintMonthlyReport(props) {
     <>
       <Modal show={props.printReportOpen} onHide={handleClose} fullscreen>
         <Modal.Header closeButton>
-          <Modal.Title>Print Monthly Report</Modal.Title>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Modal.Title>Print Monthly Report</Modal.Title>
+            <button className="button-style" onClick={savePdfToServer}>
+              Save to Server
+            </button>
+          </div>
         </Modal.Header>
         <Modal.Body>
           <Fragment>
