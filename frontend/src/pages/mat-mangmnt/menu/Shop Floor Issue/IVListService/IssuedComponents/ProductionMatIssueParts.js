@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Table from "react-bootstrap/Table";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -16,13 +15,11 @@ const { endpoints } = require("../../../../../api/constants");
 function ProductionMatIssueParts() {
   const nav = useNavigate();
   const location = useLocation();
-  // console.log("CustCode", location?.state?.custCode);
-
   const [tableData, setTableData] = useState([]);
   const [rowData, setRowData] = useState({});
   const [show, setShow] = useState(false);
-  const [show1, setShow1] = useState(false); //cancel
-  const [show2, setShow2] = useState(false); //accept
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [showYN, setShowYN] = useState(false);
 
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
@@ -58,10 +55,8 @@ function ProductionMatIssueParts() {
       endpoints.getProductionMaterialIssueParts +
       "?id=" +
       location.state.issueIDVal;
-    console.log("issueIDVal", location?.state?.issueIDVal);
+
     getRequest(url, async (data) => {
-      console.log("data = ", data);
-      //get cust name
       let url1 = endpoints.getCustomerByCustCode + "?code=" + data.Cust_Code;
       getRequest(url1, async (cdata) => {
         setFormHeader({
@@ -71,7 +66,7 @@ function ProductionMatIssueParts() {
           Cust_name: cdata.Cust_name,
           IV_No: data.IV_No,
           IssueID: data.IssueID,
-          Issue_date: formatDate(new Date(data.Issue_date), 3), //data.Issue_date,
+          Issue_date: formatDate(new Date(data.Issue_date), 3),
           Machine: data.Machine,
           Mtrl_Code: data.Mtrl_Code,
           NCProgramNo: data.NCProgramNo,
@@ -87,17 +82,13 @@ function ProductionMatIssueParts() {
         });
       });
     });
-    //get table data
 
     let url2 =
       endpoints.getProductionMaterialIssuePartsTable +
       "?id=" +
       location?.state?.issueIDVal;
-    // +
-    // "&custCode=" +
-    // location?.state?.custCode;
+
     getRequest(url2, (data) => {
-      console.log("table data..................... = ", data);
       setTableData(data);
     });
   };
@@ -140,7 +131,6 @@ function ProductionMatIssueParts() {
   ];
 
   const modalResponseok = (msg) => {
-    console.log("msg = ", msg);
     if (msg === "ok") {
       for (let i = 0; i < tableData.length; i++) {
         let update1 = {
@@ -151,9 +141,7 @@ function ProductionMatIssueParts() {
         postRequest(
           endpoints.updateQtyIssuedPartReceiptDetails,
           update1,
-          (data) => {
-            console.log("update1");
-          }
+          (data) => {}
         );
 
         //shopfloorbomissuedetails set qtyreturn = qtyissue
@@ -163,9 +151,7 @@ function ProductionMatIssueParts() {
         postRequest(
           endpoints.updateQtyReturnedShopfloorBOMIssueDetails,
           update2,
-          (data) => {
-            console.log("update2");
-          }
+          (data) => {}
         );
       }
 
@@ -174,9 +160,7 @@ function ProductionMatIssueParts() {
         Id: formHeader.NcId,
         Qty: formHeader.QtyIssued,
       };
-      postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {
-        console.log("update3");
-      });
+      postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
 
       //update shopfloorpartissueregiser stats closed
       let update4 = {
@@ -187,15 +171,12 @@ function ProductionMatIssueParts() {
         endpoints.updateStatusShopfloorPartIssueRegister,
         update4,
         (data) => {
-          console.log("update4");
           setFormHeader({ ...formHeader, Status: "Cancelled" });
         }
       );
 
-      // toast.success("Parts Cancelled Successfully");
       toast.success("Issue Voucher Cancelled");
     }
-    console.log("formHeader.Status after updates:", formHeader.Status);
   };
 
   const cancelButton = () => {
@@ -223,15 +204,6 @@ function ProductionMatIssueParts() {
     }
   };
   const printButton = () => {
-    // nav(
-    //   "/MaterialManagement/ShopFloorIssue/IVListService/PrintIVListServicePart",
-    //   {
-    //     state: {
-    //       formHeader: formHeader,
-    //       tableData: tableData,
-    //     },
-    //   }
-    // );
     setIsPrintModalOpen(true);
   };
   return (
@@ -376,15 +348,6 @@ function ProductionMatIssueParts() {
             <button
               className="button-style "
               onClick={cancelButton}
-              // disabled={show1 || formHeader.Status === "Closed" ? true : false}
-              // disabled={
-              //   show1 || formHeader.Status === "Cancelled" ? true : false
-              // }
-              // disabled={
-              //   show1 ||
-              //   formHeader.Status === "Cancelled" ||
-              //   formHeader.Status === "Closed"
-              // }
               disabled={
                 formHeader.Status === "Cancelled" ||
                 formHeader.Status === "Closed" ||
@@ -398,7 +361,6 @@ function ProductionMatIssueParts() {
             <button
               className="button-style "
               onClick={acceptReturn}
-              // disabled={show2 || formHeader.Status === "Closed" ? true : false}
               disabled={
                 formHeader.Status !== "Created" ||
                 formHeader.QtyReturned === 0 ||
@@ -434,8 +396,6 @@ function ProductionMatIssueParts() {
             striped
             hover
             condensed
-            //pagination={paginationFactory()}
-            //selectRow={selectRow}
             headerClasses="header-class tableHeaderBGColor"
           ></BootstrapTable>
         </div>

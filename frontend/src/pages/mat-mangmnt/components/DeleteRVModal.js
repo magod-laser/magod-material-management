@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function DeleteRVModal(props) {
   let { deleteRvModalOpen, setDeleteRvModalOpen, message, handleRVYes } = props;
   const handleNo = () => {
-    // modalResponse("no");
     setDeleteRvModalOpen(false);
   };
 
@@ -19,12 +16,7 @@ function DeleteRVModal(props) {
         </Modal.Header>
         <Modal.Body style={{ fontSize: "12px" }}>{message}</Modal.Body>
         <Modal.Footer>
-          <button
-            // variant="secondary"
-            className="button-style"
-            onClick={handleRVYes}
-            // style={{ backgroundColor: " #2b3a55", fontSize:'12px' }}
-          >
+          <button className="button-style" onClick={handleRVYes}>
             Yes
           </button>
           <button

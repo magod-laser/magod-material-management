@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Page,
   Document,
@@ -7,12 +6,9 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-// import MLLogo from "../../../../../../frontend/src/ML-LOGO.png";
+
 import MLLogo from "../../../../../src/ML-LOGO.png";
-
 import { formatDate } from "../../../../utils";
-
-//function PrintMaterialDCTable() {
 
 let headerFontSize = "13px";
 let subheaderFontsize = "11px";
@@ -29,9 +25,7 @@ const styles = StyleSheet.create({
   },
   globalPadding: { padding: "0.6%" },
   footerRowPadding: { padding: "3px" },
-  // globalPadding: { padding: "0.6%" },
   fontBold: {
-    //   fontWeight: "bold",
     fontSize: fontSize,
     fontFamily: "Helvetica-Bold",
   },
@@ -42,46 +36,33 @@ const styles = StyleSheet.create({
     width: "30%",
     marginLeft: "50px",
     marginTop: "5px",
-    // fontSize: 11,
-    // fontWeight: "bold",
   },
   weightinkgs: {
     width: "30%",
     marginLeft: "5px",
     marginTop: "5px",
-    // fontSize: 11,
-    // fontWeight: "bold",
   },
   totqty: {
     width: "20%",
     marginLeft: "5px",
     marginTop: "5px",
-    // fontSize: 11,
-    // fontWeight: "bold",
   },
   para: {
     width: "10%",
     marginLeft: "5px",
     marginTop: "2px",
-    // fontSize: 8,
-    // fontWeight: "bold",
   },
   docu: {
     width: "50%",
     marginLeft: "5px",
     marginTop: "2px",
-    // fontSize: 8,
-    // fontWeight: "bold",
   },
 });
 
-//return <div>PrintMaterialDCTable</div>;
-//}
 const PrintMonthlyTable = (props) => (
   <Document>
     <Page size="A4" style={{ ...styles.pageStyling }}>
       <View>
-        {/* Top */}
         <View
           style={{
             display: "flex",
@@ -125,14 +106,9 @@ const PrintMonthlyTable = (props) => (
         <View style={{ border: "1px" }}>
           <View
             style={{
-              // display: "flex",
-              // flexDirection: "column",
-              // justifyContent: "center",
               padding: "1%",
             }}
           >
-            {/* summary section */}
-            {/* Material Purchase Summary */}
             <View>
               <View
                 style={{
@@ -165,7 +141,6 @@ const PrintMonthlyTable = (props) => (
                   ...styles.insideBox,
                   display: "flex",
                   flexDirection: "column",
-                  // justifyContent: "flex-start",
                 }}
               >
                 {props.fourthTab.map((item, index) => {
@@ -173,7 +148,6 @@ const PrintMonthlyTable = (props) => (
                     <>
                       <View
                         style={{
-                          // ...styles.insideBox,
                           display: "flex",
                           flexDirection: "row",
                           justifyContent: "flex-start",
@@ -189,7 +163,7 @@ const PrintMonthlyTable = (props) => (
                 })}
               </View>
             </View>
-            {/* Material Sales Summary */}
+
             <View>
               <View
                 style={{
@@ -222,7 +196,6 @@ const PrintMonthlyTable = (props) => (
                   ...styles.insideBox,
                   display: "flex",
                   flexDirection: "column",
-                  // justifyContent: "flex-start",
                 }}
               >
                 {props.thirdTab.map((item, index) => {
@@ -230,7 +203,6 @@ const PrintMonthlyTable = (props) => (
                     <>
                       <View
                         style={{
-                          // ...styles.insideBox,
                           display: "flex",
                           flexDirection: "row",
                           justifyContent: "flex-start",
@@ -246,7 +218,6 @@ const PrintMonthlyTable = (props) => (
                 })}
               </View>
             </View>
-            {/* Monthly Material Handling Summary */}
 
             <View>
               <View
@@ -266,7 +237,6 @@ const PrintMonthlyTable = (props) => (
                   ...styles.insideBox,
                   display: "flex",
                   flexDirection: "column",
-                  // justifyContent: "flex-start",
                 }}
               >
                 {props.totalobj.map((item, index) => {
@@ -274,7 +244,6 @@ const PrintMonthlyTable = (props) => (
                     <>
                       <View
                         style={{
-                          // ...styles.insideBox,
                           display: "flex",
                           flexDirection: "row",
                           justifyContent: "flex-start",
@@ -291,9 +260,6 @@ const PrintMonthlyTable = (props) => (
                 })}
               </View>
             </View>
-
-            {/* details sections */}
-            {/*Material Purchase Details */}
 
             <View>
               <View
@@ -313,7 +279,6 @@ const PrintMonthlyTable = (props) => (
                   ...styles.insideBox,
                   display: "flex",
                   flexDirection: "column",
-                  // justifyContent: "flex-start",
                   border: "none",
                 }}
               >
@@ -336,7 +301,6 @@ const PrintMonthlyTable = (props) => (
 
                       <View
                         style={{
-                          // ...styles.insideBox,
                           display: "flex",
                           flexDirection: "column",
                         }}
@@ -346,7 +310,6 @@ const PrintMonthlyTable = (props) => (
                             <>
                               <View
                                 style={{
-                                  // ...styles.insideBox,
                                   display: "flex",
                                   flexDirection: "row",
                                   justifyContent: "space-between",
@@ -368,8 +331,6 @@ const PrintMonthlyTable = (props) => (
                         })}
                         <View
                           style={{
-                            // ...styles.insideBox,
-                            // border: "none",
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
@@ -393,8 +354,6 @@ const PrintMonthlyTable = (props) => (
               </View>
             </View>
 
-            {/* Material Sales Details */}
-
             <View>
               <View
                 style={{
@@ -413,7 +372,6 @@ const PrintMonthlyTable = (props) => (
                   ...styles.insideBox,
                   display: "flex",
                   flexDirection: "column",
-                  // justifyContent: "flex-start",
                   border: "none",
                 }}
               >
@@ -436,7 +394,6 @@ const PrintMonthlyTable = (props) => (
 
                       <View
                         style={{
-                          // ...styles.insideBox,
                           display: "flex",
                           flexDirection: "column",
                         }}
@@ -446,7 +403,6 @@ const PrintMonthlyTable = (props) => (
                             <>
                               <View
                                 style={{
-                                  // ...styles.insideBox,
                                   display: "flex",
                                   flexDirection: "row",
                                   justifyContent: "space-between",
@@ -468,8 +424,6 @@ const PrintMonthlyTable = (props) => (
                         })}
                         <View
                           style={{
-                            // ...styles.insideBox,
-                            // border: "none",
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",

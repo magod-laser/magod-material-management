@@ -1,6 +1,3 @@
-/** @format */
-
-import React from "react";
 import {
   Page,
   Document,
@@ -9,25 +6,18 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-import { formatDate } from "../../../../utils";
-// import MLLogo from "../../../../../../frontend/src/ML-LOGO.png";
 import MLLogo from "../../../../../src/ML-LOGO.png";
 
 const styles = StyleSheet.create({
   page: {
     fontSize: "9px",
     flexDirection: "column",
-    //  margin: "30px"
     marginTop: 30,
     marginBottom: 50,
     paddingBottom: 50,
   },
 
   tableContainer: {
-    //   flexDirection: "row",
-    //   flexWrap: "wrap",
-    //   border: "1px solid black",
-    //   padding: "4px",
     flexDirection: "row",
     flexWrap: "wrap",
     margin: 10,
@@ -44,7 +34,6 @@ const styles = StyleSheet.create({
     fontWeight: "bolder",
     textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
-    // alignSelf: "center",
   },
 
   title2: {
@@ -52,9 +41,7 @@ const styles = StyleSheet.create({
     marginLeft: "140px",
     fontSize: "11px",
     fontWeight: "bold",
-    // textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
-    // alignSelf: "center",
   },
 
   Heading: {
@@ -90,7 +77,6 @@ const styles = StyleSheet.create({
     marginLeft: "10px",
     marginTop: "10px",
     fontSize: "9px",
-    // fontFamily: "Helvetica-Bold",
   },
 
   blockRightAlign2: {
@@ -116,7 +102,6 @@ const styles = StyleSheet.create({
     marginLeft: "10px",
     marginTop: "10px",
     fontSize: "9px",
-    // fontFamily: "Helvetica-Bold",
   },
 
   linegap: {
@@ -199,7 +184,6 @@ const styles = StyleSheet.create({
     marginLeft: "10px",
     marginTop: "10px",
     fontSize: "9px",
-    // textDecoration: "underline",
   },
   lastText: {
     width: "45%",
@@ -238,18 +222,13 @@ const PrintIVListProfileCuttingTable1 = ({
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.tableContainer}>
-        {/* <Text style={styles.title1}>
-          Magod Laser Machining Pvt Ltd : Jigani
-        </Text>
-        <Text style={styles.title2}>Material : Floor Issue</Text> */}
-
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image src={MLLogo} style={styles.logoImage} />
 
           <View>
             <View style={{ justifyContent: "center" }}>
               <Text style={[styles.title1, { textDecoration: "underline" }]}>
-              Material : Shop Floor Issue
+                Material : Shop Floor Issue
               </Text>
             </View>
 
@@ -270,9 +249,8 @@ const PrintIVListProfileCuttingTable1 = ({
 
             <View style={{ justifyContent: "center" }}>
               <Text style={{ ...styles.companyInfo }}>
-                {PDFData.PhonePrimary} {PDFData.PhoneSecondary}
-                {PDFData.Email}
-                {PDFData.URL}
+                {PDFData.PhonePrimary} {PDFData.PhoneSecondary}, {""}
+                {PDFData.Email}, {PDFData.URL}
               </Text>
             </View>
           </View>
@@ -280,7 +258,6 @@ const PrintIVListProfileCuttingTable1 = ({
         <Text style={styles.line1}>
           ___________________________________________________________________________________________________________________
         </Text>
-        {/* Issue By & Received By */}
 
         <View style={styles.blockRightAlign}>
           <Text style={{ fontFamily: "Helvetica-Bold" }}>IV No</Text>
@@ -300,7 +277,6 @@ const PrintIVListProfileCuttingTable1 = ({
         </View>
 
         <View style={styles.blockLeftAlign}>
-          {/* <Text>{formHeader.Isssue_date}</Text> */}
           <Text>
             {formHeader.Isssue_date
               ? new Date(formHeader.Isssue_date).toLocaleDateString("en-GB")
@@ -309,18 +285,6 @@ const PrintIVListProfileCuttingTable1 = ({
           <Text style={styles.linegap}>{formHeader.NC_ProgramNo}</Text>
         </View>
 
-        {/* <Text style={styles.blockWhole}>IV No : {formHeader.IV_No}</Text>
-        <Text style={styles.blockLeftAlign}></Text>
-        <Text style={styles.blockRightAlign}>
-          Date: {formHeader.Issue_date}{" "}
-        </Text>
-        <Text style={styles.emptyBlock}></Text>
-        <Text style={styles.blockLeftAlign}>Task No: {formHeader.TaskNo}</Text>
-        <Text style={styles.blockRightAlign}>
-          Program No: {formHeader.NC_ProgramNo}
-        </Text>
-        <Text style={styles.emptyBlock}></Text>
-        <Text style={styles.blockWhole}>Customer: {formHeader.Cust_name} </Text> */}
         <Text style={styles.line1}>
           ___________________________________________________________________________________________________________________
         </Text>
@@ -329,16 +293,12 @@ const PrintIVListProfileCuttingTable1 = ({
           <Text>Material</Text>
           <Text style={styles.linegap}>Para 3</Text>
           <Text style={styles.linegap}>Qty Issued</Text>
-          {/* <Text style={styles.linegap}>Qty Received</Text> */}
-
-          {/* <Text style={styles.linegap}>Source</Text> */}
         </View>
         <View style={styles.blockLeftAlign2}>
           <Text>{formHeader.Mtrl_Code}</Text>
           <Text style={styles.linegap}>{formHeader.Para3}</Text>
-          {/* <Text style={styles.linegap}>{formHeader.Qty}</Text> */}
+
           <Text style={styles.linegap}>{formHeader.QtyIssued}</Text>
-          {/* <Text style={styles.linegap}>{formHeader.CustMtrl}</Text> */}
         </View>
 
         <View style={styles.blockRightAlign2}>
@@ -363,16 +323,6 @@ const PrintIVListProfileCuttingTable1 = ({
           <Text style={styles.linegap}>{formHeader.CustMtrl}</Text>
         </View>
 
-        {/* <Text style={styles.blockWhole}>Material : {formHeader.Mtrl_Code}</Text>
-        <Text style={styles.blockLeftAlign}>Length: {formHeader.Para1}</Text>
-        <Text style={styles.blockLeftAlign}>Width: {formHeader.Para2}</Text>
-        <Text style={styles.blockLeftAlign}>Height: {formHeader.Para3}</Text>
-        <Text style={styles.blockLeftAlign}>Qty: {formHeader.Qty}</Text>
-        <Text style={styles.blockLeftAlign}>Machine: {formHeader.Machine}</Text>
-        <Text style={styles.blockLeftAlign}>
-          Process: {formHeader.MProcess}
-        </Text>
-        <Text style={styles.blockWhole}>Source : Custom</Text> */}
         <Text style={styles.line1}>
           ___________________________________________________________________________________________________________________
         </Text>
@@ -385,20 +335,15 @@ const PrintIVListProfileCuttingTable1 = ({
         <Text style={styles.line2}>
           ___________________________________________________________________________________________________________________
         </Text>
-        {/* Table Row */}
+
         {tableData.map((item, index) => {
           return (
             <>
               <Text style={styles.mtrlVal}>{item.ShapeMtrlID}</Text>
               <Text style={styles.para1Val}>{item.Para1}</Text>
               <Text style={styles.para2Val}>{item.Para2}</Text>
-              {/* <Text style={styles.usedVal}>{item.Used}</Text> */}
               <Text style={styles.usedVal}></Text>
-
-              {/* <Text style={styles.rejectVal}>{item.Rejected}</Text> */}
               <Text style={styles.rejectVal}></Text>
-
-              {/* <Text style={styles.emptyBlock}></Text> */}
             </>
           );
         })}
@@ -406,7 +351,6 @@ const PrintIVListProfileCuttingTable1 = ({
           ___________________________________________________________________________________________________________________
         </Text>
 
-        {/* Issue By & Received By */}
         <Text style={styles.issuedByReceivedBy}>
           Issued By and Time {formHeader.Issue_time}
         </Text>

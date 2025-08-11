@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import SideComponent from "./ReturnComponents/SideComponent";
-import Table from "react-bootstrap/Table";
+import { useState, useEffect } from "react";
 import LocationModel from "./ReturnComponents/LocationModel";
 import ResizeModal from "./ReturnComponents/ResizeModal";
 import { useNavigate } from "react-router-dom";
@@ -341,10 +339,6 @@ function PendingList(props) {
     if (selectedSecondTableRows.length === 0) {
       toast.error("Select Material to return to Stock");
     } else {
-      // secondTableRow.ReminderPara1 = secondTableRow.RemPara1 - 10;
-      // secondTableRow.ReminderPara2 = secondTableRow.RemPara2 - 10;
-      // secondTableRow.location = "";
-
       setOpen1(true);
     }
   };
@@ -357,7 +351,6 @@ function PendingList(props) {
   };
 
   const modalYesNoResponse = (msg) => {
-    // console.log("msg", rowValResize);
     if (msg == "yes") {
       if (rowValResize.ReminderPara1 < 10 || rowValResize.ReminderPara2 < 10) {
         toast.error("Cannot Resize to less than 10 mm");
@@ -385,11 +378,7 @@ function PendingList(props) {
               postRequest(
                 endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
                 paraData1,
-                (data) => {
-                  console.log(
-                    "rejected : updated shopfloorregisterqtyreturned"
-                  );
-                }
+                (data) => {}
               );
 
               //Set issued less by one
@@ -400,9 +389,7 @@ function PendingList(props) {
               postRequest(
                 endpoints.updateQtyAllotedncprograms,
                 paraData2,
-                (data) => {
-                  console.log("rejected : updated qtyallotted ncprograms");
-                }
+                (data) => {}
               );
             }
             if (selectedSecondTableRows[i].Used === 1) {
@@ -413,9 +400,7 @@ function PendingList(props) {
               postRequest(
                 endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
                 paraData1,
-                (data) => {
-                  console.log("used : updated shopfloorregisterqtyreturned");
-                }
+                (data) => {}
               );
             }
 
@@ -440,9 +425,7 @@ function PendingList(props) {
             postRequest(
               endpoints.updatencprogrammtrlallotmentlistReturnStock,
               paraData4,
-              (data) => {
-                console.log("updated ncprogrammtrlallotmentreturnstock");
-              }
+              (data) => {}
             );
 
             tableRefresh();
@@ -453,21 +436,7 @@ function PendingList(props) {
     }
   };
 
-  // const returnScrap = () => {
-  //   console.log("=selectedSecondTableRows", selectedSecondTableRows);
-
-  //   if (selectedSecondTableRows.length === 0) {
-  //     toast.error("Select Material to return to Stock");
-  //   } else {
-  //     setShow(true);
-  //   }
-  // };
-
-  // VEERANA 11032025
-
   const returnScrap = () => {
-    console.log("=selectedSecondTableRows", selectedSecondTableRows);
-
     if (selectedSecondTableRows.length === 0) {
       toast.error("Select Material to return to Stock");
       return;
@@ -476,7 +445,7 @@ function PendingList(props) {
     // Function to extract the number part from ShapeMtrlID
     const extractMtrlIDPart = (ShapeMtrlID) => {
       const parts = ShapeMtrlID.split("/");
-      return parts[1]; // Extract the second part (e.g., "5837")
+      return parts[1];
     };
 
     // Get the part of the ShapeMtrlID from the first row
@@ -493,8 +462,6 @@ function PendingList(props) {
       toast.error("Please Check the ShapeMtrlID you selected");
       return;
     }
-
-    // Proceed if all parts match
     setShow(true);
   };
 
@@ -509,9 +476,7 @@ function PendingList(props) {
           postRequest(
             endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
             paraData1,
-            (data) => {
-              console.log("rejected : updated shopfloorregisterqtyreturned");
-            }
+            (data) => {}
           );
 
           //Set issued less by one
@@ -522,9 +487,7 @@ function PendingList(props) {
           postRequest(
             endpoints.updateQtyAllotedncprograms,
             paraData2,
-            (data) => {
-              console.log("rejected : updated qtyallotted ncprograms");
-            }
+            (data) => {}
           );
         }
         if (selectedSecondTableRows[i].Used === 1) {
@@ -535,9 +498,7 @@ function PendingList(props) {
           postRequest(
             endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
             paraData1,
-            (data) => {
-              console.log("used : updated shopfloorregisterqtyreturned");
-            }
+            (data) => {}
           );
         }
 
@@ -547,9 +508,7 @@ function PendingList(props) {
           LocationNo: data.location,
           MtrlStockID: selectedSecondTableRows[i].ShapeMtrlID,
         };
-        postRequest(endpoints.updateMtrlStockLock2, paraData3, (data) => {
-          console.log("updated stock list");
-        });
+        postRequest(endpoints.updateMtrlStockLock2, paraData3, (data) => {});
 
         //updatencprogrammtrlallotmentlistReturnStock
         let paraData4 = {
@@ -558,16 +517,13 @@ function PendingList(props) {
         postRequest(
           endpoints.updatencprogrammtrlallotmentlistReturnStock,
           paraData4,
-          (data) => {
-            console.log("updated ncprogrammtrlallotmentreturnstock");
-          }
+          (data) => {}
         );
 
         tableRefresh();
       }
       toast.success("Return as Scrap Completed");
     } else {
-      console.log("no data");
     }
   };
 
@@ -609,25 +565,13 @@ function PendingList(props) {
       <h4 className="title">Shop Floor Material Issue List</h4>
       <div className="row">
         <div className="col-md-3">
-          {/* <h4 className="form-title">
-            <b>Shop Floor Material Return Form</b>
-          </h4> */}
           <label className="form-label">Shop Floor Material Return Form</label>
-          {/* <button className="button-style ">custname</button> */}
         </div>
         <div className="col-md-9">
-          <button
-            className="button-style mt-0"
-            onClick={returnScrap}
-            // style={{ width: "170px" }}
-          >
+          <button className="button-style mt-0" onClick={returnScrap}>
             Return As Scrap
           </button>
-          <button
-            className="button-style"
-            onClick={returnToStock}
-            //style={{ width: "170px" }}
-          >
+          <button className="button-style" onClick={returnToStock}>
             Return To Stock
           </button>
 
@@ -659,7 +603,6 @@ function PendingList(props) {
             id="btnclose"
             type="submit"
             onClick={() => nav("/MaterialManagement")}
-            // style={{ width: "170px" }}
           >
             Close
           </button>
@@ -667,7 +610,6 @@ function PendingList(props) {
       </div>
       <div className="row mt-2">
         <div className="col-md-2 mb-5">
-          {/* <SideComponent /> */}
           {treeData.map((node, i) => {
             const machine = node.Machine;
             const label = (
@@ -690,7 +632,6 @@ function PendingList(props) {
             <BootstrapTable
               keyField="IssueID"
               columns={columns1}
-              // data={firstTable}
               data={currentPageData}
               striped
               hover
@@ -724,10 +665,6 @@ function PendingList(props) {
         </div>
         <div className="col-md-4 mt-3">
           <div style={{ height: "400px", overflowY: "scroll" }}>
-            {/* {isSecondTableLoading && <p>Loading...</p>}
-            {!isSecondTableLoading && secondTable.length === 0 && (
-              <p>No Data</p>
-            )} */}
             <BootstrapTable
               keyField="NcPgmMtrlId"
               columns={columns2}
@@ -737,7 +674,6 @@ function PendingList(props) {
               condensed
               selectRow={selectRow2}
               headerClasses="header-class tableHeaderBGColor"
-              // noDataIndication={isSecondTableLoading ? "Loading..." : "No Data"}
               noDataIndication={
                 isFirstRowSelected
                   ? isSecondTableLoading

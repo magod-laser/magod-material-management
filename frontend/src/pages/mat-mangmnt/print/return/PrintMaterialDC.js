@@ -1,29 +1,17 @@
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 import PrintMaterialDCTable from "./PrintMaterialDCTable";
-import { useLocation } from "react-router-dom";
-
 import Modal from "react-bootstrap/Modal";
-
 import { postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
+
 function PrintMaterialDC(props) {
   const [PDFData, setPDFData] = useState({});
 
-  const location = useLocation();
-  // console.log(
-  //   "Second formheader = ",
-  //   location.state.formHeader,
-  //   " outdata = ",
-  //   location.state.outData,
-  //   " custdata = ",
-  //   location.state.custdata
-  // );
   let totalQTYVar = 0;
 
   for (let i = 0; i < props.outData.length; i++) {
     const element = props.outData[i];
-    // console.log("element", element.QtyReturned);
     totalQTYVar = totalQTYVar + parseInt(element.Qty);
   }
 
@@ -49,9 +37,6 @@ function PrintMaterialDC(props) {
           <Fragment>
             <PDFViewer width="1200" height="600" filename="somename.pdf">
               <PrintMaterialDCTable
-                //data={data}
-                //selectedWeek={selectedWeek}
-                //newData={newData}
                 formHeader={props.formHeader}
                 outData={props.outData}
                 custdata={props.custdata}

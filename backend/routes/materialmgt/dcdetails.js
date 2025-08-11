@@ -18,11 +18,7 @@ dcDetailsRouter.post("/insert", async (req, res, next) => {
       Excise_CL_no,
       DespStatus,
     } = req.body;
-    // console.log(`Insert Into magodmis.dc_details
-    // (DC_ID, DC_Srl, Cust_Code,cust_docu_No, Item_Descrption, Material, Qty,
-    // Unit_Wt, DC_Srl_Wt, Excise_CL_no, DespStatus)
-    // VALUES("${DC_ID}", "${DC_Srl}", "${Cust_Code}","${cust_docu_No}", "${Item_Descrption}","${Material}", "${Qty}",
-    // "${Unit_Wt}", "${DC_Srl_Wt}", ${Excise_CL_no}, "${DespStatus}")`);
+
     misQueryMod(
       `insert Into magodmis.dc_details
       (DC_ID, DC_Srl, Cust_Code,cust_docu_No, Item_Descrption, Material, Qty,

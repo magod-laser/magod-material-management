@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
 import { toast } from "react-toastify";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +27,6 @@ function StockArrival() {
 
   const InputEvent = (e) => {
     const { name, value } = e.target;
-    console.log("value = ", value);
     setDateVal(value);
   };
 
@@ -128,7 +126,6 @@ function StockArrival() {
         data[i].id = i + 1;
       }
       setFirstTable(data);
-      console.log("first table = ", data);
     });
 
     //second table
@@ -138,7 +135,6 @@ function StockArrival() {
         data[i].id = i + 1;
       }
       setSecondTable(data);
-      console.log("second table = ", data);
     });
 
     //third table
@@ -148,7 +144,6 @@ function StockArrival() {
         data[i].id = i + 1;
       }
       setThirdTable(data);
-      console.log("third table = ", data);
     });
   };
 
@@ -162,7 +157,6 @@ function StockArrival() {
     if (flag == 1) {
       toast.error("Update Receipt Weight before updating stock ledger");
     } else {
-      console.log("else");
       let flag1 = 0;
       for (let i = 0; i < firstTable.length; i++) {
         //insertStockArrivalMtrlReceiptList
@@ -178,7 +172,6 @@ function StockArrival() {
           paraData1,
           (data) => {
             flag1 = 1;
-            console.log("updated");
           }
         );
       }
@@ -275,7 +268,6 @@ function StockArrival() {
                 striped
                 hover
                 condensed
-                //selectRow={selectRow1}
                 headerClasses="header-class tableHeaderBGColor"
                 sort={sort1}
                 onSortChange={onSortChange1}
@@ -291,7 +283,6 @@ function StockArrival() {
                 striped
                 hover
                 condensed
-                //selectRow={selectRow1}
                 headerClasses="header-class tableHeaderBGColor"
                 sort={sort2}
                 onSortChange={onSortChange2}
@@ -308,7 +299,6 @@ function StockArrival() {
               striped
               hover
               condensed
-              //selectRow={selectRow1}
               headerClasses="header-class tableHeaderBGColor"
               sort={sort3}
               onSortChange={onSortChange3}

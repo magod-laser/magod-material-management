@@ -1,15 +1,12 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const { getRequest, postRequest } = require("../../api/apiinstance");
+const { postRequest } = require("../../api/apiinstance");
 const { endpoints } = require("../../api/constants");
 
 function ReturnCancelIVModal(props) {
-  const { show, setShow, handleShow } = props;
-  const nav = useNavigate();
+  const { show, setShow } = props;
+
   const IVDetails = {
     Iv_Id: props.IV_ID,
     IV_No: props.IV_NO,
@@ -28,9 +25,7 @@ function ReturnCancelIVModal(props) {
         postRequest(
           endpoints.updateQtyReturnedPartReceiptDetails,
           updateQtyReturn,
-          async (data) => {
-            console.log("updated qty");
-          }
+          async (data) => {}
         );
 
         //update status cancel
@@ -45,8 +40,6 @@ function ReturnCancelIVModal(props) {
       //insert into mtrlstock by mtrlreturn
       postRequest(endpoints.insertByReturnDetails, IVDetails, async (data) => {
         if (data.affectedRows !== 0) {
-          console.log("Record inserted");
-
           //delete by material return details
           postRequest(
             endpoints.deleteByIVNOMaterialReturnDetails,
@@ -75,15 +68,19 @@ function ReturnCancelIVModal(props) {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title style={{fontSize:'14px'}}>
+          <Modal.Title style={{ fontSize: "14px" }}>
             Cancel IV {props.IV_NO} and {props.IV_ID}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{fontSize:'12px'}}>
+        <Modal.Body style={{ fontSize: "12px" }}>
           Current IV cancelled and stock added to Material Stock
         </Modal.Body>
         <Modal.Footer>
-          <button className="button-style" onClick={handleClose} style={{fontSize:'12px'}}>
+          <button
+            className="button-style"
+            onClick={handleClose}
+            style={{ fontSize: "12px" }}
+          >
             Ok
           </button>
         </Modal.Footer>

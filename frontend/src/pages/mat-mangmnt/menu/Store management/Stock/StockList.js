@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
 import { toast } from "react-toastify";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
 import PrintReportStockList from "../../../print/report/PrintReportStockList";
 import PrintReportFullStockList from "../../../print/report/PrintReportFullStockList";
-// PrintReportStockList
+
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
@@ -17,14 +16,10 @@ function StockList(props) {
   const [firstTable, setFirstTable] = useState([]);
   const [secondTable, setSecondTable] = useState([]);
   const [thirdTable, setThirdTable] = useState([]);
-  // const [firstAllData, setFirstAllData] = useState([]);
   const [secondAllData, setSecondAllData] = useState([]);
   const [thirdAllData, setThirdAllData] = useState([]);
   let [custdata, setCustdata] = useState([]);
   let [custCode, setCustCode] = useState("0");
-
-  const [totQty1, setTotQty1] = useState(0);
-  const [totWeight1, setTotWeight1] = useState(0);
 
   let [customerDetails, setCustomerDetails] = useState({
     customerName: "",
@@ -43,9 +38,8 @@ function StockList(props) {
 
       setCustdata(data);
 
-      //set customer 0
       const found = await data.find((obj) => obj.Cust_Code === "0000");
-      //console.log("cust data found = ", found);
+
       setCustomerDetails(() => {
         return {
           customerName: found.Cust_name,
@@ -68,7 +62,6 @@ function StockList(props) {
           data[i].id = i + 1;
         }
         setFirstTable(data);
-        //console.log("first table = ", data);
       });
 
       //second table
@@ -77,8 +70,6 @@ function StockList(props) {
           data[i].id = i + 1;
         }
         setSecondAllData(data);
-        //setFirstTable(data);
-        //console.log("second table = ", data);
       });
 
       //third table
@@ -86,9 +77,8 @@ function StockList(props) {
         for (let i = 0; i < data.length; i++) {
           data[i].id = i + 1;
         }
-        //setFirstTable(data);
+
         setThirdAllData(data);
-        //console.log("third table = ", data);
       });
     }
   };
@@ -98,7 +88,6 @@ function StockList(props) {
   }, []);
 
   const changeCustomer = (e) => {
-    ////console.log("e = ", e);
     if (e.length !== 0) {
       setCustCode(e[0].Cust_Code);
 
@@ -118,7 +107,6 @@ function StockList(props) {
         }
 
         setFirstTable(data);
-        //console.log("first table = ", data);
       });
 
       //second table
@@ -127,8 +115,6 @@ function StockList(props) {
           data[i].id = i + 1;
         }
         setSecondAllData(data);
-        //setFirstTable(data);
-        //console.log("second table = ", data);
       });
 
       //third table
@@ -136,9 +122,8 @@ function StockList(props) {
         for (let i = 0; i < data.length; i++) {
           data[i].id = i + 1;
         }
-        //setFirstTable(data);
+
         setThirdAllData(data);
-        //console.log("third table = ", data);
       });
 
       //set customer data
@@ -274,8 +259,7 @@ function StockList(props) {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#98A8F8",
-    onSelect: (row, isSelect, rowIndex, e) => {
-      ////console.log("row = ", row);
+    onSelect: (row) => {
       setSecondTable(
         secondAllData.filter((obj) => obj.Material === row.Material)
       );
@@ -287,14 +271,12 @@ function StockList(props) {
     clickToSelect: true,
     bgColor: "#98A8F8",
     onSelect: (row, isSelect, rowIndex, e) => {
-      ////console.log("row = ", row);
       setThirdTable(
         thirdAllData.filter((obj) => obj.Mtrl_Code === row.Mtrl_Code)
       );
     },
   };
 
-  // selected stock calc start
   let tq1 = 0;
   let tw1 = 0;
   for (let i = 0; i < thirdTable.length; i++) {
@@ -318,85 +300,21 @@ function StockList(props) {
     return item.Scrap !== 0;
   });
 
-  //console.log("scrapDataTbl", scrapDataTbl);
-
   const tblDataTbl = thirdTable.filter((item, index) => {
     return item.Scrap === 0;
   });
   delay(300);
 
-  // setprintSelectedStockOpen(true)
-
-  // nav("/MaterialManagement/Reports/PrintReportStockList", {
-  //   state: {
-  //     //tableData: thirdTable,
-  //     customerDetails: customerDetails,
-  //     totalweight1: tw1,
-  //     totqty1: tq1,
-  //     totalweight2: tw2,
-  //     totqty2: tq2,
-  //     tableData: tblDataTbl,
-  //     scrapData: scrapDataTbl,
-  //     scrapFlag: scrapDataTbl.length,
-  //   },
-  // });
-
-  // selected stock cal end
-
   const selectedStock = async () => {
     setprintSelectedStockOpen(true);
-
-    // let tq1 = 0;
-    // let tw1 = 0;
-    // for (let i = 0; i < thirdTable.length; i++) {
-    //   if (thirdTable[i].Scrap === 0) {
-    //     tq1 = tq1 + thirdTable[i].Qty;
-    //     tw1 = tw1 + parseFloat(thirdTable[i].Weight);
-    //   }
-    // }
-
-    // let tq2 = 0;
-    // let tw2 = 0;
-    // for (let i = 0; i < thirdTable.length; i++) {
-    //   if (thirdTable[i].Scrap !== 0) {
-    //     tq2 = tq2 + thirdTable[i].Qty;
-    //     tw2 = tw2 + parseFloat(thirdTable[i].Weight);
-    //   }
-    // }
-    // await delay(300);
-
-    // const scrapDataTbl = thirdTable.filter((item, index) => {
-    //   return item.Scrap !== 0;
-    // });
-
-    // const tblDataTbl = thirdTable.filter((item, index) => {
-    //   return item.Scrap === 0;
-    // });
-    // await delay(300);
-
-    // setprintSelectedStockOpen(true)
-
-    // nav("/MaterialManagement/Reports/PrintReportStockList", {
-    //   state: {
-    //     //tableData: thirdTable,
-    //     customerDetails: customerDetails,
-    //     totalweight1: tw1,
-    //     totqty1: tq1,
-    //     totalweight2: tw2,
-    //     totqty2: tq2,
-    //     tableData: tblDataTbl,
-    //     scrapData: scrapDataTbl,
-    //     scrapFlag: scrapDataTbl.length,
-    //   },
-    // });
   };
 
-  var fullStockTable = [];
-  var fullStockScrapTable = [];
+  let fullStockTable = [];
+  let fullStockScrapTable = [];
   for (let i = 0; i < firstTable.length; i++) {
     let totqty = 0;
     let totwt = 0;
-    var tempdata = [];
+    let tempdata = [];
     for (let j = 0; j < thirdAllData.length; j++) {
       if (
         firstTable[i].Material === thirdAllData[j].Material &&
@@ -413,10 +331,9 @@ function StockList(props) {
       totwt: totwt,
       data: tempdata,
     };
-    //await delay(500);
+
     fullStockTable.push(obj);
 
-    //for scrap
     totqty = 0;
     totwt = 0;
     tempdata = [];
@@ -436,87 +353,14 @@ function StockList(props) {
       totwt: totwt,
       data: tempdata,
     };
-    //await delay(500);
+
     fullStockScrapTable.push(obj);
   }
-  //fullStockTable.push({ material: "Aluminium", data: thirdAllData });
-  delay(500);
-  // //console.log("table = ", fullStockTable);
-  // //console.log("table scrap = ", fullStockScrapTable);
 
-  // nav("/MaterialManagement/Reports/PrintReportFullStockList", {
-  //   state: {
-  //     customerDetails: customerDetails,
-  //     fullStockTable: fullStockTable,
-  //     fullStockScrapTable: fullStockScrapTable,
-  //   },
-  // });
+  delay(500);
 
   const fullStock = async () => {
-    //ready to print data
-
     setPrintFullStockListOpen(true);
-
-    // var fullStockTable = [];
-    // var fullStockScrapTable = [];
-    // for (let i = 0; i < firstTable.length; i++) {
-    //   let totqty = 0;
-    //   let totwt = 0;
-    //   var tempdata = [];
-    //   for (let j = 0; j < thirdAllData.length; j++) {
-    //     if (
-    //       firstTable[i].Material === thirdAllData[j].Material &&
-    //       thirdAllData[j].Scrap === 0
-    //     ) {
-    //       tempdata.push(thirdAllData[j]);
-    //       totqty = totqty + parseInt(thirdAllData[j].Qty);
-    //       totwt = totwt + parseFloat(thirdAllData[j].Weight);
-    //     }
-    //   }
-    //   let obj = {
-    //     material: firstTable[i].Material,
-    //     totqty: totqty,
-    //     totwt: totwt,
-    //     data: tempdata,
-    //   };
-    //   //await delay(500);
-    //   fullStockTable.push(obj);
-
-    //   //for scrap
-    //   totqty = 0;
-    //   totwt = 0;
-    //   tempdata = [];
-    //   for (let j = 0; j < thirdAllData.length; j++) {
-    //     if (
-    //       firstTable[i].Material === thirdAllData[j].Material &&
-    //       thirdAllData[j].Scrap !== 0
-    //     ) {
-    //       tempdata.push(thirdAllData[j]);
-    //       totqty = totqty + parseInt(thirdAllData[j].Qty);
-    //       totwt = totwt + parseFloat(thirdAllData[j].Weight);
-    //     }
-    //   }
-    //   obj = {
-    //     material: firstTable[i].Material,
-    //     totqty: totqty,
-    //     totwt: totwt,
-    //     data: tempdata,
-    //   };
-    //   //await delay(500);
-    //   fullStockScrapTable.push(obj);
-    // }
-    // //fullStockTable.push({ material: "Aluminium", data: thirdAllData });
-    // await delay(500);
-    // //console.log("table = ", fullStockTable);
-    // //console.log("table scrap = ", fullStockScrapTable);
-
-    // nav("/MaterialManagement/Reports/PrintReportFullStockList", {
-    //   state: {
-    //     customerDetails: customerDetails,
-    //     fullStockTable: fullStockTable,
-    //     fullStockScrapTable: fullStockScrapTable,
-    //   },
-    // });
   };
 
   const [sort1, setSort1] = React.useState({
@@ -551,7 +395,7 @@ function StockList(props) {
         {" "}
         <>
           <h4 className="title">Material Stock List </h4>
-          {/* <h4 className="form-title">Customer Material Stock List</h4> */}
+
           <div className="row">
             <div className="d-flex col-md-8 col-sm-12" style={{ gap: "10px" }}>
               <div
@@ -566,19 +410,6 @@ function StockList(props) {
                   props.type === "customer" ? "col-md-6 mt-3" : "d-none"
                 }
               >
-                {/* <select
-              className="ip-select dropdown-field"
-              onChange={customerChange}
-            >
-              <option value="" disabled selected>
-                Select Customer
-              </option>
-              {custdata.map((customer, index) => (
-                <option key={index} value={customer.Cust_Code}>
-                  {customer.Cust_name}
-                </option>
-              ))}
-            </select> */}
                 <Typeahead
                   id="basic-example"
                   name="customer"
@@ -673,7 +504,6 @@ function StockList(props) {
                   striped
                   hover
                   condensed
-                  //selectRow={selectRow1}
                   headerClasses="header-class tableHeaderBGColor"
                   sort={sort3}
                   onSortChange={onSortChange3}

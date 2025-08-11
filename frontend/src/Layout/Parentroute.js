@@ -1,8 +1,7 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet } from "react-router-dom";
 
 function Parentroute() {
-  return <Outlet/>
+  return <Outlet />;
 }
 
-export default Parentroute
+export default Parentroute;

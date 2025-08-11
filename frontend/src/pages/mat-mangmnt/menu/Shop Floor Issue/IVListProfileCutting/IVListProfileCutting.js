@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../../../utils";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
 
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function IVListProfileCutting(props) {
@@ -25,9 +24,6 @@ function IVListProfileCutting(props) {
         ? endpoints.getMaterialIssueVoucherList + "?status=Closed"
         : endpoints.getMaterialIssueVoucherList + "?status=Created";
     getRequest(url, (data) => {
-      console.log("table data = ", data);
-      console.log("Qty Used", data[0].QtyUsed);
-
       for (let i = 0; i < data.length; i++) {
         if (data[i].QtyUsed === null || data[i].QtyUsed === undefined) {
           data[i].QtyUsed = 0;
@@ -98,7 +94,6 @@ function IVListProfileCutting(props) {
     clickToSelect: true,
     bgColor: "#98A8F8",
     onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("Row", row);
       setIssueIDVal(row.IssueID);
       setRowData({
         Cust_Name: row.Cust_Name,
@@ -112,7 +107,6 @@ function IVListProfileCutting(props) {
         QtyIssued: row.QtyIssued,
         QtyUsed: row.QtyUsed,
         QtyReturned: row.QtyReturned,
-        //RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
       });
     },
   };
@@ -147,14 +141,11 @@ function IVListProfileCutting(props) {
             <div style={{ height: "400px", overflowY: "scroll" }}>
               <BootstrapTable
                 keyField="IssueID"
-                //keyField="id"
                 columns={columns}
-                // data={tableData}
                 data={currentPageData}
                 striped
                 hover
                 condensed
-                //pagination={paginationFactory()}
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
                 noDataIndication={() =>

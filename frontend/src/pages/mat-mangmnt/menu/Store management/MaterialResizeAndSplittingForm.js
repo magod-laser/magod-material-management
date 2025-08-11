@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Table from "react-bootstrap/Table";
 import SplitMatModal from "./SplitMatModal";
 
 function MaterialResizeAndSplittingForm(props) {
   const [open, setOpen] = useState();
   const handleOpen = (event) => {
-    // alert("open yaaa");
     event.preventDefault();
     setOpen(true);
   };
   return (
     <div>
-      <SplitMatModal open={open} setOpen={setOpen}   />
+      <SplitMatModal open={open} setOpen={setOpen} />
       <h4 className="form-title">
         <b>Material Resize and Splitting Form </b>
       </h4>
@@ -82,12 +81,7 @@ function MaterialResizeAndSplittingForm(props) {
                 </thead>
 
                 <tbody className="tablebody">
-                  <tr
-                  // onClick={() => selectedRowFn(item, key)}
-                  // className={
-                  //   key === selectedRow?.index ? "selcted-row-clr" : ""
-                  // }
-                  >
+                  <tr>
                     <td>asdfghj</td>
                     <td>asdfghj</td>
                     <td>asdfghj</td>

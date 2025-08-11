@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { dateToShort, formatDate } from "../../../../../../utils";
+import { useState, useEffect } from "react";
+import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { useNavigate } from "react-router-dom";
-import { Typeahead } from "react-bootstrap-typeahead"; // ES2015
-const { getRequest, postRequest } = require("../../../../../api/apiinstance");
+const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 export default function PurOtherDraftRVList(props) {
   const nav = useNavigate();
-  //after clicking save button
-  const [boolVal2, setBoolVal2] = useState(false);
+
   const [formHeader, setFormHeader] = useState({
     rvId: "",
-    receiptDate: "", //formatDate(new Date(), 4),
+    receiptDate: "",
     rvNo: "Draft",
-    rvDate: "", //currDate,
+    rvDate: "",
     status: "Created",
     customer: props.type2 === "purchase" ? "0000" : "",
     customerName: "",
@@ -46,7 +43,6 @@ export default function PurOtherDraftRVList(props) {
   const fetchData = () => {
     getRequest(endpoints.getSheetsCreatedPurchaseMaterial, (data) => {
       setTableData(data);
-      //console.log("data = ", data);
     });
   };
 
@@ -55,7 +51,6 @@ export default function PurOtherDraftRVList(props) {
       if (props.type2 === "purchase") {
         data = data.filter((obj) => obj.Cust_Code == 0);
       }
-      //Cust_Code == 0
       for (let i = 0; i < data.length; i++) {
         data[i].label = data[i].Cust_name;
       }
@@ -67,70 +62,30 @@ export default function PurOtherDraftRVList(props) {
     getRequest(endpoints.getMtrlData, (data) => {
       setMtrlDetails(data);
     });
-    //console.log("data = ", custdata);
   }
 
   let changeCustomer = async (e) => {
-    //e.preventDefault();
-    //const { value, name } = e.target;
-
     const found = custdata.find((obj) => obj.Cust_Code === e[0].Cust_Code);
-    //setCustDetailVal(found.Address);
-
     setFormHeader((preValue) => {
-      //console.log(preValue)
       return {
         ...preValue,
-        //[name]: value,
         customerName: found.Cust_name,
         customer: found.Cust_Code,
         address: found.Address,
       };
     });
-
-    // getRequest(endpoints.getCustBomList, (data) => {
-    //   const foundPart = data.filter((obj) => obj.Cust_code == value);
-    //   setMtrlDetails(foundPart);
-    // });
   };
 
-  let changeCustomer1 = async (e) => {
-    e.preventDefault();
-    const { value, name } = e.target;
-
-    const found = custdata.find((obj) => obj.Cust_Code === value);
-    //setCustDetailVal(found.Address);
-
-    setFormHeader((preValue) => {
-      //console.log(preValue)
-      return {
-        ...preValue,
-        [name]: value,
-        customerName: found.Cust_name,
-        customer: found.Cust_Code,
-        address: found.Address,
-      };
-    });
-
-    // getRequest(endpoints.getCustBomList, (data) => {
-    //   const foundPart = data.filter((obj) => obj.Cust_code == value);
-    //   setMtrlDetails(foundPart);
-    // });
-  };
   useEffect(() => {
     fetchData();
     fetchData2();
   }, []);
 
-  // Process the returned date in the formatter
-  function statusFormatter(cell, row, rowIndex, formatExtraData) {
-    //return dateToShort(cell);
+  function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
 
   const openButtonClick = () => {
-    //console.log("data = ", data);
-    //console.log("button click : ");
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
       state: { id: data.RvID, type: "sheets" },
     });
@@ -146,9 +101,9 @@ export default function PurOtherDraftRVList(props) {
         Cust_Code: row.Cust_Code,
         Customer: row.Customer,
         RVStatus: row.RVStatus,
-        RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
+        RV_Date: formatDate(new Date(row.RV_Date), 3),
         RV_No: row.RV_No,
-        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3), //dateToShort(row.ReceiptDate),
+        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3),
         RvID: row.RvID,
         TotalWeight: row.TotalWeight,
         TotalCalculatedWeight: row.TotalCalculatedWeight,
@@ -186,18 +141,12 @@ export default function PurOtherDraftRVList(props) {
         <h4 className="title">Magod : Sheets Receipt List Created</h4>
 
         <div className="row">
-          {/* <div className="col-md-7 text-center"></div> */}
           <div className="d-flex col-md-7">
             <div className="col-md-2">
               <label className="form-label">Customer</label>
             </div>
             <div className="col-md-6">
-              <select
-                className="ip-select"
-                name="customer"
-                disabled={true}
-                //onChange={changeCustomer}
-              >
+              <select className="ip-select" name="customer" disabled={true}>
                 <option value={data.customer} disabled selected>
                   {data.Customer}
                 </option>
@@ -208,7 +157,6 @@ export default function PurOtherDraftRVList(props) {
             <button
               className="button-style "
               style={{ width: "55px" }}
-              //data.RvID
               onClick={openButtonClick}
             >
               Open
@@ -227,16 +175,13 @@ export default function PurOtherDraftRVList(props) {
             style={{ height: "350px", overflowY: "scroll" }}
             className="col-md-7 col-sm-12"
           >
-            {/* <BootstrapTable keyField="id" data={products} columns={columns} /> */}
             <BootstrapTable
               keyField="RvID"
-              //keyField="id"
               columns={columns}
               data={tabledata}
               striped
               hover
               condensed
-              //pagination={paginationFactory()}
               selectRow={selectRow}
               headerClasses="header-class tableHeaderBGColor"
             ></BootstrapTable>

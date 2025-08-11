@@ -7,7 +7,7 @@ const { logger } = require("../../helpers/logger");
 reportRouter.get("/getDailyReportMaterialReceipt1", async (req, res, next) => {
   try {
     let date = req.query.date;
-    console.log("date", req.query.date);
+
     misQueryMod(
       `SELECT A.*,s.Shape,m.Mtrl_Rv_id,m.mtrl_code,m.material, m.qty, m.totalWeight, m.totalweightcalculated 
       FROM (SELECT m.RV_No, m.RV_Date, m.Customer, m.CustDocuNo,
@@ -100,7 +100,7 @@ FROM
 ORDER BY B.RV_No`,
       (err, data) => {
         if (err) logger.error(err);
-        console.log("dataaaaaaaaaaaaaa", data);
+
         res.send(data);
       }
     );
@@ -130,14 +130,10 @@ reportRouter.get("/getDailyReportMaterialDispatch", async (req, res, next) => {
 });
 
 reportRouter.post("/updateSrlWghtMaterialDispatch", async (req, res, next) => {
-  // console.log("reqqqqqqqqqqqq.............", req.body.tableData);
-
-  // const resultArray = [];
   try {
     for (let i = 0; i < req.body.tableData.length; i++) {
       const element = req.body.tableData[i];
 
-      // console.log("element.....", i, element);
       misQueryMod(
         `UPDATE magodmis.dc_inv_summary
           SET
@@ -146,35 +142,14 @@ reportRouter.post("/updateSrlWghtMaterialDispatch", async (req, res, next) => {
         DC_Inv_No = ${element.Dc_Inv_No} AND SummarySrl = ${element.SummarySrl}`,
         (err, data) => {
           if (err) logger.error(err);
-          // console.log("done", i, data);
-          // resultArray.push("1");
-
-          // console.log(
-          //   "req.body.tableData.lengthreq.body.tableData.lengthreq.body.tableData.length"
-          // );
-          // res.send(data);
         }
       );
-      // console.log("resultarray...", resultArray);
     }
-    // console.log("testestetstesteste");
-
-    // console.log("resultArray.length", resultArray, resultArray.length);
 
     res.send({
       flag: 1,
       message: "Updated Successfully",
     });
-
-    // console.log("req.body.tableData.length", req.body.tableData.length);
-
-    // if (resultArray.length === req.body.tableData.length) {
-    //   console.log("trueeeeeeee");
-    //   res.send({
-    //     flag: 1,
-    //     message: "Update Successfull",
-    //   });
-    // }
   } catch (error) {
     next(error);
   }
@@ -207,34 +182,6 @@ reportRouter.get("/getDailyReportMaterialSales", async (req, res, next) => {
   }
 });
 
-/*
-SELECT GROUP_CONCAT( distinct (m.RV_No)) as RV_No, m.RV_Date, GROUP_CONCAT( distinct (m.Cust_Code)) as Cust_Code, 
-      GROUP_CONCAT( distinct (m.Customer)) as Customer, GROUP_CONCAT( distinct (m.CustDocuNo)) as CustDocuNo, 
-      m1.Material, sum(m1.TotalWeightCalculated) as TotalWeightCalculated,
-      sum(m1.TotalWeight) as TotalWeight, sum(m1.Qty) as qty 
-      FROM magodmis.material_receipt_register m,magodmis.mtrlreceiptdetails m1 
-      WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
-      GROUP BY m1.RV_No, m1.Material
-       */
-
-
-
-// Bodheesh vc: 11/03/2025 replaced for resolving bug http://localhost:4025/MaterialManagement/Reports/DailyReports material purchase tab value not showing
-      /*
-        `SELECT m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, 
-                                m.CustDocuNo, d.Material, d.TotalWeightCalculated,
-                                d.TotalWeight, d.qty 
-                                FROM 
-                                (SELECT m1.Material, sum(m1.TotalWeightCalculated) as TotalWeightCalculated,
-                                sum(m1.TotalWeight) as TotalWeight, sum(m1.Qty) as qty 
-                                from magodmis.material_receipt_register m, mtrlreceiptdetails m1 
-                                WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
-                                GROUP BY m1.Material) as d,magodmis.material_receipt_register m, mtrlreceiptdetails m1
-                                WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
-                                and m1.Material = d.Material limit 1`,
-                                */
-
-
 reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
   try {
     let date = req.query.date;
@@ -266,16 +213,6 @@ reportRouter.get("/getDailyReportMaterialPurchase", async (req, res, next) => {
   }
 });
 
-/*
-SELECT GROUP_CONCAT( distinct (m.RV_No)) as RV_No, m.RV_Date, GROUP_CONCAT( distinct (m.Cust_Code)) as Cust_Code, 
-      GROUP_CONCAT( distinct (m.Customer)) as Customer, GROUP_CONCAT( distinct (m.CustDocuNo)) as CustDocuNo, 
-      m1.Material, sum(m1.TotalWeightCalculated) as TotalWeightCalculated,
-      sum(m1.TotalWeight) as TotalWeight, sum(m1.Qty) as qty 
-      FROM magodmis.material_receipt_register m,magodmis.mtrlreceiptdetails m1 
-      WHERE m.RV_No not like 'Draft' and m.RvID=m1.RvID AND m1.Cust_Code='0000' AND m.RV_Date='${date}' 
-      GROUP BY m1.RV_No, m1.Material
-       */
-//monthly report
 reportRouter.get(
   "/getMonthlyReportMaterialPurchaseDetails",
   async (req, res, next) => {

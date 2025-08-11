@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import ProfilesMaterials from "../custjobwork/components/PofilesMaterials";
 import Parts from "./components/Parts";
-import BootstrapTable from "react-bootstrap-table-next";
 import { Typeahead } from "react-bootstrap-typeahead";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
@@ -32,8 +30,6 @@ function ReturnNew() {
   }
 
   let changeCustomer = async (e) => {
-    //e.preventDefault();
-    //const { value, name } = e.target;
     setCustCode(e[0].Cust_Code);
     let foundCustomer = custdata.filter(
       (obj) => obj.Cust_Code === e[0].Cust_Code
@@ -57,17 +53,6 @@ function ReturnNew() {
           <label className="form-label m-1" style={{ whiteSpace: "nowrap" }}>
             Select Customer
           </label>
-
-          {/* <select className="ip-select" onChange={changeCustomer}>
-            <option value="" disabled selected>
-              Select Customer
-            </option>
-            {custdata.map((customer, index) => (
-              <option key={index} value={customer.Cust_Code}>
-                {customer.Cust_name}
-              </option>
-            ))}
-          </select> */}
 
           <Typeahead
             className="ip-select"

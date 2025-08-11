@@ -79,7 +79,7 @@ storeRouter.get(
             `,
               (err, data) => {
                 if (err) logger.error(err);
-                // console.log("dataaaa", data);
+
                 res.send(data);
               }
             );
@@ -135,7 +135,7 @@ storeRouter.get("/getLocationListMtrlStockCount", async (req, res, next) => {
       `SELECT count(m.MtrlStockID) as count  FROM magodmis.mtrlstocklist m WHERE m.LocationNo like '${LocationNo}'`,
       (err, data) => {
         if (err) logger.error(err);
-        //console.log("data =", data[0]);
+
         res.send(data[0]);
       }
     );

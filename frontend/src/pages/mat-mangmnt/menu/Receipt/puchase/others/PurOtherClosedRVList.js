@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { dateToShort, formatDate } from "../../../../../../utils";
+import { useState, useEffect } from "react";
+import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -28,7 +27,6 @@ function PurOtherClosedRVList() {
   const fetchData = () => {
     getRequest(endpoints.getSheetsClosedPurchaseMaterial, (data) => {
       setTableData(data);
-      //console.log("data = ", data);
     });
   };
 
@@ -36,15 +34,11 @@ function PurOtherClosedRVList() {
     fetchData();
   }, []);
 
-  // Process the returned date in the formatter
-  function statusFormatter(cell, row, rowIndex, formatExtraData) {
-    //return dateToShort(cell);
+  function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
 
   const openButtonClick = () => {
-    //console.log("data = ", data);
-    //console.log("button click : ");
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonClosedSheetUnit", {
         state: { id: data.RvID },
@@ -52,8 +46,6 @@ function PurOtherClosedRVList() {
     } else {
       toast.error("Select Customer");
     }
-
-    //<OpenClosedRVList />;
   };
 
   const selectRow = {
@@ -66,9 +58,9 @@ function PurOtherClosedRVList() {
         Cust_Code: row.Cust_Code,
         Customer: row.Customer,
         RVStatus: row.RVStatus,
-        RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
+        RV_Date: formatDate(new Date(row.RV_Date), 3),
         RV_No: row.RV_No,
-        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3), //dateToShort(row.ReceiptDate),
+        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3),
         RvID: row.RvID,
         TotalWeight: row.TotalWeight,
         TotalCalculatedWeight: row.TotalCalculatedWeight,
@@ -105,18 +97,12 @@ function PurOtherClosedRVList() {
       <>
         <h4 className="title">Magod : Sheets Receipt List Closed</h4>
         <div className="row">
-          {/* <div className="col-md-7 text-center"></div> */}
           <div className="d-flex col-md-7">
             <div className="col-md-2">
               <label className="form-label">Customer</label>
             </div>
             <div className="col-md-6 mt1">
-              <select
-                className="ip-select"
-                name="customer"
-                disabled={true}
-                //onChange={changeCustomer}
-              >
+              <select className="ip-select" name="customer" disabled={true}>
                 <option value={data.customer} disabled selected>
                   {data.Customer}
                 </option>
@@ -127,7 +113,6 @@ function PurOtherClosedRVList() {
             <button
               className="button-style "
               style={{ width: "55px" }}
-              //data.RvID
               onClick={openButtonClick}
             >
               Open
@@ -148,13 +133,11 @@ function PurOtherClosedRVList() {
           >
             <BootstrapTable
               keyField="RvID"
-              //keyField="id"
               columns={columns}
               data={tabledata}
               striped
               hover
               condensed
-              //pagination={paginationFactory()}
               selectRow={selectRow}
               headerClasses="header-class tableHeaderBGColor"
             ></BootstrapTable>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Page,
   Document,
@@ -8,9 +7,7 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import { formatDate } from "../../../../utils";
-// import MLLogo from "../../../../../../frontend/src/ML-LOGO.png";
 import MLLogo from "../../../../../src/ML-LOGO.png";
-//function PrintMaterialDCTable() {
 
 let headerFontSize = "13px";
 let subheaderFontsize = "11px";
@@ -27,9 +24,7 @@ const styles = StyleSheet.create({
   },
   globalPadding: { padding: "0.6%" },
   footerRowPadding: { padding: "3px" },
-  // globalPadding: { padding: "0.6%" },
   fontBold: {
-    //   fontWeight: "bold",
     fontSize: fontSize,
     fontFamily: "Helvetica-Bold",
   },
@@ -61,13 +56,9 @@ const styles = StyleSheet.create({
   },
   title1: {
     width: "100%",
-    // fontWeight: "bold",
-    // fontSize: "12px",
-    // paddingLeft: "15px",
   },
   line1: {
     width: "100%",
-    // paddingLeft: "15px",
   },
   material: {
     width: "35%",
@@ -87,8 +78,6 @@ const styles = StyleSheet.create({
     width: "40%",
   },
   totalFinal: {
-    // width: "25%",
-    // marginLeft: "5px",
     marginTop: "13px",
     marginBottom: "10px",
     fontSize: 10,
@@ -111,14 +100,9 @@ const styles = StyleSheet.create({
   },
 });
 
-//return <div>PrintMaterialDCTable</div>;
-//}
 const PrintReportStockListTable = (props) => (
   <Document>
     <Page size="A4" style={{ ...styles.pageStyling }}>
-      {/* <View>
-        <Text style={{ padding: "1%" }}></Text>
-      </View> */}
       <View>
         <View
           style={{
@@ -161,7 +145,6 @@ const PrintReportStockListTable = (props) => (
         </View>
         <Text style={{ padding: "1%" }}></Text>
         <View style={{ border: "1px" }}>
-          {/* Cust */}
           <View style={styles.insideBox}>
             <Text style={{ ...styles.fontBold }}>Customer Name:</Text>
             <View style={{ paddingLeft: "1%" }}>
@@ -173,7 +156,6 @@ const PrintReportStockListTable = (props) => (
             </View>
           </View>
 
-          {/* material stock */}
           <View style={styles.insideBox}>
             <Text style={{ ...styles.title1, ...styles.fontBold }}>
               Material Stock Details
@@ -218,12 +200,6 @@ const PrintReportStockListTable = (props) => (
                   paddingTop: "0%",
                 }}
               >
-                {/* <Text style={styles.material}>Material</Text>
-              <Text style={styles.para}>Width</Text>
-              <Text style={styles.para}>Length</Text>
-              <Text style={styles.para}>Qty</Text>
-              <Text style={styles.para}>Weight</Text>
-              <Text style={styles.para}>Status</Text> */}
                 {props.tableData.length > 0 ? (
                   props.tableData.map((item, index) => {
                     return (
@@ -245,12 +221,11 @@ const PrintReportStockListTable = (props) => (
                   <View style={{ padding: "1%" }}></View>
                 )}
               </View>
-              {/* <Text style={{ padding: "0.3%" }}></Text> */}
+
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  // justifyContent: "flex-end",
                 }}
               >
                 <Text style={styles.emptyblock1}></Text>
@@ -265,8 +240,6 @@ const PrintReportStockListTable = (props) => (
               </View>
             </View>
           </View>
-
-          {/* Scrap Material Details */}
 
           {props.scrapFlag !== 0 ? (
             <>
@@ -328,21 +301,18 @@ const PrintReportStockListTable = (props) => (
                             <Text style={styles.para}>{item.DynamicPara2}</Text>
                             <Text style={styles.para}>{item.Qty}</Text>
                             <Text style={styles.para}>{item.ScrapWeight}</Text>
-                            {/* <Text style={styles.para}>{item.Weight}</Text> */}
-                            <Text style={styles.para}>
-                              {/* {item.Locked !== 0 ? " Locked" : ""} */}
-                            </Text>
+
+                            <Text style={styles.para}></Text>
                           </View>
                         </>
                       );
                     })}
                   </View>
-                  {/* <Text style={{ padding: "0.3%" }}></Text> */}
+
                   <View
                     style={{
                       display: "flex",
                       flexDirection: "row",
-                      // justifyContent: "flex-end",
                     }}
                   >
                     <Text style={styles.emptyblock1}></Text>

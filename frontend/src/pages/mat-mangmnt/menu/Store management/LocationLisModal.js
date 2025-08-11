@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
@@ -20,8 +18,11 @@ function LocationLisModal({ open, setOpen }) {
           <Form>Location Information Saved </Form>
         </Modal.Body>
         <Modal.Footer>
-          {/* variant="secondary" */}
-          <button className="button-style" onClick={handleClose} style={{ fontSize: "12px" }}>
+          <button
+            className="button-style"
+            onClick={handleClose}
+            style={{ fontSize: "12px" }}
+          >
             Okay
           </button>
         </Modal.Footer>

@@ -1,7 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
-import { useLocation } from "react-router-dom";
-import PrintLocationStockDetailTableReport from "./PrintLocationStockDetailTableReport";
 import PrintLocationStockSummaryTableReport from "./PrintLocationStockSummaryTableReport";
 import { Modal } from "react-bootstrap";
 
@@ -10,17 +8,6 @@ import { endpoints } from "../../../api/constants";
 
 function PrintLocationStockSummaryReport(props) {
   const [PDFData, setPDFData] = useState({});
-
-  const location = useLocation();
-  // console.log(
-  //   "formHeader = ",
-  //   location?.state?.formHeader,
-  //   " tabledata = ",
-  //   location?.state?.tableData
-  //   //" weight = ",
-  //   //location.state.totalweight1
-  // );
-
   const handleClose = () => props.setSummaryReportPrintOpen(false);
 
   function fetchPDFData() {

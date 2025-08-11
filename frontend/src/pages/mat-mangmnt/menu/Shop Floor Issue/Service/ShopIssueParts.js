@@ -1,5 +1,3 @@
-import React from "react";
-
 import ShopFloorMaterialAllotment from "./PartsComponents/ShopFloorMaterialAllotment";
 
 function ShopIssueParts() {

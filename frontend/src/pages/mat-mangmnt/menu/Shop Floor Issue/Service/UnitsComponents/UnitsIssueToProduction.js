@@ -1,4 +1,3 @@
-import React from "react";
 import Table from "react-bootstrap/Table";
 
 function UnitsIssueToProduction() {
@@ -115,10 +114,6 @@ function UnitsIssueToProduction() {
                 type="checkbox"
                 id="flexCheckDefault"
                 name="updated"
-                //   value={inputPart.upDated}
-                //disabled={boolVal3 | boolVal4}
-                //   disabled={true}
-                //   onChange={changeMaterialHandle}
               />
                <label className="form-label mt-1">No Details</label>
             </div>
@@ -162,12 +157,7 @@ function UnitsIssueToProduction() {
           </thead>
 
           <tbody className="tablebody">
-            <tr
-            // onClick={() => selectedRowFn(item, key)}
-            // className={
-            //   key === selectedRow?.index ? "selcted-row-clr" : ""
-            // }
-            >
+            <tr>
               <td>asdfghj</td>
               <td>asdfghj</td>
               <td>asdfghj</td>

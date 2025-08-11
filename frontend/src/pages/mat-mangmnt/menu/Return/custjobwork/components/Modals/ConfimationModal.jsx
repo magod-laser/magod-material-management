@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Modal from "react-bootstrap/Modal";
-// import { Form, ModalFooter, Tab, Table, Tabs } from "react-bootstrap";
-// import { toast } from "react-toastify";
-// import Button from "react-bootstrap/Button";
 
-// import Axios from "axios";
+import Modal from "react-bootstrap/Modal";
+
 export default function ConfirmationModal(props) {
   const closeModal = () => {
     props.setConfirmModalOpen(false);
@@ -41,7 +37,6 @@ export default function ConfirmationModal(props) {
 
           <button
             className="button-style m-0"
-            // background: "rgb(173, 173, 173)"
             style={{ width: "60px" }}
             onClick={closeModal}
           >

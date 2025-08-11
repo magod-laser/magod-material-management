@@ -1,10 +1,9 @@
-import React from "react";
 import Table from "react-bootstrap/Table";
 import { useLocation } from "react-router-dom";
 
 function ProductionMaterialIssueParts() {
   const location = useLocation();
-  console.log("ID = ", location.state.id);
+
   return (
     <div>
       <h4 className="title">Production Material Issue :Parts </h4>
@@ -82,12 +81,7 @@ function ProductionMaterialIssueParts() {
             </thead>
 
             <tbody className="tablebody">
-              <tr
-              // onClick={() => selectedRowFn(item, key)}
-              // className={
-              //   key === selectedRow?.index ? "selcted-row-clr" : ""
-              // }
-              >
+              <tr>
                 <td>asdfghj</td>
                 <td>asdfghj</td>
                 <td>asdfghj</td>

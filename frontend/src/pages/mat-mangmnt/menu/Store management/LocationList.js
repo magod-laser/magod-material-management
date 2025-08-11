@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { Typeahead } from "react-bootstrap-typeahead";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import YesNoModal from "../../components/YesNoModal";
@@ -8,7 +7,6 @@ import YesNoModal from "../../components/YesNoModal";
 const { getRequest, postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
 
-// YesNoModal
 export default function LocationList() {
   const nav = useNavigate();
 
@@ -23,7 +21,6 @@ export default function LocationList() {
   const [selectedRow, setSelectedRow] = useState({});
   const [selectedIndex, setSelectedIndex] = useState([]);
   const [show, setShow] = useState(false);
-  // const [btnState, setBtnState] = useState("");
 
   const columns = [
     {
@@ -63,13 +60,11 @@ export default function LocationList() {
       setShape(data);
     });
 
-    //console.log("shapes", shape);
     getRequest(endpoints.getMaterialLocationList, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
       }
       setTableData(data);
-      //console.log("table data = ", data);
     });
   };
 
@@ -80,31 +75,6 @@ export default function LocationList() {
   const changeHandler = (e) => {
     const { value, name } = e.target;
 
-    // for (let i = 0; i < tableData.length; i++) {
-    //   const element = tableData[i];
-
-    //   if (i === selectedTableRow[0].SrlNo - 1) {
-    //     tableData[i][name] = value;
-    //     const percentage =
-    //       (parseFloat(tableData[i].DynamicPara1) *
-    //         parseFloat(tableData[i].DynamicPara2) *
-    //         parseFloat(tableData[i].InStock)) /
-    //       (parseFloat(formHeader.para1) * parseFloat(formHeader.para2));
-
-    //     let weightCalculated =
-    //       parseFloat(location?.state?.selectedTableRows[0].Weight) * percentage;
-
-    //     if (weightCalculated >= 0) {
-    //       tableData[i].Weight = weightCalculated.toFixed(2);
-    //     } else {
-    //       tableData[i].Weight = 0.0;
-    //     }
-    //     setTableData(tableData);
-    //   } else {
-    //     setTableData(tableData);
-
-    //   }
-    // }
     setInputData((preValue) => {
       return {
         ...preValue,
@@ -112,27 +82,11 @@ export default function LocationList() {
       };
     });
   };
-  // const InputEventShape = (e) => {
-  //   console.log("eeeee", e[0]?.Shape);
-  //   //const { value, name } = e.target;
-  //   setInputData((preValue) => {
-  //     //console.log(preValue)
-  //     return {
-  //       ...preValue,
-  //       storage: e[0]?.Shape,
-  //     };
-  //   });
-  // };
 
   const addButton = () => {
-    // console.log("inputData.location", inputData.location);
-    // console.log("dataaaa..", tableData);
-
     const found = tableData.some((obj) => {
       return obj.LocationNo === inputData.location;
     });
-
-    // console.log("found", found);
 
     if (found) {
       toast.error("The location number already exist");
@@ -161,8 +115,6 @@ export default function LocationList() {
         toast.error("Please fill the data before adding");
       }
     }
-
-    // setBtnState("");
   };
   const selectRow = {
     mode: "radio",
@@ -171,7 +123,6 @@ export default function LocationList() {
     selected: selectedIndex,
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
-        // console.log("row = ", row);
         setSelectedRow(row);
         setSelectedIndex([row.id]);
         setInputData((preValue) => {
@@ -194,14 +145,11 @@ export default function LocationList() {
   };
   const deleteButton = () => {
     if (selectedRow?.id) {
-      //console.log("form header = ", formHeader);
-      //console.log("selected row = ", selectedRow);
       let url1 =
         endpoints.getLocationListMtrlStockCount +
         "?location=" +
         selectedRow.LocationNo;
       getRequest(url1, async (data) => {
-        //console.log("count = " + data.count);
         if (data.count > 0) {
           toast.error(
             selectedRow.LocationNo +
@@ -216,13 +164,11 @@ export default function LocationList() {
     }
   };
   const modalResponse = (msg) => {
-    //console.log("msg = ", msg);
     if (msg === "yes") {
       let paraData1 = {
         LocationNo: selectedRow.LocationNo,
       };
       postRequest(endpoints.deleteMaterialLocationList, paraData1, (data) => {
-        //console.log("Location Deleted");
         toast.success("Location Deleted");
         getRequest(endpoints.getMaterialLocationList, (data) => {
           for (let i = 0; i < data.length; i++) {
@@ -241,8 +187,6 @@ export default function LocationList() {
   };
 
   const saveButton = () => {
-    // setBtnState("updayte");
-
     if (selectedRow?.id) {
       if (inputData.storage && inputData.capacity) {
         //update
@@ -252,17 +196,14 @@ export default function LocationList() {
           Capacity: inputData.capacity,
         };
         postRequest(endpoints.updateMaterialLocationList, paraData1, (data) => {
-          //console.log("Location Updated");
-          // toast.success("Location Updated");
           getRequest(endpoints.getMaterialLocationList, (data) => {
             for (let i = 0; i < data.length; i++) {
               data[i].id = i + 1;
             }
             setTableData(data);
-            //console.log("table data = ", data);
           });
           toast.success("Location detail updated successfully");
-          // setBtnState("");
+
           setInputData({
             location: "",
             storage: "",
@@ -277,7 +218,6 @@ export default function LocationList() {
       toast.error("Please select the row from the table");
     }
   };
-  // console.log("selectedRow...", selectedRow?.id ? true : false);
 
   const [sort, setSort] = React.useState({
     dataField: "id",
@@ -341,9 +281,6 @@ export default function LocationList() {
                   }}
                   value={inputData.location}
                   disabled={selectedRow?.id ? true : false}
-                  // onBlur={focusOutEvent}
-                  // value={formHeader.location}
-                  // onChange={InputEvent}
                 />
               </div>
             </div>
@@ -352,23 +289,9 @@ export default function LocationList() {
                 <label className="form-label mt-2">Storage Type</label>
               </div>
               <div className="   col-md-7">
-                {/* {shape.length > 0 ? (
-                  <Typeahead
-                    id="basic-example"
-                    name="storage"
-                    // options={shape}
-                    placeholder="Select Storage Type"
-                    // onChange={(label) => InputEventShape(label)}
-                    className="in-field"
-                  />
-                ) : (
-                  <p>Loading storage types...</p>
-                )} */}
-
                 {shape.length > 0 ? (
                   <select
                     name="storage"
-                    //  className="in-field border-top-0 border-start-0 border-end-0  "
                     className="input-disabled mt-2"
                     onChange={changeHandler}
                     value={inputData.storage}
@@ -384,18 +307,6 @@ export default function LocationList() {
                 ) : (
                   <p>Loading storage types...</p>
                 )}
-
-                {/* <Typeahead
-                  id="basic-example"
-                  name="storage"
-                  options={shape}
-                  placeholder="Select Storage Type"
-                  onChange={(label) => InputEventShape(label)}
-                  className="in-field"
-                  // selected={inputData.storage}
-                  // onChange={changeHandler}
-                  // value={inputData.capacity}
-                /> */}
               </div>
             </div>
             <div className="row mb-3">
@@ -409,8 +320,6 @@ export default function LocationList() {
                   type="number"
                   value={inputData.capacity}
                   onKeyDown={numbValidations}
-                  // onChange={changeHandler}
-
                   onChange={(e) => {
                     if (
                       e.target.value === "" ||
@@ -426,46 +335,29 @@ export default function LocationList() {
 
                     changeHandler(e);
                   }}
-
-                  // value={formHeader.capacity}
-                  // onChange={InputEvent}
-                  // onBlur={insertData}
                 />
               </div>
             </div>
-            {/* buttons */}
+
             <div className="row mt-3 mb-3">
               <div className="col-md-3 col-sm-12">
-                <button
-                  className="button-style "
-                  // style={{ width: "100px" }}
-                  onClick={addButton}
-                >
+                <button className="button-style " onClick={addButton}>
                   Add
                 </button>
               </div>
               <div className="col-md-3 col-sm-12">
-                <button
-                  className="button-style"
-                  //style={{ width: "100px" }}
-                  onClick={deleteButton}
-                >
+                <button className="button-style" onClick={deleteButton}>
                   Delete
                 </button>
               </div>
               <div className="col-md-3 col-sm-12">
-                <button
-                  className="button-style "
-                  // style={{ width: "100px" }}
-                  onClick={saveButton}
-                >
+                <button className="button-style " onClick={saveButton}>
                   Save
                 </button>
               </div>
               <div className="col-md-3 col-sm-12">
                 <button
                   className="button-style"
-                  //style={{ width: "100px" }}
                   id="btnclose"
                   type="submit"
                   onClick={() => nav("/MaterialManagement")}

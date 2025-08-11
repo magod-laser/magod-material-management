@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
+import { useState, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 
-const { getRequest, postRequest } = require("../../../../../api/apiinstance");
+const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 function MaterialStockList() {
@@ -14,12 +13,11 @@ function MaterialStockList() {
   async function fetchData() {
     getRequest(endpoints.getCustomerDetailsByMtrlStock, (data) => {
       setData(data);
-      console.log("data = ", data);
     });
   }
   useEffect(() => {
     fetchData();
-  }, []); //[inputPart]);
+  }, []);
   let changeCustomerDropdown = async (e) => {
     e.preventDefault();
     const { value, name } = e.target;
@@ -34,7 +32,6 @@ function MaterialStockList() {
     await getRequest(
       `${endpoints.getMaterialStockList2}Cust_Code=${value}`,
       (data2) => {
-        console.log("before1", data2);
         setGrid2(data2);
       }
     );
@@ -43,11 +40,10 @@ function MaterialStockList() {
       `${endpoints.getMaterialStockList3}Cust_Code=${value}`,
       (data3) => {
         setGrid3(data3);
-        console.log("data:", data3);
       }
     );
   };
-  console.log("after1", grid2);
+
   const columns = [
     {
       text: "Material",
@@ -162,38 +158,7 @@ function MaterialStockList() {
                   striped
                   hover
                   condensed
-                  //selectRow={selectRow}
                 ></BootstrapTable>
-                {/* <Table bordered>
-                  <thead
-                    style={{
-                      textAlign: "center",
-                      position: "sticky",
-                      top: "-1px",
-                    }}
-                  >
-                    <tr>
-                      <th>Material</th>
-                      <th>Qty</th>
-                      <th>Weight</th>
-                      <th>Scrap Weight</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="tablebody">
-                    <tr
-                    // onClick={() => selectedRowFn(item, key)}
-                    // className={
-                    //   key === selectedRow?.index ? "selcted-row-clr" : ""
-                    // }
-                    >
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                    </tr>
-                  </tbody>
-                </Table> */}
               </div>
             </div>
             <div className="row">
@@ -206,38 +171,7 @@ function MaterialStockList() {
                   striped
                   hover
                   condensed
-                  //selectRow={selectRow}
                 ></BootstrapTable>
-                {/* <Table bordered>
-                  <thead
-                    style={{
-                      textAlign: "center",
-                      position: "sticky",
-                      top: "-1px",
-                    }}
-                  >
-                    <tr>
-                      <th>Material</th>
-                      <th>Qty</th>
-                      <th>Weight</th>
-                      <th>Scrap Weight</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="tablebody">
-                    <tr
-                    // onClick={() => selectedRowFn(item, key)}
-                    // className={
-                    //   key === selectedRow?.index ? "selcted-row-clr" : ""
-                    // }
-                    >
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                      <td>asdfghj</td>
-                    </tr>
-                  </tbody>
-                </Table> */}
               </div>
             </div>
           </div>
@@ -251,48 +185,7 @@ function MaterialStockList() {
                 striped
                 hover
                 condensed
-                //selectRow={selectRow}
               ></BootstrapTable>
-              {/* <Table bordered>
-                <thead
-                  style={{
-                    textAlign: "center",
-                    position: "sticky",
-                    top: "-1px",
-                  }}
-                >
-                  <tr>
-                    <th>Para1</th>
-                    <th>Para2</th>
-                    <th>Qty</th>
-                    <th>Locked</th>
-                    <th>Scrap</th>
-                    <th>Weight</th>
-                    <th>Scrap Weight</th>
-                  </tr>
-                </thead>
-
-                <tbody className="tablebody">
-                  <tr
-                  // onClick={() => selectedRowFn(item, key)}
-                  // className={
-                  //   key === selectedRow?.index ? "selcted-row-clr" : ""
-                  // }
-                  >
-                    <td>asdfghj</td>
-                    <td>asdfghj</td>
-                    <td>asdfghj</td>
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>asdfghj</td>
-                    <td>asdfghj</td>
-                  </tr>
-                </tbody>
-              </Table> */}
             </div>
           </div>
         </div>

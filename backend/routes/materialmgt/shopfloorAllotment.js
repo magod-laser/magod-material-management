@@ -8,7 +8,7 @@ shopFloorAllotmentRouter.get(
   async (req, res, next) => {
     try {
       let id = req.query.id;
-      // console.log("id", id);
+
       misQueryMod(
         `SELECT c1.id,c2.PartId,c1.Quantity as QtyPerAssy, c2.Id As CustBOM_Id,
           n.Sheets*c1.Quantity as QtyRequired, n.NC_Pgme_Part_ID, n.QtyRejected
@@ -18,7 +18,7 @@ shopFloorAllotmentRouter.get(
           AND c.MagodCode = o.Dwg_Code AND c1.Cust_AssyId=c.Id AND c1.Cust_BOM_ListId=c2.Id`,
         (err, data) => {
           if (err) logger.error(err);
-          //console.log("data received");
+
           logger.info(
             `successfully fetched first table data  with Ncid = ${id}`
           );
@@ -60,7 +60,7 @@ shopFloorAllotmentRouter.get(
   async (req, res, next) => {
     try {
       let bomids = req.query.bomids;
-      // console.log("ids = ", bomids);
+
       misQueryMod(
         `SELECT m.*, m1.RV_No, m1.RV_Date 
         FROM magodmis.mtrl_part_receipt_details m,magodmis.material_receipt_register m1 

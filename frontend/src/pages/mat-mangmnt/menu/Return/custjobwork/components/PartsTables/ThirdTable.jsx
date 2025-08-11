@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Table from "react-bootstrap/Table";
 
@@ -6,7 +5,6 @@ import { FaArrowUp } from "react-icons/fa";
 
 export default function ThirdTable(props) {
   function changeQTY(key, val) {
-    // console.log("fdsffsfddsfadsfdafdsbv", key);
     let arr = [];
     for (let i = 0; i < props.thirdTableData.length; i++) {
       const element = props.thirdTableData[i];
@@ -28,7 +26,6 @@ export default function ThirdTable(props) {
           !parseFloat(a[props.sortConfigThird.key]) ||
           !parseFloat(b[props.sortConfigThird.key])
         ) {
-          // console.log("string");
           if (a[props.sortConfigThird.key] < b[props.sortConfigThird.key]) {
             return props.sortConfigThird.direction === "asc" ? -1 : 1;
           }
@@ -37,7 +34,6 @@ export default function ThirdTable(props) {
           }
           return 0;
         } else {
-          // console.log("number");
           if (
             parseFloat(a[props.sortConfigThird.key]) <
             parseFloat(b[props.sortConfigThird.key])
@@ -139,7 +135,6 @@ export default function ThirdTable(props) {
                 <input
                   type="number"
                   value={val.QtyReturnedNew}
-                  // min={"0"}
                   onKeyDown={numbValidations}
                   onChange={(e) => {
                     if (parseInt(e.target.value) < 0) {
@@ -168,7 +163,6 @@ export default function ThirdTable(props) {
                     border: "none",
                   }}
                 />
-                {/* {val.QtyReturnedNew} */}
               </td>
               <td>{val.Remarks}</td>
             </tr>

@@ -1,19 +1,11 @@
-import * as React from "react";
- 
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link, useLocation } from "react-router-dom";
- 
-// MemoryRouter,    //assign initilal state
- 
-{
-  /* <MemoryRouter initialEntries={['/inbox']} initialIndex={0}></MemoryRouter> */
-} //this will wrap whole return
- 
+
 const BreadcrumbsComponent = () => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
- 
+
   return (
     <div style={{ marginLeft: "10px" }}>
       <Breadcrumbs aria-label="breadcrumb" separator="›">
@@ -39,5 +31,5 @@ const BreadcrumbsComponent = () => {
     </div>
   );
 };
- 
+
 export default BreadcrumbsComponent;

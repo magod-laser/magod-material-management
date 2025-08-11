@@ -1,4 +1,3 @@
-import React from "react";
 import ShopFloorMaterialAllotment from "./Service/PartsComponents/ShopFloorMaterialAllotment";
 
 function ProfileCutting() {

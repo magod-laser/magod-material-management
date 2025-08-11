@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function DeleteSerialYesNoModal(props) {
   let { modalOpen, setModalOpen, message, handleYes } = props;
   const handleNo = () => {
-    // modalResponse("no");
     setModalOpen(false);
   };
 
@@ -20,12 +17,7 @@ function DeleteSerialYesNoModal(props) {
         </Modal.Header>
         <Modal.Body style={{ fontSize: "12px" }}>{message}</Modal.Body>
         <Modal.Footer>
-          <button
-            // variant="secondary"
-            className="button-style"
-            onClick={handleYes}
-            // style={{ backgroundColor: " #2b3a55" ,fontSize:'12px'}}
-          >
+          <button className="button-style" onClick={handleYes}>
             Yes
           </button>
           <button

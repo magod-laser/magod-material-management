@@ -1,11 +1,6 @@
-import React from "react";
 import Table from "react-bootstrap/Table";
-// import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-// import "../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
 
 const Tables = ({ theadData, tbodyData }) => {
-  console.log("inside table", theadData);
-  console.log("inside table", tbodyData);
   return (
     <Table striped className="table-data border ">
       <thead className="tableHeaderBGColor">
@@ -27,10 +22,6 @@ const Tables = ({ theadData, tbodyData }) => {
         })}
       </tbody>
     </Table>
-    // <BootstrapTable data={tbodyData} />
-    // <div>
-    //   <h1>hello</h1>
-    // </div>
   );
 };
 

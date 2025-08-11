@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import BootstrapTable from "react-bootstrap-table-next";
 import UpdateStockModal from "./UpdateStockModal";
@@ -18,13 +17,9 @@ function StockDispatch() {
   const [dateVal, setDateVal] = useState("1988-01-01");
 
   const [open, setOpen] = useState();
-  const handleOpen = () => {
-    setOpen(true);
-  };
 
   const InputEvent = (e) => {
     const { name, value } = e.target;
-    console.log("value = ", value);
     setDateVal(value);
   };
 
@@ -143,7 +138,6 @@ function StockDispatch() {
         data[i].id = i + 1;
       }
       setFirstTable(data);
-      console.log("first table = ", data);
     });
 
     //second table
@@ -153,7 +147,6 @@ function StockDispatch() {
         data[i].id = i + 1;
       }
       setSecondTableAll(data);
-      console.log("second table = ", data);
     });
 
     //third table
@@ -163,7 +156,6 @@ function StockDispatch() {
         data[i].id = i + 1;
       }
       setThirdTable(data);
-      console.log("third table = ", data);
     });
   };
 
@@ -173,7 +165,6 @@ function StockDispatch() {
     bgColor: "#98A8F8",
     onSelect: (row, isSelect, rowIndex, e) => {
       if (isSelect) {
-        //console.log("row = ", row);
         setSecondTable(
           secondTableAll.filter((obj) => {
             return obj.DC_Inv_No === row.DC_Inv_No;
@@ -209,16 +200,12 @@ function StockDispatch() {
           endpoints.insertStockDispatchMtrlSales,
           paraData1,
           async (data) => {
-            console.log("updated");
             flag1 = 1;
           }
         );
       }
-
-      //if (flag1 == 1) {
       toast.success("Stock Ledger is Updated");
       loadData();
-      //}
     }
   };
 
@@ -323,7 +310,6 @@ function StockDispatch() {
                 striped
                 hover
                 condensed
-                //selectRow={selectRow1}
                 headerClasses="header-class tableHeaderBGColor"
                 sort={sort2}
                 onSortChange={onSortChange2}
@@ -340,7 +326,6 @@ function StockDispatch() {
               striped
               hover
               condensed
-              //selectRow={selectRow1}
               headerClasses="header-class tableHeaderBGColor"
               sort={sort3}
               onSortChange={onSortChange3}

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getWeight } from "../../../../utils";
-
 import BootstrapTable from "react-bootstrap-table-next";
 import { formatDate } from "../../../../utils";
 import { useLocation } from "react-router-dom";
@@ -15,18 +14,10 @@ function OpenButtonOpenSheetUnit() {
   const location = useLocation();
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  //initial disable all
   const [boolVal, setBoolVal] = useState(true);
-
-  //alter enable add and remove stock
   const [boolVal2, setBoolVal2] = useState(false);
   const [boolVal3, setBoolVal3] = useState(false);
-
   const [mtrlArray, setMtrlArray] = useState([]);
-  //after selecting material disable dynamic para 1 2 3
-  const [boolPara1, setBoolPara1] = useState(false);
-  const [boolPara2, setBoolPara2] = useState(false);
-  const [boolPara3, setBoolPara3] = useState(false);
 
   let [para1Label, setPara1Label] = useState("Para 1");
   let [para2Label, setPara2Label] = useState("Para 2");
@@ -38,8 +29,6 @@ function OpenButtonOpenSheetUnit() {
 
   const [rmvBtn, setRmvBtn] = useState(false);
   const [addBtn, setAddBtn] = useState(false);
-  const [insCheck, setInsCheck] = useState(false);
-  //falg for add to stock and remove stock
   const [boolValStock, setBoolValStock] = useState("off");
 
   const [sheetRowSelect, setSheetRowSelect] = useState(false);
@@ -53,9 +42,9 @@ function OpenButtonOpenSheetUnit() {
   const [mtrlStock, setMtrlStock] = useState({});
   const [formHeader, setFormHeader] = useState({
     rvId: "",
-    receiptDate: "", //currDate, //.split("/").reverse().join("-"),
+    receiptDate: "",
     rvNo: "",
-    rvDate: "", //.split("/").reverse().join("-"),
+    rvDate: "",
     status: "",
     customer: "",
     customerName: "",
@@ -110,8 +99,6 @@ function OpenButtonOpenSheetUnit() {
       formHeader.calcWeight = data.TotalCalculatedWeight;
       formHeader.type = data.Type;
 
-      //setFormHeader(formHeader);
-
       //get customer details for address
       getRequest(endpoints.getCustomers, (data1) => {
         const found = data1.find((obj) => obj.Cust_Code === data.Cust_Code);
@@ -120,12 +107,9 @@ function OpenButtonOpenSheetUnit() {
         setFormHeader(formHeader);
       });
 
-      //enable disable add to stock button
-      //check stock alredy exist or not
       let url3 = endpoints.checkStockAvailable + "?rvno=" + formHeader.rvNo;
 
       getRequest(url3, (data4) => {
-        //length = 0 means no stock
         if (data4.length === 0) {
           setBoolVal2(false);
           setBoolVal3(true);
@@ -165,88 +149,6 @@ function OpenButtonOpenSheetUnit() {
           obj.qtyReturned = obj.QtyReturned;
         });
         setMtrlArray(data2);
-
-        //find shape of material
-        // for (let i = 0; i < data2.length; i++) {
-        //   let material = data2[i];
-
-        //   const url2 =
-        //     endpoints.getRowByMtrlCode + "?code=" + data2[i].Mtrl_Code;
-        //   getRequest(url2, (data3) => {
-
-        //     if (data3.Shape === "Units") {
-        //       setPara1Label("Qty"); //Nos
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //       setBoolPara1(false);
-        //       setBoolPara2(true);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("Nos");
-        //       setUnitLabel2("");
-        //       setUnitLabel3("");
-        //     } else if (data3.Shape === "Block") {
-        //       setPara1Label("Length"); //mm
-        //       setPara2Label("Width");
-        //       setPara3Label("Height");
-        //       setBoolPara1(false);
-        //       setBoolPara2(false);
-        //       setBoolPara3(false);
-        //       setUnitLabel1("mm");
-        //       setUnitLabel2("mm");
-        //       setUnitLabel3("mm");
-        //     } else if (data3.Shape === "Plate") {
-        //       setPara1Label("Length"); //mm
-        //       setPara2Label("Width");
-        //       setPara3Label("");
-        //       setBoolPara1(false);
-        //       setBoolPara2(false);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("mm");
-        //       setUnitLabel2("mm");
-        //       setUnitLabel3("");
-        //     } else if (data3.Shape === "Sheet") {
-        //       setPara1Label("Width"); //mm
-        //       setPara2Label("Length"); //mm
-        //       setPara3Label("");
-        //       setBoolPara1(false);
-        //       setBoolPara2(false);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("mm");
-        //       setUnitLabel2("mm");
-        //       setUnitLabel3("");
-        //     } else if (data3.Shape === "Tiles") {
-        //       setPara1Label("");
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //       setBoolPara1(true);
-        //       setBoolPara2(true);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("");
-        //       setUnitLabel2("");
-        //       setUnitLabel3("");
-        //     } else if (data3.Shape === "Tube") {
-        //       setPara1Label("Length"); //mm
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //       setBoolPara1(false);
-        //       setBoolPara2(true);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("mm");
-        //       setUnitLabel2("");
-        //       setUnitLabel3("");
-        //     } else if (data3.Shape === "Cylinder") {
-        //       setPara1Label("Volume"); //CubicMtr
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //       setBoolPara1(false);
-        //       setBoolPara2(true);
-        //       setBoolPara3(true);
-        //       setUnitLabel1("CubicMtr");
-        //       setUnitLabel2("");
-        //       setUnitLabel3("");
-        //     }
-        //   });
-        // }
 
         const url2 =
           endpoints.getRowByMtrlCode + "?code=" + data2[0]?.Mtrl_Code;
@@ -322,20 +224,13 @@ function OpenButtonOpenSheetUnit() {
             setUnitRowSelect(false);
           }
         });
-
-        //setFormHeader(formHeader);
       });
     });
   }
 
   useEffect(() => {
     fetchData();
-    //formHeader.ReceiptDate = formatDate(new Date(), 4);
   }, []);
-
-  // useEffect(() => {
-
-  // }, [mtrlArray]);
 
   function updateCount(cnt, callback) {
     setTimeout(async () => {
@@ -350,100 +245,6 @@ function OpenButtonOpenSheetUnit() {
       callback("hello");
     }, 500);
   }
-  // const addToStock = async () => {
-  //   if (Object.keys(mtrlStock).length === 0) {
-  //     toast.error("Please Select Material");
-  //   } else {
-  //     const newRow = {
-  //       //mtrlStockId :
-  //       mtrlRvId: mtrlStock.Mtrl_Rv_id,
-  //       custCode: mtrlStock.Cust_Code,
-  //       customer: formHeader.customerName,
-  //       custDocuNo: "",
-  //       rvNo: formHeader.rvNo,
-  //       mtrlCode: mtrlStock.Mtrl_Code,
-  //       shapeID: mtrlStock.shapeID,
-  //       shape: "",
-  //       material: mtrlStock.material,
-  //       dynamicPara1: mtrlStock.dynamicPara1,
-  //       dynamicPara2: mtrlStock.dynamicPara2,
-  //       dynamicPara3: mtrlStock.dynamicPara3,
-  //       dynamicPara4: "0.00",
-  //       locked: 0,
-  //       scrap: 0,
-  //       issue: 0,
-  //       weight: formHeader.weight,
-  //       scrapWeight: "0.00",
-  //       srl: mtrlStock.Srl,
-  //       ivNo: "",
-  //       ncProgramNo: "",
-  //       locationNo: mtrlStock.locationNo,
-  //       // qtyAccepted: mtrlStock.qtyAccepted,
-  //       accepted: mtrlStock.accepted,
-  //     };
-
-  //     // postRequest(endpoints.insertMtrlStockList, newRow, async (data) => {
-
-  //     //   if (data.affectedRows !== 0) {
-  //     //     //enable remove stock buttons
-  //     //     toast.success("Stock Added Successfully");
-  //     //     // setBoolVal2(true);
-  //     //     // setBoolVal3(false);
-  //     //     setRmvBtn(true);
-  //     //     setAddBtn(false);
-  //     //   } else {
-  //     //     toast.error("Stock Not Added");
-  //     //   }
-  //     // });
-
-  //     postRequest(endpoints.insertMtrlStockList, newRow, async (data) => {
-  //       if (data.affectedRows !== 0) {
-  //         //enable remove stock buttons
-  //         toast.success("Stock Added Successfully");
-  //         //setBoolVal2(true);
-  //         //setBoolVal3(false);
-  //         setBoolValStock("on");
-  //         // setBoolVal6(true);
-  //         // setBoolVal7(false);
-  //         setRmvBtn(true);
-  //         setAddBtn(false);
-  //       } else {
-  //         toast.error("Stock Not Added");
-  //       }
-  //     });
-  //     //update updated status = 1
-  //     let updateObj = {
-  //       id: mtrlStock.Mtrl_Rv_id,
-  //       upDated: 1,
-  //     };
-  //     postRequest(
-  //       endpoints.updateMtrlReceiptDetailsUpdated,
-  //       updateObj,
-  //       async (data) => {
-  //         // console.log("updated = 1");s
-  //       }
-  //     );
-
-  //     // updateCount(1, (nm) => {
-
-  //     //   setMtrlArray(mtrlArray);
-  //     // });
-
-  //     for (let i = 0; i < mtrlArray.length; i++) {
-  //       if (mtrlArray[i].Mtrl_Rv_id == mtrlStock.Mtrl_Rv_id) {
-  //         // if (mtrlArray[i].mtrlCode == mtrlStock.Mtrl_Code) {
-  //         mtrlArray[i].updated = 1;
-  //       }
-  //     }
-  //     await delay(500);
-  //     let newArray = mtrlArray;
-
-  //     setMtrlArray([]);
-  //     await delay(200);
-  //     setMtrlArray(newArray);
-  //     // setInputPart({ ...inputPart, upda     ted: 1 });
-  //   }
-  // };
 
   const addToStock = async () => {
     if (Object.keys(mtrlStock).length === 0) {
@@ -461,7 +262,6 @@ function OpenButtonOpenSheetUnit() {
         const finalWeight = Math.round(weight * 0.000001 * 100) / 100;
 
         const newRow = {
-          //mtrlStockId :
           mtrlRvId: mtrlStock.Mtrl_Rv_id,
           custCode: mtrlStock.Cust_Code,
           customer: formHeader.customerName,
@@ -484,33 +284,13 @@ function OpenButtonOpenSheetUnit() {
           ivNo: "",
           ncProgramNo: "",
           locationNo: mtrlStock.locationNo,
-          // qtyAccepted: mtrlStock.qtyAccepted,
           accepted: mtrlStock.accepted,
         };
 
-        // postRequest(endpoints.insertMtrlStockList, newRow, async (data) => {
-
-        //   if (data.affectedRows !== 0) {
-        //     //enable remove stock buttons
-        //     toast.success("Stock Added Successfully");
-        //     // setBoolVal2(true);
-        //     // setBoolVal3(false);
-        //     setRmvBtn(true);
-        //     setAddBtn(false);
-        //   } else {
-        //     toast.error("Stock Not Added");
-        //   }
-        // });
-
         postRequest(endpoints.insertMtrlStockList, newRow, async (data) => {
           if (data.affectedRows !== 0) {
-            //enable remove stock buttons
             toast.success("Stock Added Successfully");
-            //setBoolVal2(true);
-            //setBoolVal3(false);
             setBoolValStock("on");
-            // setBoolVal6(true);
-            // setBoolVal7(false);
             setRmvBtn(true);
             setAddBtn(false);
           } else {
@@ -525,19 +305,11 @@ function OpenButtonOpenSheetUnit() {
         postRequest(
           endpoints.updateMtrlReceiptDetailsUpdated,
           updateObj,
-          async (data) => {
-            // console.log("updated = 1");s
-          }
+          async (data) => {}
         );
-
-        // updateCount(1, (nm) => {
-
-        //   setMtrlArray(mtrlArray);
-        // });
 
         for (let i = 0; i < mtrlArray.length; i++) {
           if (mtrlArray[i].Mtrl_Rv_id == mtrlStock.Mtrl_Rv_id) {
-            // if (mtrlArray[i].mtrlCode == mtrlStock.Mtrl_Code) {
             mtrlArray[i].updated = 1;
           }
         }
@@ -547,98 +319,9 @@ function OpenButtonOpenSheetUnit() {
         setMtrlArray([]);
         await delay(200);
         setMtrlArray(newArray);
-        // setInputPart({ ...inputPart, updated: 1 });
       });
     }
   };
-
-  // const removeStock = async () => {
-  //   // console.log("mtrlStock.Mtrl_Rv_id", mtrlStock.Mtrl_Rv_id);
-  //   // console.log("mtrlStock.Mtrl_Code", mtrlStock.Mtrl_Code);
-  //   // console.log("inputPart.accepted", inputPart.accepted);
-  //   if (Object.keys(mtrlStock).length === 0) {
-  //     toast.error("Please Select Material");
-  //   } else {
-  //     const requestData = {
-  //       Mtrl_Rv_id: mtrlStock.Mtrl_Rv_id,
-  //       Mtrl_Code: mtrlStock.Mtrl_Code,
-  //       Accepted: inputPart.accepted,
-  //     };
-
-  //     //update updated status = 1
-
-  //     postRequest(
-  //       endpoints.deleteMtrlStockByRVNo,
-  //       requestData,
-  //       async (data) => {
-  //         console.log("Remove stock data = ", data);
-
-  //         if (data.countResult[0].count < parseFloat(inputPart.accepted)) {
-  //           toast.error(
-  //             "Received Material Already used, to return create a Issue Voucher"
-  //           );
-  //           return;
-  //         } else {
-  //           // Validate if the material is already in use for production
-  //           if (data.inUseResult[0].inUseCount > 0) {
-  //             toast.error(
-  //               "Material already in use for production, cannot take out from stock"
-  //             );
-  //             return;
-  //           } else {
-  //             // Only execute this block if the first two conditions are validated
-  //             if (data.deletionResult.affectedRows !== 0) {
-  //               //enable remove stock buttons
-  //               toast.success("Stock Removed Successfully");
-  //               // Update UI state here
-  //               setBoolValStock("off");
-  //               setAddBtn(true);
-  //               setRmvBtn(false);
-  //               //update checkbox
-  //               for (let i = 0; i < mtrlArray.length; i++) {
-  //                 if (mtrlArray[i].mtrlCode == mtrlStock.Mtrl_Code) {
-  //                   mtrlArray[i].upDated = 0;
-  //                 }
-  //               }
-  //               await delay(500);
-  //               setMtrlArray(newArray);
-  //             } else {
-  //               // toast.success("Stock Removed Successfully");
-  //             }
-  //           }
-  //         }
-  //       }
-  //     );
-
-  //     let updateObj = {
-  //       id: mtrlStock.Mtrl_Rv_id,
-  //       upDated: 0,
-  //     };
-  //     postRequest(
-  //       endpoints.updateMtrlReceiptDetailsUpdated,
-  //       updateObj,
-  //       async (data) => {
-  //         // console.log("updated = 0");
-  //       }
-  //     );
-
-  //     for (let i = 0; i < mtrlArray.length; i++) {
-  //       if (mtrlArray[i].Mtrl_Rv_id == mtrlStock.Mtrl_Rv_id) {
-  //         mtrlArray[i].updated = 0;
-  //         //console.log("Its Updated");
-  //       }
-  //     }
-  //     await delay(500);
-  //     // console.log(newArray);
-  //     let newArray = mtrlArray;
-
-  //     setMtrlArray([]);
-  //     await delay(200);
-  //     setMtrlArray(newArray);
-
-  //     await updateStockRegister();
-  //   }
-  // };
 
   const removeStock = async () => {
     if (Object.keys(mtrlStock).length === 0) {
@@ -653,18 +336,14 @@ function OpenButtonOpenSheetUnit() {
     };
 
     postRequest(endpoints.deleteMtrlStockByRVNo, requestData, async (data) => {
-      console.log("Remove stock data = ", data);
-
       if (data.error) {
         toast.error(data.error);
       } else {
         if (data.deletionResult.affectedRows !== 0) {
-          // Update UI state
           setBoolValStock("off");
           setAddBtn(true);
           setRmvBtn(false);
 
-          // Update checkbox
           const updatedMaterialArray = mtrlArray.map((material) => {
             if (material.id === mtrlStock.id) {
               return { ...material, updated: 0 };
@@ -672,10 +351,8 @@ function OpenButtonOpenSheetUnit() {
             return material;
           });
 
-          // Delay for 200ms before updating UI
           await delay(200);
 
-          // Update UI state
           setInputPart({ ...inputPart, updated: 0 });
           setMtrlArray(updatedMaterialArray);
 
@@ -696,21 +373,12 @@ function OpenButtonOpenSheetUnit() {
           await updateStockRegister((error) => {
             if (error) {
               console.error("Error updating Stock Register:", error);
-              // toast.error("Error updating Stock Register");
             }
           });
         } else {
           toast.error("Failed to remove stock");
         }
       }
-
-      // Update MtrlReceiptDetailsUpdated
-      // let updateObj = {
-      //   id: mtrlStock.Mtrl_Rv_id,
-      //   upDated: 0,
-      // };
-
-      // await postRequest(endpoints.updateMtrlReceiptDetailsUpdated, updateObj);
 
       // Update Stock Register
       await updateStockRegister((error) => {
@@ -733,8 +401,6 @@ function OpenButtonOpenSheetUnit() {
         endpoints.updateAfterRemoveStock,
         requestData
       );
-
-      console.log("response", response);
     } catch (error) {
       console.error("Error updating Stock Register:", error);
     }
@@ -827,15 +493,11 @@ function OpenButtonOpenSheetUnit() {
         setRmvBtn(false);
         setAddBtn(true);
       }
-      // console.log("mtrlArray", mtrlArray);
       mtrlArray?.map((obj) => {
         if (obj.id == row.id) {
           setMtrlStock(obj);
-          // console.log("obj.totalWeight", obj.totalWeight);
           setInputPart({
-            // qtyAccepted: row.qtyAccepted,
             qtyRejected: obj.qtyRejected,
-            // qtyReceived: row.qtyReceived,
             id: obj.id,
             srl: obj.srl,
             mtrlCode: row.mtrlCode,
@@ -934,11 +596,6 @@ function OpenButtonOpenSheetUnit() {
     },
   };
 
-  console.log("Input Part", inputPart);
-  console.log("formHeader", formHeader);
-  console.log("rvId", formHeader.rvId);
-  console.log("materialArray", mtrlArray);
-
   return (
     <div>
       <div>
@@ -1023,7 +680,6 @@ function OpenButtonOpenSheetUnit() {
             <select
               className="ip-select mt-1"
               name="customer"
-              //onChange={changeCustomer}
               disabled={boolVal}
             >
               <option value={formHeader.customer} disabled selected>
@@ -1112,25 +768,8 @@ function OpenButtonOpenSheetUnit() {
               headerClasses="header-class tableHeaderBGColor"
             ></BootstrapTable>
           </div>
-          {/* <div className="col-md-6 col-sm-12">
-           <div
-              className="table-data"
-              style={{ height: "480px", overflowY: "scroll" }}
-            >
-              <Tables theadData={getHeadings()} tbodyData={data3} />
-            </div> 
-          </div> */}
           <div className="col-md-4 col-sm-12" style={{ overflowY: "scroll" }}>
             <div className=" form-bg">
-              {/* <div className="row justify-content-center mt-2">
-                <button
-                  className="button-style "
-                  style={{ width: "155px" }}
-                  disabled={boolVal}
-                >
-                  Add Serial
-                </button>
-              </div> */}
               <div className="d-flex justify-content-center">
                 <button
                   className="button-style "
@@ -1156,85 +795,8 @@ function OpenButtonOpenSheetUnit() {
                   >
                     Serial Details
                   </label>
-                  {/* <div className="row">
-                    <p className="form-title-deco mt-2">
-                      <h5>Serial Details</h5>
-                    </p>
-
-                    <div className="col-md-4">
-                      <label className="form-label">Part ID</label>
-                    </div>
-                    <div className="col-md-8" style={{ marginTop: "8px" }}>
-                      <select
-                        className="ip-select dropdown-field"
-                        disabled={boolVal}
-                        // defaultValue={" "}
-                        value={inputPart.mtrlCode}
-                        name="mtrlCode"
-                      >
-                        <option value={inputPart.mtrlCode} disabled selected>
-                          {inputPart.mtrlCode}
-                        </option>
-                      </select>
-                    </div>
-                  </div> */}
-                  {/* {!(boolVal3 || boolPara1) && ( */}
-                  {/* <div className="row">
-                    <div className="col-md-4">
-                      <label className="form-label">{para1Label}</label>
-                    </div>
-                    <div className="col-md-6">
-                      <input
-                        className="in-field"
-                        value={inputPart.dynamicPara1}
-                        disabled={boolVal}
-                      />
-                    </div>
-                    <div className="col-md-2">
-                      <label className="form-label">{unitLabel1}</label>
-                    </div>
-                  </div> */}
-                  {/* )} */}
-                  {/* {!(boolVal3 || boolPara2) && ( */}
-                  {/* <div className="row">
-                    <div className="col-md-3">
-                      <label className="form-label">{para2Label}</label>
-                    </div>
-                    <div className="col-md-6 ">
-                      <input
-                        className="in-field"
-                        disabled={boolVal}
-                        value={inputPart.dynamicPara2}
-                      />
-                    </div>
-                    <div className="col-md-3">
-                      <label className="form-label">{unitLabel2}</label>
-                    </div>
-                  </div> */}
-                  {/* )} */}
-                  {/* {!(boolVal3 || boolPara3) && ( */}
-                  {/* <div className="row">
-                    <div className="col-md-3">
-                      <label className="form-label">{para3Label}</label>
-                    </div>
-                    <div className="col-md-6 ">
-                      <input
-                        className="in-field"
-                        disabled={boolVal}
-                        value={inputPart.dynamicPara3}
-                      />
-                    </div>
-                    <div className="col-md-3">
-                      <label className="form-label">{unitLabel3}</label>
-                    </div>
-                  </div> */}
-                  {/* )} */}
 
                   <div className="row">
-                    {/* <p className="form-title-deco mt-2">
-                      <h5>Serial Details</h5>
-                    </p> */}
-
                     <div className="col-md-4">
                       <label
                         className="form-label"
@@ -1245,11 +807,9 @@ function OpenButtonOpenSheetUnit() {
                     </div>
                     <div className="col-md-8">
                       <select
-                        // className="ip-select dropdown-field"
                         style={{ width: "100%" }}
                         className="input-disabled mt-1"
                         disabled={boolVal}
-                        // defaultValue={" "}
                         value={inputPart.mtrlCode}
                         name="mtrlCode"
                       >
@@ -1474,9 +1034,6 @@ function OpenButtonOpenSheetUnit() {
                   )}
 
                   <div className="col-md-12 ">
-                    {/* <p className="form-title-deco">
-                      <h5>Quantity Details</h5>
-                    </p> */}
                     <label
                       className="form-label"
                       style={{ textDecoration: "underline" }}
@@ -1501,8 +1058,6 @@ function OpenButtonOpenSheetUnit() {
                           name="inspected"
                           checked={inputPart.inspected == 1 ? true : false}
                           value={inputPart.inspected}
-                          // checked={insCheck}
-
                           disabled={boolVal}
                         />
                         <label className="form-label mt-2 ">Inspected</label>
@@ -1570,7 +1125,6 @@ function OpenButtonOpenSheetUnit() {
                       </div>
                       <div className="col-md-6 mt-2">
                         <select
-                          //className="ip-select dropdown-field"
                           className="input-disabled mt-1"
                           disabled={boolVal}
                           style={{ width: "100%" }}
@@ -1584,15 +1138,6 @@ function OpenButtonOpenSheetUnit() {
                   </div>
                 </div>
               </div>
-              {/* <div className="row justify-content-center mt-2 mb-4">
-                <button
-                  className="button-style "
-                  style={{ width: "75px" }}
-                  disabled={boolVal}
-                >
-                  Delete
-                </button>
-              </div> */}
             </div>
           </div>
         </div>

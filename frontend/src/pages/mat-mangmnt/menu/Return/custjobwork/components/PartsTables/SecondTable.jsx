@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import Table from "react-bootstrap/Table";
 import { FaArrowUp } from "react-icons/fa";
 
 export default function SecondTable(props) {
-  //   console.log("props in second table..", props);
+  
 
   const sortedData = () => {
     let dataCopy = [...props.secondTableData];
@@ -15,7 +13,7 @@ export default function SecondTable(props) {
           !parseFloat(a[props.sortConfigSecond.key]) ||
           !parseFloat(b[props.sortConfigSecond.key])
         ) {
-          // console.log("string");
+         
           if (a[props.sortConfigSecond.key] < b[props.sortConfigSecond.key]) {
             return props.sortConfigSecond.direction === "asc" ? -1 : 1;
           }
@@ -24,7 +22,7 @@ export default function SecondTable(props) {
           }
           return 0;
         } else {
-          // console.log("number");
+          
           if (
             parseFloat(a[props.sortConfigSecond.key]) <
             parseFloat(b[props.sortConfigSecond.key])

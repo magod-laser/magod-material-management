@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
+import { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import ModalComp from "./ModalComp";
 import { toast } from "react-toastify";
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function ResizeModal({ open1, setOpen1, row, resizeModal }) {
@@ -59,9 +57,6 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
     const { value, name } = e.target;
     setLocalRow((prev) => ({ ...prev, [name]: value }));
   };
-
-  // console.log("row", row);
-  // console.log("localRow", localRow);
 
   return (
     <>

@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
-
+import { useState, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { formatDate } from "../../../../../../utils";
 
-const { getRequest, postRequest } = require("../../../../../api/apiinstance");
+const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 function ReceiptAndUsage(props) {
@@ -22,7 +20,6 @@ function ReceiptAndUsage(props) {
         data[i].id = i + 1;
       }
       setFirstTable(data);
-      console.log("first table = ", data);
     });
   }
 
@@ -30,7 +27,7 @@ function ReceiptAndUsage(props) {
     fetchData();
   }, [props.custCode]);
 
-  function statusFormatter(cell, row, rowIndex, formatExtraData) {
+  function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
 
@@ -154,15 +151,13 @@ function ReceiptAndUsage(props) {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#98A8F8",
-    onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("first row = ", row);
+    onSelect: (row) => {
       let url1 = endpoints.getPartListReceiptAndUsageSecond + "?id=" + row.RvID;
       getRequest(url1, (data) => {
         for (let i = 0; i < data.length; i++) {
           data[i].id = i + 1;
         }
         setSecondTable(data);
-        console.log("second table = ", data);
       });
     },
   };
@@ -170,8 +165,7 @@ function ReceiptAndUsage(props) {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#98A8F8",
-    onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("second row = ", row);
+    onSelect: (row) => {
       let url1 = endpoints.getPartListReceiptAndUsageThird + "?id=" + row.Id;
       getRequest(url1, (data) => {
         for (let i = 0; i < data.length; i++) {
@@ -179,7 +173,6 @@ function ReceiptAndUsage(props) {
         }
         setSelectedSecondRow(row);
         setThirdTable(data);
-        console.log("third table = ", data);
       });
     },
   };
@@ -187,8 +180,7 @@ function ReceiptAndUsage(props) {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#98A8F8",
-    onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("third row = ", row);
+    onSelect: (row) => {
       let url1 =
         endpoints.getPartListReceiptAndUsageFourth +
         "?id1=" +
@@ -200,7 +192,6 @@ function ReceiptAndUsage(props) {
           data[i].id = i + 1;
         }
         setFourthTable(data);
-        console.log("fourth table = ", data);
       });
     },
   };
@@ -273,7 +264,6 @@ function ReceiptAndUsage(props) {
                   striped
                   hover
                   condensed
-                  //selectRow={selectRow1}
                   headerClasses="header-class tableHeaderBGColor"
                 ></BootstrapTable>
               </div>

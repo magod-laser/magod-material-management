@@ -1,8 +1,7 @@
-import React from 'react'
-import SharedLayout from './SharedLayout'
+import SharedLayout from "./SharedLayout";
 
 function WithNav() {
-  return  <SharedLayout/>
+  return <SharedLayout />;
 }
 
-export default WithNav
+export default WithNav;

@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function OkModal(props) {
-  const { show, setShow, handleShow, modalMessage, modalResponseok } = props;
+  const { show, setShow, modalMessage, modalResponseok } = props;
 
   const handleClose = () => {
     setShow(false);
@@ -22,7 +20,6 @@ function OkModal(props) {
         </Modal.Header>
         <Modal.Body style={{ fontSize: "12px" }}>{modalMessage}</Modal.Body>
         <Modal.Footer>
-          {/* <Button variant="secondary" onClick={handleClose}> */}
           <button
             className="button-style "
             style={{ width: "50px" }}
@@ -30,10 +27,10 @@ function OkModal(props) {
           >
             Yes
           </button>
-          {/* backgroundColor: "gray" */}
+
           <button
             className="button-style"
-            style={{ width: "50px",  }}
+            style={{ width: "50px" }}
             onClick={handleClose}
           >
             No

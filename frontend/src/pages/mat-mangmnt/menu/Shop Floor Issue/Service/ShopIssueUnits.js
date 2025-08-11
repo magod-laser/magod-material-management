@@ -1,7 +1,3 @@
-import React from "react";
-import NavComp from "../Service/Components/NavComp";
-import Table from "react-bootstrap/Table";
-import { useNavigate } from "react-router-dom";
 import ShopFloorMaterialAllotment from "./PartsComponents/ShopFloorMaterialAllotment";
 
 function ShopIssueUnits() {

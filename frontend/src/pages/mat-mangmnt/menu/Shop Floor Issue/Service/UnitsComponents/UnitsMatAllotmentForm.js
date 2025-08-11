@@ -1,7 +1,4 @@
-/** @format */
-
-import React, { useEffect, useState } from "react";
-import Table from "react-bootstrap/Table";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -34,7 +31,6 @@ function UnitsMatAllotmentForm() {
 
   const [show, setShow] = useState(false);
   const [showok, setShowok] = useState(false);
-  const [messageok, setmessageok] = useState("");
 
   const storedData = JSON.parse(localStorage.getItem("LazerUser"));
   let unitName = storedData.data[0]["UnitName"];
@@ -489,7 +485,6 @@ function UnitsMatAllotmentForm() {
         }
       );
     } else {
-      console.log("data is not ok");
     }
   };
 
@@ -709,17 +704,6 @@ function UnitsMatAllotmentForm() {
                 marginTop: "10px",
               }}
             >
-              {/* <BootstrapTable
-                keyField="MtrlStockID"
-                columns={columns1}
-                data={firstTable}
-                striped
-                hover
-                condensed
-                //pagination={paginationFactory()
-                selectRow={selectRow1}
-                headerClasses="header-class tableHeaderBGColor"
-              ></BootstrapTable> */}
               <BootstrapTable
                 keyField="MtrlStockID"
                 columns={columns1}

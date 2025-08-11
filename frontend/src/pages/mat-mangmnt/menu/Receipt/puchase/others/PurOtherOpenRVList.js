@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { dateToShort, formatDate } from "../../../../../../utils";
+import { useState, useEffect } from "react";
+import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { useNavigate } from "react-router-dom";
 
-const { getRequest, postRequest } = require("../../../../../api/apiinstance");
+const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 function PurOtherOpenRVList() {
@@ -26,7 +25,6 @@ function PurOtherOpenRVList() {
   const fetchData = () => {
     getRequest(endpoints.getSheetsOpenedPurchaseMaterial, (data) => {
       setTableData(data);
-      //console.log("data = ", data);
     });
   };
 
@@ -34,15 +32,11 @@ function PurOtherOpenRVList() {
     fetchData();
   }, []);
 
-  // Process the returned date in the formatter
-  function statusFormatter(cell, row, rowIndex, formatExtraData) {
-    //return dateToShort(cell);
+  function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
 
   const openButtonClick = () => {
-    //console.log("data = ", data);
-    //console.log("button click : ");
     nav("/MaterialManagement/Receipt/OpenButtonOpenSheetUnit", {
       state: { id: data.RvID },
     });
@@ -58,9 +52,9 @@ function PurOtherOpenRVList() {
         Cust_Code: row.Cust_Code,
         Customer: row.Customer,
         RVStatus: row.RVStatus,
-        RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
+        RV_Date: formatDate(new Date(row.RV_Date), 3),
         RV_No: row.RV_No,
-        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3), //dateToShort(row.ReceiptDate),
+        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3),
         RvID: row.RvID,
         TotalWeight: row.TotalWeight,
         TotalCalculatedWeight: row.TotalCalculatedWeight,
@@ -97,18 +91,12 @@ function PurOtherOpenRVList() {
       <>
         <h4 className="title">Magod : Sheets Receipt List Received</h4>
         <div className="row">
-          {/* <div className="col-md-7 text-center"></div> */}
           <div className="d-flex col-md-7">
             <div className="col-md-2">
               <label className="form-label">Customer</label>
             </div>
             <div className="col-md-6 mt-1">
-              <select
-                className="ip-select"
-                name="customer"
-                disabled={true}
-                //onChange={changeCustomer}
-              >
+              <select className="ip-select" name="customer" disabled={true}>
                 <option value={data.customer} disabled selected>
                   {data.Customer}
                 </option>
@@ -119,7 +107,6 @@ function PurOtherOpenRVList() {
             <button
               className="button-style "
               style={{ width: "55px" }}
-              //data.RvID
               onClick={openButtonClick}
             >
               Open
@@ -138,16 +125,13 @@ function PurOtherOpenRVList() {
             style={{ height: "350px", overflowY: "scroll" }}
             className="col-md-7 col-sm-12"
           >
-            {/* <BootstrapTable keyField="id" data={products} columns={columns} /> */}
             <BootstrapTable
               keyField="RvID"
-              //keyField="id"
               columns={columns}
               data={tabledata}
               striped
               hover
               condensed
-              //pagination={paginationFactory()}
               selectRow={selectRow}
               headerClasses="header-class tableHeaderBGColor"
             ></BootstrapTable>

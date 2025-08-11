@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../../../utils";
 import { toast } from "react-toastify";
 
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function ShopIssueIVList(props) {
@@ -62,8 +61,6 @@ function ShopIssueIVList(props) {
     },
     {
       text: "NC Program No",
-      // dataField: "NcId",
-      //veeranna 20-02-2025 (table column data is missmatchin changed the value nc id to nc prgram no)
       dataField: "NC_ProgramNo",
       sort: true,
       headerStyle: { whiteSpace: "nowrap" },
@@ -95,7 +92,6 @@ function ShopIssueIVList(props) {
     bgColor: "#98A8F8",
     onSelect: (row, isSelect, rowIndex, e) => {
       setIssueIDVal(row.IssueID);
-      console.log("row = ", row);
       setRowData({
         Cust_Name: row.Cust_Name,
         IV_No: row.IV_No,
@@ -106,7 +102,6 @@ function ShopIssueIVList(props) {
         Mtrl_Code: row.Mtrl_Code,
         QtyIssued: row.QtyIssued,
         QtyReturned: row.QtyReturned,
-        //RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
       });
     },
   };
@@ -132,13 +127,11 @@ function ShopIssueIVList(props) {
             <div style={{ height: "420px", overflowY: "scroll" }}>
               <BootstrapTable
                 keyField="IssueID"
-                //keyField="id"
                 columns={columns}
                 data={tableData}
                 striped
                 hover
                 condensed
-                //pagination={paginationFactory()}
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
                 noDataIndication={() =>

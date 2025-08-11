@@ -1,5 +1,3 @@
-/** @format */
-
 import React from "react";
 import {
   Page,
@@ -9,15 +7,13 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-import { formatDate } from "../../../../utils";
-// import MLLogo from "../../../../../../frontend/src/ML-LOGO.png";
+
 import MLLogo from "../../../../../src/ML-LOGO.png";
 
 const styles = StyleSheet.create({
   page: {
     fontSize: "9px",
     flexDirection: "column",
-    // margin: "30px",
     marginTop: 30,
     marginBottom: 50,
     paddingBottom: 50,
@@ -40,7 +36,6 @@ const styles = StyleSheet.create({
     fontWeight: "bolder",
     textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
-    // alignSelf: "center",
   },
 
   title2: {
@@ -48,9 +43,7 @@ const styles = StyleSheet.create({
     marginLeft: "140px",
     fontSize: "11px",
     fontWeight: "bold",
-    // textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
-    // alignSelf: "center",
   },
 
   line1: {
@@ -106,11 +99,7 @@ const styles = StyleSheet.create({
     textDecoration: "underline",
     fontFamily: "Helvetica-Bold",
   },
-  // tableHeader: {
-  //   width: "100%",
-  //   marginTop: "5px",
-  //   fontSize: 10,
-  // },
+
   partID: {
     width: "30%",
     marginLeft: "10px",
@@ -121,7 +110,7 @@ const styles = StyleSheet.create({
   rvNO: {
     width: "40%",
     marginTop: "5px",
-    marginLeft:'5px',
+    marginLeft: "5px",
     fontSize: "9px",
     fontFamily: "Helvetica-Bold",
   },
@@ -170,7 +159,7 @@ const styles = StyleSheet.create({
     marginLeft: "5px",
     fontSize: "9px",
     marginTop: "10px",
-    textAlign:'right',
+    textAlign: "right",
   },
   usedVal: {
     width: "7%",
@@ -213,8 +202,6 @@ const styles = StyleSheet.create({
 });
 
 const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
-  // let previousPartId = null;
-
   const groupedTableData = tableData.reduce((acc, item) => {
     if (!acc[item.PartId]) {
       acc[item.PartId] = [];
@@ -227,24 +214,13 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.tableContainer}>
-          {/* <Image src={MLLogo} style={styles.logoImage} />
-        
-         
-        <Text style={styles.title1}>Magod Laser Machining Pvt Ltd : Jigni</Text>
-
-        <Text style={styles.title2}>
-          Production : Assembly Parts Issue Voucher
-        </Text> */}
-          {/* marginLeft: "127px" */}
-
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image src={MLLogo} style={styles.logoImage} />
-            {/* {logoBase64 && <Image src={logoBase64} style={styles.logoImage} />} */}
 
             <View>
               <View style={{ justifyContent: "center" }}>
                 <Text style={[styles.title1, { textDecoration: "underline" }]}>
-                Material : Shop Floor Issue
+                  Material : Shop Floor Issue
                 </Text>
               </View>
 
@@ -265,9 +241,8 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
 
               <View style={{ justifyContent: "center" }}>
                 <Text style={{ ...styles.companyInfo }}>
-                  {PDFData.PhonePrimary} {PDFData.PhoneSecondary}
-                  {PDFData.Email}
-                  {PDFData.URL}
+                  {PDFData.PhonePrimary} {PDFData.PhoneSecondary},{" "}
+                  {PDFData.Email}, {PDFData.URL}
                 </Text>
               </View>
             </View>
@@ -324,32 +299,7 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
           <Text style={styles.line2}>
             ___________________________________________________________________________________________________________________
           </Text>
-          {/* Table Row */}
-          {/* {tableData.map((item, index) => {
-            const renderPartId = item.PartId !== previousPartId;
-            previousPartId = item.PartId;
-            return (
-              <>
-                
-                <Text style={styles.partIDVal}>
-                  {renderPartId && item.PartId}
-                </Text>
 
-                <Text style={styles.rvNOVal}>
-                  {item.RV_No}({item.CustDocuNo})
-                </Text>
-                <Text style={styles.issuedVal}>{item.QtyIssued}</Text>
-                <Text style={styles.usedVal}></Text>
-                <Text style={styles.returnedVal}></Text>
-                
-                {tableData[index + 1]?.PartId !== item.PartId && (
-                  <Text style={styles.line2}>
-                    ______________________________________________________________________________________________
-                  </Text>
-                )}
-              </>
-            );
-          })} */}
           {Object.values(groupedTableData).map((group, groupIndex) => {
             return (
               <React.Fragment key={groupIndex}>

@@ -32,7 +32,7 @@ shopFloorReturnRouter.get("/getFirstMainTable", async (req, res, next) => {
 shopFloorReturnRouter.get("/getSecondMainTable", async (req, res, next) => {
   try {
     let id = req.query.id;
-    // console.log("id", id);
+
     misQueryMod(
       `SELECT * FROM magodmis.ncprogrammtrlallotmentlist n WHERE n.IssueID=${id}
       AND (n.Used Or n.Rejected) And Not n.returntostock`,

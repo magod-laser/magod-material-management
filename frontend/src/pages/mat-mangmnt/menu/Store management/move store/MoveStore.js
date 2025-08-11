@@ -1,9 +1,5 @@
-import React from 'react'
-
 function MoveStore() {
-  return (
-    <div>MoveStore</div>
-  )
+  return <div>MoveStore</div>;
 }
 
-export default MoveStore
+export default MoveStore;

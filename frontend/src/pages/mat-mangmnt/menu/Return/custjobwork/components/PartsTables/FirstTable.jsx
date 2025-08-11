@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import Table from "react-bootstrap/Table";
 
+import Table from "react-bootstrap/Table";
 import { FaArrowUp } from "react-icons/fa";
 
 export default function FirstTable(props) {
-  // console.log("props in frist table..", props);
+
 
   const sortedData = () => {
     let dataCopy = [...props.firstTableData];
@@ -16,7 +14,7 @@ export default function FirstTable(props) {
           !parseFloat(a[props.sortConfigFirst.key]) ||
           !parseFloat(b[props.sortConfigFirst.key])
         ) {
-          // console.log("string");
+       
           if (a[props.sortConfigFirst.key] < b[props.sortConfigFirst.key]) {
             return props.sortConfigFirst.direction === "asc" ? -1 : 1;
           }
@@ -25,7 +23,7 @@ export default function FirstTable(props) {
           }
           return 0;
         } else {
-          // console.log("number");
+         
           if (
             parseFloat(a[props.sortConfigFirst.key]) <
             parseFloat(b[props.sortConfigFirst.key])

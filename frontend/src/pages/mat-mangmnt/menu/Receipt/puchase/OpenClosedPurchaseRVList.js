@@ -1,32 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { formatDate } from "../../../../../utils";
 import { useLocation } from "react-router-dom";
 
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function OpenClosedPurchaseRVList() {
   const location = useLocation();
-
-  const nav = useNavigate();
-  const [show, setShow] = useState(false);
-
-  const currDate = new Date()
-    .toJSON()
-    .slice(0, 10)
-    .split("-")
-    .reverse()
-    .join("/");
-
-  //initial disable all
   const [boolVal, setBoolVal] = useState(true);
-
-  const [partUniqueId, setPartUniqueId] = useState();
   const [partArray, setPartArray] = useState([]);
-
-  const [partVal, setPartVal] = useState([]);
   const [inputPart, setInputPart] = useState({
     Id: "",
     PartId: "",
@@ -36,13 +19,7 @@ function OpenClosedPurchaseRVList() {
     QtyRejected: "0",
   });
 
-  const [custDetailVal, setCustDetailVal] = useState("");
-  const [calcWeightVal, setCalcWeightVal] = useState(0);
-
-  const currDateTime = new Date();
-  let [custdata, setCustdata] = useState([]);
   let [mtrlDetails, setMtrlDetails] = useState([]);
-  const [saveUpdateCount, setSaveUpdateCount] = useState(0);
 
   const [formHeader, setFormHeader] = useState({
     RvID: "",
@@ -59,25 +36,14 @@ function OpenClosedPurchaseRVList() {
     address: "",
   });
 
-  //   async function fetchCustData() {
-  //     getRequest(endpoints.getCustomers, (data) => {
-  //       const found = data.find((obj) => obj.Cust_Code === formHeader.Cust_Code);
-  //       formHeader.address = found.Address;
-  //       //setCustdata(data);
-  //     });
-  //     //console.log("data = ", custdata);
-  //   }
-
   async function fetchData() {
     const url =
       endpoints.getByTypeMaterialReceiptRegisterByRvID +
       "?id=" +
       location.state.id;
     getRequest(url, (data) => {
-      //console.log("data = ", data);
       data.ReceiptDate = formatDate(new Date(data.ReceiptDate), 4);
       data.RV_Date = formatDate(new Date(data.RV_Date), 3);
-      //setFormHeader(data);
 
       //get customer details for address
       getRequest(endpoints.getCustomers, (data1) => {
@@ -90,17 +56,13 @@ function OpenClosedPurchaseRVList() {
           endpoints.getPartReceiptDetailsByRvID + "?id=" + location.state.id;
         getRequest(url1, (data2) => {
           setPartArray(data2);
-          //setFormHeader(formHeader);
-          //console.log(data2);
         });
       });
     });
-    //console.log("data = ", formHeader);
   }
 
   useEffect(() => {
     fetchData();
-    //formHeader.ReceiptDate = formatDate(new Date(), 4);
   }, []);
 
   const columns = [
@@ -177,11 +139,6 @@ function OpenClosedPurchaseRVList() {
               <option value={formHeader.Cust_Code} disabled selected>
                 {formHeader.Customer}
               </option>
-              {/* {custdata.map((customer, index) => (
-                <option key={index} value={customer.Cust_Code}>
-                  {customer.Cust_name}
-                </option>
-              ))} */}
             </select>
           </div>
           <div className="col-md-4">
@@ -262,7 +219,6 @@ function OpenClosedPurchaseRVList() {
             striped
             hover
             condensed
-            //selectRow={selectRow}
           ></BootstrapTable>
         </div>
         <div className="col-md-6 col-sm-12">
@@ -322,7 +278,6 @@ function OpenClosedPurchaseRVList() {
                           className="in-field"
                           type="text"
                           name="qtyReceived"
-                          //value={tempVal}
                           value={inputPart.qtyReceived}
                           disabled={boolVal}
                         />

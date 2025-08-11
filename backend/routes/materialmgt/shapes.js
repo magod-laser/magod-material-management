@@ -16,9 +16,7 @@ shapeRouter.get("/getAllShapes", async (req, res, next) => {
 shapeRouter.get("/getRowByShape", async (req, res, next) => {
   try {
     let shape = req.query.shape;
-    /*console.log(
-        `Select * from magodmis.shapes where Shape =  "${shape}"`
-      );*/
+
     misQueryMod(
       `Select * from magodmis.shapes where Shape =  "${shape}"`,
       (err, data) => {

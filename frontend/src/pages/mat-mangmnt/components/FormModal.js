@@ -1,4 +1,3 @@
-import React from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
@@ -52,10 +51,6 @@ function FormModal(props) {
             </button>
           </div>
         </Modal.Body>
-
-        {/* <Modal.Footer>
-          
-        </Modal.Footer> */}
       </Modal>
     </>
   );

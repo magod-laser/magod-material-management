@@ -1,5 +1,3 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
@@ -21,7 +19,6 @@ function UpdateStockModal({ open, setOpen }) {
         </Modal.Body>
         <Modal.Footer>
           <button
-            // variant="secondary"
             className="button-style"
             onClick={handleClose}
             style={{ fontSize: "12px" }}

@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
@@ -23,11 +21,9 @@ function SplitMatModal({ open, setOpen }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          {/* variant="secondary" */}
           <button className="button-style" onClick={handleClose}>
             yes
           </button>
-          {/* variant="primary" */}
           <button className="button-style" onClick={handleClose}>
             No
           </button>

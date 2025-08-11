@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { PDFViewer, StyleSheet, pdf } from "@react-pdf/renderer";
 import { useLocation } from "react-router-dom";
 import PrintIVListServicePartTable from "./PrintIVListServicePartTable";
@@ -6,20 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const { getRequest, postRequest } = require("../../../api/apiinstance");
+const { postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
-
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-});
 
 function PrintIVListServicePart({
   isOpen,
@@ -30,12 +18,6 @@ function PrintIVListServicePart({
   const [PDFData, setPDFData] = useState({});
   const [logoBase64, setLogoBase64] = useState(null);
   const location = useLocation();
-  // console.log(
-  //   "Second formheader = ",
-  //   location?.state?.formHeader,
-  //   " outdata = ",
-  //   location?.state?.tableData
-  // );
 
   const handleClose = () => {
     setIsPrintModalOpen(false);
@@ -44,8 +26,6 @@ function PrintIVListServicePart({
   function fetchPDFData() {
     let url1 = endpoints.getPDFData;
     postRequest(url1, {}, async (res) => {
-      // console.log("res", res);
-      console.log("url", url1);
       setPDFData(res[0]);
     });
   }
