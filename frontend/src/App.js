@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Sidebar from "./pages/Sidebar";
 import WithNav from "./Layout/WithNav";
 import Parentroute from "./Layout/Parentroute";
 import Login from "./pages/Auth/Login";
@@ -9,7 +8,6 @@ import ShoopFloorreturns from "./pages/mat-mangmnt/menu/Shop Floor Returns/Shoop
 import Reports from "./pages/mat-mangmnt/menu/Reports/Reports";
 import StoreManagement from "./pages/mat-mangmnt/menu/Store management/StoreManagement";
 import Setup from "./pages/mat-mangmnt/menu/setup/Setup";
-// import Customer from "./pages/mat-mangmnt/menu/Reports/Customer/Customer";
 import ProfileCutting from "./pages/mat-mangmnt/menu/Shop Floor Issue/ProfileCutting";
 import PendingList from "./pages/mat-mangmnt/menu/Shop Floor Returns/PendingList";
 import MoveStore from "./pages/mat-mangmnt/menu/Store management/move store/MoveStore";
@@ -104,7 +102,6 @@ import PrintMonthlyReport from "./pages/mat-mangmnt/print/report/PrintMonthlyRep
 import PrintDailyReportInvoice from "./pages/mat-mangmnt/print/report/PrintDailyReportInvoice";
 import PrintLocationStockDetailReport from "./pages/mat-mangmnt/print/store/PrintLocationStockDetailReport";
 import PrintLocationStockSummaryReport from "./pages/mat-mangmnt/print/store/PrintLocationStockSummaryReport";
-
 import ResizeAndSplittingStoreManagement from "./pages/mat-mangmnt/menu/Store management/ResizeAndSplittingStoreManagement";
 
 function App() {
@@ -345,7 +342,7 @@ function App() {
                 </Route>
               </Route>
             </Route>
-            {/* shoopfloorreturns/pendinglist/returnasscrap/location */}R
+
             <Route path="ShopFloorReturns">
               <Route index={true} element={<ShoopFloorreturns />} />
               <Route path="PendingList">

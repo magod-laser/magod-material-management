@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import ModalComp from "./ModalComp";
-import Form from "react-bootstrap/Form";
 import { getWeight } from "../../../../../utils";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getRequest, postRequest } from "../../../../api/apiinstance";
 import { endpoints } from "../../../../api/constants";
 import SplitMaterialYesNoModal from "../../../components/SplitMaterialYesNoModal";
@@ -14,7 +12,6 @@ function ResizeReturnModal({
   isOpen,
   onClose,
   secondTableRow,
-  setSelectedSecondTableRows,
   tableRefresh,
   type,
   setIsModalOpen,
@@ -42,10 +39,6 @@ function ResizeReturnModal({
   const quantity = secondTableRow?.length;
   const para1 = secondTableRow[0]?.Para1;
   const para2 = secondTableRow[0]?.Para2;
-
-  // console.log("para1", para1);
-  // console.log("para2", para2);
-
   const [tableData, setTableData] = useState([]);
   const [selectedTableRow, setSelectedTableRow] = useState([
     {
@@ -87,13 +80,10 @@ function ResizeReturnModal({
       InStock: "",
       Weight: "",
       Location: "",
-      // MtrlStock_ID: counter,
     };
 
     setTableData([...tableData, newRow]);
   };
-
-  // console.log("1st Table Data", tableData);
 
   const selectRow = (val, key) => {
     setSelectedTableRow([
@@ -118,8 +108,6 @@ function ResizeReturnModal({
 
       Location: val.Location,
     });
-
-    // },
   };
 
   const changeHandler = (e) => {
@@ -185,28 +173,15 @@ function ResizeReturnModal({
   };
 
   const deleteItem = () => {
-    // console.log("delete clicked...");
-    // console.log("selectedTableRow", selectedTableRow);
-    // console.log(
-    //   "tableData",
-    //   tableData[parseInt(selectedTableRow[0].SrlNo) - 1]
-    // );
-
-    // const newArray = tableData.filter(
-    //   (p) => p.MtrlStock_ID !== selectedRow.srlNo
-    // );
-
     const newArray = [];
     for (let i = 0; i < tableData.length; i++) {
       const element = tableData[i];
 
       if (i !== parseInt(selectedTableRow[0].SrlNo - 1)) {
-        // console.log(`table data... ${i + 1}`, tableData);
-
         newArray.push(element);
       }
     }
-    // console.log("newArray", newArray);
+
     setTableData(newArray);
     setSelectedTableRow([]);
     setInputData({
@@ -223,7 +198,7 @@ function ResizeReturnModal({
   const splitMaterialButton = () => {
     let SheetArea = para1 * para2;
 
-    var totalSplitArea = 0;
+    let totalSplitArea = 0;
     for (let i = 0; i < tableData.length; i++) {
       totalSplitArea +=
         tableData[i].DynamicPara1 *
@@ -244,7 +219,6 @@ function ResizeReturnModal({
         } else if (tableData[i].Location.length === 0) {
           toast.error("Select Location for Resized Sheets");
         } else {
-          //get mtrl_data by mtrl_code
           let url = endpoints.getRowByMtrlCode + "?code=" + materialCode;
           getRequest(url, async (data) => {
             let totwt = 0;
@@ -263,116 +237,20 @@ function ResizeReturnModal({
     }
   };
 
-  // const modalYesNoResponse = (msg) => {
-  //   // console.log("msg = ", msg);
-  //   if (msg == "yes") {
-  //     for (let i = 0; i < secondTableRow?.length; i++) {
-  //       const element0 = secondTableRow[i];
-  //       let counter = 1;
-
-  //       for (let j = 0; j < tableData.length; j++) {
-  //         const element1 = tableData[j];
-
-  //         for (let k = 1; k < parseInt(element1.InStock) + 1; k++) {
-  //           let urlGet =
-  //             endpoints.getDataByMtrlStockIdResize +
-  //             "?MtrlStockID=" +
-  //             element0.MtrlStockID;
-  //           getRequest(urlGet, async (selectData) => {
-  //             if (selectData.length > 0) {
-  //               let paraData3 = {
-  //                 MtrlStockID: `${element0.MtrlStockID}/P${counter}`,
-  //                 MtrlStockIDOld: element0.MtrlStockID,
-
-  //                 Mtrl_Rv_id: selectData[0].Mtrl_Rv_id,
-  //                 Cust_Code: selectData[0].Cust_Code,
-  //                 Customer: selectData[0].Customer,
-  //                 RV_No: selectData[0].RV_No,
-  //                 Cust_Docu_No: null,
-  //                 Mtrl_Code: selectData[0].Mtrl_Code,
-  //                 Shape: selectData[0].Shape,
-  //                 Material: selectData[0].Material,
-  //                 DynamicPara1: element1.DynamicPara1,
-  //                 DynamicPara2: element1.DynamicPara2,
-  //                 DynamicPara3: 0,
-  //                 DynamicPara4: 0,
-  //                 Locked: 0,
-  //                 Scrap: 0,
-  //                 Issue: 1,
-  //                 Weight: element1.Weight,
-  //                 ScrapWeight: selectData[0].ScrapWeight,
-  //                 IV_No: selectData[0].IV_No,
-  //                 NCProgramNo: null,
-  //                 LocationNo: element1.Location,
-  //               };
-
-  //               postRequest(
-  //                 endpoints.insertByMtrlStockIDResize,
-  //                 paraData3,
-  //                 (data) => {
-  //                   if (data.affectedRows > 0) {
-  //                     // flagTest.push(1);
-  //                     // setFlagTest([...flagTest, 1]);
-  //                     // console.log("test...");
-  //                   }
-  //                   // console.log("inserted stock list.....", flagTest);
-  //                 }
-  //               );
-
-  //               counter = counter + 1;
-  //             } else {
-  //               toast.error("unaught error");
-  //             }
-  //           });
-  //         }
-  //       }
-  //     }
-
-  //     for (let j = 0; j < secondTableRow?.length; j++) {
-  //       const element = secondTableRow[j];
-
-  //       let paraData3 = {
-  //         LocationNo: "ScrapYard",
-  //         MtrlStockID: element.MtrlStockID,
-  //       };
-  //       postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-  //         if (data.affectedRows > 0) {
-  //           // flagTest.push(2);
-  //           // setFlagTest([...flagTest, 2]);
-  //         }
-  //       });
-
-  //       tableRefresh();
-  //     }
-
-  //     toast.success("Resize Successfull");
-
-  //     // new
-  //     // setTimeout(() => {
-  //     //   nav("/MaterialManagement/ShopFloorReturns/PendingList");
-  //     // }, 500);
-  //   }
-  // };
-
   const modalYesNoResponse = (msg) => {
-    // console.log("msg = ", msg);
     if (msg == "yes") {
       if (type == "return") {
         for (let i = 0; i < secondTableRow?.length; i++) {
           if (secondTableRow[i].Rejected === 1) {
-            //return the sheet
             let paraData1 = {
               id: secondTableRow[i].IssueID,
             };
             postRequest(
               endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
               paraData1,
-              (data) => {
-                // console.log("rejected : updated shopfloorregisterqtyreturned");
-              }
+              (data) => {}
             );
 
-            //Set issued less by one
             let paraData2 = {
               Id: secondTableRow[i].NcID,
               Qty: 1,
@@ -380,9 +258,7 @@ function ResizeReturnModal({
             postRequest(
               endpoints.updateQtyAllotedncprograms,
               paraData2,
-              (data) => {
-                // console.log("rejected : updated qtyallotted ncprograms");
-              }
+              (data) => {}
             );
           }
           if (secondTableRow[i].Used === 1) {
@@ -393,9 +269,7 @@ function ResizeReturnModal({
             postRequest(
               endpoints.updateShopfloorMaterialIssueRegisterQtyReturnedAddOne,
               paraData1,
-              (data) => {
-                // console.log("used : updated shopfloorregisterqtyreturned");
-              }
+              (data) => {}
             );
           }
 
@@ -404,9 +278,7 @@ function ResizeReturnModal({
             LocationNo: "ScrapYard",
             MtrlStockID: secondTableRow[i].ShapeMtrlID,
           };
-          postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-            // console.log("updated stock list");
-          });
+          postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {});
 
           //updatencprogrammtrlallotmentlistReturnStock
           let paraData4 = {
@@ -415,9 +287,7 @@ function ResizeReturnModal({
           postRequest(
             endpoints.updatencprogrammtrlallotmentlistReturnStock,
             paraData4,
-            (data) => {
-              // console.log("updated ncprogrammtrlallotmentreturnstock");
-            }
+            (data) => {}
           );
         }
 
@@ -432,9 +302,7 @@ function ResizeReturnModal({
             MtrlStockID: secondTableRow[0].ShapeMtrlID + "/P" + (i + 1),
             MtrlStockIDNew: secondTableRow[0].ShapeMtrlID,
           };
-          postRequest(endpoints.insertByMtrlStockID, paraData3, (data) => {
-            // console.log("inserted stock list");
-          });
+          postRequest(endpoints.insertByMtrlStockID, paraData3, (data) => {});
         }
         tableRefresh();
         toast.success("Spliting done Successfully");
@@ -452,28 +320,17 @@ function ResizeReturnModal({
 
         setIsModalOpen(false);
       } else if (type == "storeresize") {
-        // console.log("secondTableRow........", location?.state?.secondTableRow);
-        // console.log("resizeTableData........", tableData);
-        // console.log("location data...........", location.state);
         //insert mtrl stock list
         for (let i = 0; i < tableData.length; i++) {
           const element0 = tableData[i];
 
-          // console.log('forrrr111111111..', element0);
           for (let j = 0; j < secondTableRow.length; j++) {
             const element1 = secondTableRow[j];
-            // console.log("forrrr111111111..", element0);
-            // console.log("forrrr222222222222..", element1);
-
-            // console.log("paraaaaaaaaa.......", paraData3);
-
             let urlGet =
               endpoints.getDataByMtrlStockIdResize +
               "?MtrlStockID=" +
               element1.MtrlStockID;
             getRequest(urlGet, async (selectData) => {
-              // console.log("data from BE selecteData", selectData);
-
               if (selectData.length > 0) {
                 let paraData3 = {
                   MtrlStockID: element1.MtrlStockID + "/P" + (i + 1),
@@ -499,28 +356,14 @@ function ResizeReturnModal({
                   IV_No: selectData[0].IV_No,
                   NCProgramNo: null,
                   LocationNo: element0.Location,
-
-                  // DynamicPara1: element0.DynamicPara1,
-                  // DynamicPara2: element0.DynamicPara2,
-                  // DynamicPara3: 0,
-                  // DynamicPara4: 0,
-                  // LocationNo: element0.Location,
-                  // Weight: element0.Weight,
-                  // MtrlStockID: element1.MtrlStockID + "/P" + (i + 1),
-                  // MtrlStockIDOld: element1.MtrlStockID,
                 };
 
-                // console.log("paraData3...", paraData3);
                 postRequest(
                   endpoints.insertByMtrlStockIDResize,
                   paraData3,
                   (data) => {
                     if (data.affectedRows > 0) {
-                      // flagTest.push(1);
-                      // setFlagTest([...flagTest, 1]);
-                      // console.log("test...");
                     }
-                    // console.log("inserted stock list.....", flagTest);
                   }
                 );
               } else {
@@ -530,53 +373,23 @@ function ResizeReturnModal({
           }
         }
 
-        // //update stock list
-        // for (let i = 0; i < location?.state?.secondTableRow.length; i++) {
-        //   let paraData3 = {
-        //     LocationNo: "ScrapYard",
-        //     MtrlStockID: location?.state?.secondTableRow[i].ShapeMtrlID,
-        //   };
-        //   postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-        //     // console.log("updated stock list");
-        //   });
-        // }
-
-        // update the old mtrl...
-
         for (let j = 0; j < secondTableRow?.length; j++) {
           const element = secondTableRow[j];
-
-          // console.log("element", element.MtrlStockID);
 
           let paraData3 = {
             LocationNo: "ScrapYard",
             MtrlStockID: element.MtrlStockID,
           };
           postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-            // console.log("updated stock list", data);
             if (data.affectedRows > 0) {
-              // flagTest.push(2);
-              // setFlagTest([...flagTest, 2]);
             }
           });
         }
 
         toast.success("Resize Successfull");
         setTimeout(() => {
-          // document.getElementById("result").innerHTML = "Hello, I am here";
           nav("/MaterialManagement/StoreManagement/ResizeSheets");
         }, 500);
-        // flagTest.push(5);
-        // console.log("flagTest", flagTest.length);
-        // if (flagTest.sort().reverse()[0] === 0) {
-        //   toast.error("Error while inserting new material");
-        // } else if (flagTest.sort().reverse()[0] === 1) {
-        //   toast.error("Error while udating the material");
-        // } else if (flagTest.sort().reverse()[0] === 2) {
-        //   toast.success("Resize Successfull");
-        // } else {
-        //   toast.error("Uncaught error while updating Material");
-        // }
       }
     }
   };
@@ -662,9 +475,6 @@ function ResizeReturnModal({
                   id="btnclose"
                   type="submit"
                   onClick={handleClose}
-                  // onClick={() =>
-                  //   nav("/MaterialManagement/ShopFloorReturns/PendingList")
-                  // }
                 >
                   Close
                 </button>
@@ -673,7 +483,6 @@ function ResizeReturnModal({
           </div>
 
           <div className="row mt-2">
-            {/* table */}
             <div
               className="col-md-8"
               style={{
@@ -690,8 +499,6 @@ function ResizeReturnModal({
                   <tr>
                     <th>Location</th>
                     <th>MtrlStock ID</th>
-                    {/* <th>DynamicPara1</th> */}
-                    {/* <th>DynamicPara2</th> */}
                     <th>DynamicPara1</th>
                     <th>DynamicPara2</th>
                     <th>InStock</th>
@@ -723,7 +530,7 @@ function ResizeReturnModal({
                 </tbody>
               </Table>
             </div>
-            {/* form */}
+
             <div
               className="col-md-4 p-3"
               style={{ backgroundColor: "#e6e6e6" }}
@@ -742,7 +549,6 @@ function ResizeReturnModal({
                     className="button-style m-0"
                     style={{ width: "75px" }}
                     onClick={deleteItem}
-                    // disabled={selectedTableRow.length === 0}
                   >
                     Delete Item
                   </button>
@@ -815,7 +621,6 @@ function ResizeReturnModal({
                         name="InStock"
                         onChange={changeHandler}
                         value={inputData.InStock}
-                        // onBlur={focusOutEvent}
                         disabled={!quantityEnabled}
                       />
                     </div>
@@ -829,7 +634,6 @@ function ResizeReturnModal({
 
                     <div className="col-md-9 p-0">
                       <select
-                        // className="in-field ip-select dropdown-field rounded-0"
                         className="input-disabled mt-1"
                         name="Location"
                         onChange={changeHandler}
@@ -858,23 +662,6 @@ function ResizeReturnModal({
             modalResponse={modalYesNoResponse}
           />
         </Modal.Body>
-        {/* <Modal.Footer>
-
-          <button
-            className="button-style"
-            style={{ width: "80px", backgroundColor: "gray" }}
-            onClick={handleClose}
-          >
-            Cancel
-          </button>
-          <button
-            className="button-style"
-            style={{ width: "80px" }}
-            onClick={handleClose}
-          >
-            Save
-          </button>
-        </Modal.Footer> */}
       </Modal>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { toast } from "react-toastify";
@@ -26,7 +26,6 @@ function DailyReport() {
 
   const [receiptReportPrint, setReceiptReportPrint] = useState(false);
   const [invoiceDispatchPrint, setInvoiceDispatchPrint] = useState(false);
-  // console.log("dateeeeeeeeeeeee", yearrr + "-" + (monthhh + 1) + "-" + dateee);
   const [dateVal, setDateVal] = useState(
     yearrr + "-" + (monthhh + 1) + "-" + dateee
   );
@@ -34,19 +33,15 @@ function DailyReport() {
   const [totalweight, settotalweight] = useState(0);
   const InputEvent = (e) => {
     const { name, value } = e.target;
-    //console.log("value = ", value);
     setDateVal(value);
   };
 
   const loadData = () => {
-    //first tab
     const url1 = endpoints.getDailyReportMaterialReceipt1 + "?date=" + dateVal;
     getRequest(url1, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
       }
-      //setFirstTab(data);
-      //console.log("first tab1 ");
     });
     const url2 = endpoints.getDailyReportMaterialReceipt2 + "?date=" + dateVal;
     getRequest(url2, async (data) => {
@@ -54,7 +49,6 @@ function DailyReport() {
         data[i].id = i + 1;
       }
       setFirstTab(data);
-      //console.log("first tab2 = ", data);
 
       let tweight = 0;
       let tqty = 0;
@@ -67,38 +61,31 @@ function DailyReport() {
       settotqty(tqty);
     });
 
-    //second tab
     const url3 = endpoints.getDailyReportMaterialDispatch + "?date=" + dateVal;
     getRequest(url3, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
       }
       setSecondTab(data);
-      //console.log("second tab = ", data);
     });
 
-    //third tab -sales
     const url4 = endpoints.getDailyReportMaterialSales + "?date=" + dateVal;
     getRequest(url4, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
       }
       setThirdTab(data);
-      //console.log("third tab = ", data);
     });
 
-    //fourth tab-purchase
     const url5 = endpoints.getDailyReportMaterialPurchase + "?date=" + dateVal;
     getRequest(url5, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
       }
       setFourthTab(data);
-      //console.log("fourth tab = ", data);
     });
   };
 
-  // console.log("firstTab", firstTab);
   const saveData = () => {
     const updateURL = endpoints.updateSrlWghtMaterialDispatch;
 
@@ -113,7 +100,6 @@ function DailyReport() {
         } else {
           toast.error("Uncaught Error");
         }
-        // console.log("resssssssssss", res);
       }
     );
   };
@@ -260,31 +246,17 @@ function DailyReport() {
     },
   ];
   const printReceipt = async () => {
-    //await delay(2000);
-
     setReceiptReportPrint(true);
-    // nav("/MaterialManagement/Reports/PrintDailyReportReceipt", {
-    //   state: {
-    //     tableData: firstTab,
-    //     date: dateVal,
-    //     totalweight: totalweight,
-    //     totqty: totqty,
-    //   },
-    // });
   };
 
-  // print invoicce dispatch func starts
-
-  //first find out the unique type
-  var invType = [...new Set(secondTab.map((item) => item.DC_InvType))];
+  let invType = [...new Set(secondTab.map((item) => item.DC_InvType))];
   invType = invType.sort();
-  //console.log("type = ", invType.sort());
 
   //calculate material purchase details
-  var fullTable = [];
+  let fullTable = [];
   for (let i = 0; i < invType.length; i++) {
     let tot = 0;
-    var tempdata = [];
+    let tempdata = [];
     for (let j = 0; j < secondTab.length; j++) {
       if (invType[i] === secondTab[j].DC_InvType) {
         tempdata.push(secondTab[j]);
@@ -298,63 +270,11 @@ function DailyReport() {
     };
     fullTable.push(obj);
   }
-  //  await delay(300);
-  //console.log("fullTable = ", fullTable);
 
-  //  nav("/MaterialManagement/Reports/PrintDailyReportInvoice", {
-  //    state: {
-  //      tableData: fullTable,
-  //      date: dateVal,
-  //    },
-  //  });
-
-  // print invoicce dispatch func ends
   const printInvoice = async () => {
     setInvoiceDispatchPrint(true);
-    // //first find out the unique type
-    // var invType = [...new Set(secondTab.map((item) => item.DC_InvType))];
-    // invType = invType.sort();
-    // //console.log("type = ", invType.sort());
-
-    // //calculate material purchase details
-    // var fullTable = [];
-    // for (let i = 0; i < invType.length; i++) {
-    //   let tot = 0;
-    //   var tempdata = [];
-    //   for (let j = 0; j < secondTab.length; j++) {
-    //     if (invType[i] === secondTab[j].DC_InvType) {
-    //       tempdata.push(secondTab[j]);
-    //       tot = tot + parseFloat(secondTab[j].SrlWt);
-    //     }
-    //   }
-    //   let obj = {
-    //     material: invType[i],
-    //     totwt: tot,
-    //     data: tempdata,
-    //   };
-    //   fullTable.push(obj);
-    // }
-    // await delay(300);
-    // //console.log("fullTable = ", fullTable);
-
-    // nav("/MaterialManagement/Reports/PrintDailyReportInvoice", {
-    //   state: {
-    //     tableData: fullTable,
-    //     date: dateVal,
-    //   },
-    // });
   };
 
-  function afterSaveCell(oldValue, newValue, row) {
-    //console.log("Oldvalue = ", oldValue);
-    //console.log("New value = ", newValue);
-    //console.log("Row = ", row);
-    //console.log("......................");
-    //console.log("secondtabbbbbbb", secondTab);
-    // setSecondTab
-  }
-
-  // setDateVal(yearrr, "-", monthhh + 1, "-", dateee);
   return (
     <>
       <div>
@@ -382,18 +302,10 @@ function DailyReport() {
             <button className="button-style" onClick={saveData}>
               Save Data
             </button>
-            <button
-              className="button-style"
-              //style={{ width: "200px" }}
-              onClick={printReceipt}
-            >
+            <button className="button-style" onClick={printReceipt}>
               Print Receipt Report
             </button>
-            <button
-              className="button-style"
-              // style={{ width: "200px" }}
-              onClick={printInvoice}
-            >
+            <button className="button-style" onClick={printInvoice}>
               Print Invoice Dispatch
             </button>
             <button
@@ -408,7 +320,6 @@ function DailyReport() {
           <div className="col-md-12">
             <Tabs id="controlled-tab-example" className="mb-3 mt-3 tab_font">
               <Tab eventKey="mat_rece" title="Material Receipt">
-                {/* <DailyReportMaterialReceipt tableData={firstTab} /> */}
                 <div style={{ height: "250px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -417,14 +328,12 @@ function DailyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
               </Tab>
 
               <Tab eventKey="mat_dis" title="Material Dispatch">
-                {/* <DailyReportMaterialDispatch tableData={secondTab} /> */}
                 <div style={{ height: "250px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -433,19 +342,16 @@ function DailyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                     cellEdit={cellEditFactory({
                       mode: "click",
                       blurToSave: true,
-                      afterSaveCell,
                     })}
                   ></BootstrapTable>
                 </div>
               </Tab>
 
               <Tab eventKey="mat_sale" title="Material Sales">
-                {/* <DailyReportMaterialSales tableData={thirdTab} /> */}
                 <div style={{ height: "250px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -454,14 +360,12 @@ function DailyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
               </Tab>
 
               <Tab eventKey="mat_pur" title="Material Purchase">
-                {/* <DailyReportMaterialPurchase tableData={fourthTab} /> */}
                 <div style={{ height: "250px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -470,7 +374,6 @@ function DailyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>

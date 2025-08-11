@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { customerSidebar, adminSidebar } from "../components/SidebarData";
+import { NavLink } from "react-router-dom";
+import { customerSidebar } from "../components/SidebarData";
 import { FaAngleRight, FaAngleLeft, FaAngleDown } from "react-icons/fa";
 
 const Sidebar = ({ children }) => {
@@ -13,12 +13,8 @@ const Sidebar = ({ children }) => {
   return (
     <div className="main-container">
       <div className={`${isSidebarOpen ? "sidebar sidebar_open" : "sidebar"}`}>
-        {/* logo */}
         <div className="top_section">
-          {isSidebarOpen && (
-            // <img className="logo" src={require("../ML-LOGO.png")} />
-            <h5 className="title_name">M A G O D</h5>
-          )}
+          {isSidebarOpen && <h5 className="title_name">M A G O D</h5>}
 
           <div className="toggle-icon">
             {isSidebarOpen ? (
@@ -29,14 +25,11 @@ const Sidebar = ({ children }) => {
           </div>
         </div>
 
-        {/* paths */}
-
         <div>
           <div className="routes">
             <div>
               {customerSidebar.map((path, index) => (
                 <React.Fragment key={path.id}>
-                  {console.log(path)}
                   <div className="link">
                     <div>
                       <NavLink to={path.path} className="menu_items">
@@ -45,7 +38,6 @@ const Sidebar = ({ children }) => {
                         >
                           {path.icon}
                         </div>
-                        {/* <div className="link_text">{path.name}</div> */}
                       </NavLink>
                     </div>
                     <div>
@@ -63,7 +55,6 @@ const Sidebar = ({ children }) => {
                         {isSidebarOpen && (
                           <>
                             {path?.subNav?.map((linkval, index) => {
-                              console.log("linkval", linkval);
                               return (
                                 <div>
                                   <li key={index} className="submenu_link">

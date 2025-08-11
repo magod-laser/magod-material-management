@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import { formatDate } from "../../../../utils";
@@ -11,9 +11,7 @@ function OpenButtonClosedSheetUnit() {
   const nav = useNavigate();
   const location = useLocation();
 
-  //initial disable all
   const [boolVal, setBoolVal] = useState(true);
-
   const [mtrlArray, setMtrlArray] = useState([]);
   const [para1Label, setPara1Label] = useState("");
   const [para2Label, setPara2Label] = useState("");
@@ -79,7 +77,6 @@ function OpenButtonClosedSheetUnit() {
       "?id=" +
       location.state.id;
     getRequest(url, (data) => {
-      //console.log("data = ", data);
       data.ReceiptDate = formatDate(new Date(data.ReceiptDate), 10);
       data.RV_Date = formatDate(new Date(data.RV_Date), 3);
       setFormHeader(data);
@@ -94,9 +91,6 @@ function OpenButtonClosedSheetUnit() {
       const url1 =
         endpoints.getMtrlReceiptDetailsByRvID + "?id=" + location.state.id;
       getRequest(url1, (data2) => {
-        console.log("data2  = ", data2);
-        // setMtrlArray(data2);
-
         data2.forEach((obj) => {
           obj.id = obj.Mtrl_Rv_id;
           obj.rvId = obj.RvID;
@@ -123,39 +117,6 @@ function OpenButtonClosedSheetUnit() {
           obj.qtyReturned = obj.QtyReturned;
         });
         setMtrlArray(data2);
-
-        //find shape of material
-        // for (let i = 0; i < data2.length; i++) {
-        //   const url2 =
-        //     endpoints.getRowByMtrlCode + "?code=" + data2[i].Mtrl_Code;
-        //   getRequest(url2, (data3) => {
-        //     if (data3.Shape === "Block") {
-        //       setPara1Label("Length");
-        //       setPara2Label("Width");
-        //       setPara3Label("Height");
-        //     } else if (data3.Shape === "Plate") {
-        //       setPara1Label("Length");
-        //       setPara2Label("Width");
-        //       setPara3Label("");
-        //     } else if (data3.Shape === "Sheet") {
-        //       setPara1Label("Width");
-        //       setPara2Label("Length");
-        //       setPara3Label("");
-        //     } else if (data3.Shape === "Tiles") {
-        //       setPara1Label("");
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //     } else if (data3.Shape.includes("Tube")) {
-        //       setPara1Label("Length");
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //     } else if (data3.Shape.includes("Units")) {
-        //       setPara1Label("Qty(Nos)");
-        //       setPara2Label("");
-        //       setPara3Label("");
-        //     }
-        //   });
-        // }
 
         const url2 =
           endpoints.getRowByMtrlCode + "?code=" + data2[0]?.Mtrl_Code;
@@ -231,17 +192,12 @@ function OpenButtonClosedSheetUnit() {
             setUnitRowSelect(false);
           }
         });
-
-        //setFormHeader(formHeader);
-        //console.log(data2);
       });
     });
-    //console.log("data = ", formHeader);
   }
 
   useEffect(() => {
     fetchData();
-    //formHeader.ReceiptDate = formatDate(new Date(), 4);
   }, []);
 
   const columns = [
@@ -283,14 +239,11 @@ function OpenButtonClosedSheetUnit() {
       text: "Inspected",
       dataField: "Inspected",
       formatter: (celContent, row) => (
-        console.log("inspected cell = ", celContent),
-        (
-          <div className="checkbox">
-            <lable>
-              <input type="checkbox" checked={celContent == 1 ? true : false} />
-            </lable>
-          </div>
-        )
+        <div className="checkbox">
+          <lable>
+            <input type="checkbox" checked={celContent == 1 ? true : false} />
+          </lable>
+        </div>
       ),
     },
     {
@@ -311,32 +264,20 @@ function OpenButtonClosedSheetUnit() {
     },
   ];
 
-  console.log("mtrlArray", mtrlArray);
-
   const selectRow = {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#8A92F0",
     onSelect: (row, isSelect, rowIndex, e) => {
-      // setSelectedRows(row);
-      console.log("row", row);
       setInputPart(row);
-      // if (row.updated === 1) {
-      //   setRmvBtn(true);
-      //   setAddBtn(false);
-      // } else {
-      //   setRmvBtn(false);
-      //   setAddBtn(true);
-      // }
-      // console.log("mtrlArray", mtrlArray);
+
       mtrlArray?.map((obj) => {
         if (obj.id == row.id) {
           setMtrlStock(obj);
-          // console.log("obj.totalWeight", obj.totalWeight);
+
           setInputPart({
-            // qtyAccepted: row.qtyAccepted,
             qtyRejected: obj.qtyRejected,
-            // qtyReceived: row.qtyReceived,
+
             id: obj.id,
             srl: obj.srl,
             mtrlCode: row.mtrlCode,
@@ -452,7 +393,6 @@ function OpenButtonClosedSheetUnit() {
               name="receiptDate"
               value={formHeader.ReceiptDate}
               readOnly
-              // disabled
             />
           </div>
 
@@ -509,7 +449,6 @@ function OpenButtonClosedSheetUnit() {
               name="weight"
               value={formHeader.TotalWeight}
               disabled={boolVal}
-              // onChange={InputHeaderEvent}
             />
           </div>
         </div>
@@ -522,7 +461,6 @@ function OpenButtonClosedSheetUnit() {
             <select
               className="ip-select mt-1"
               name="customer"
-              //onChange={changeCustomer}
               disabled={boolVal}
             >
               <option value={formHeader.Cust_Code} disabled selected>
@@ -542,7 +480,6 @@ function OpenButtonClosedSheetUnit() {
               name="reference"
               value={formHeader.CustDocuNo}
               disabled={boolVal}
-              // onChange={InputHeaderEvent}
             />
           </div>
 
@@ -611,25 +548,9 @@ function OpenButtonClosedSheetUnit() {
               selectRow={selectRow}
             ></BootstrapTable>
           </div>
-          {/* <div className="col-md-6 col-sm-12">
-           <div
-              className="table-data"
-              style={{ height: "480px", overflowY: "scroll" }}
-            >
-              <Tables theadData={getHeadings()} tbodyData={data3} />
-            </div> 
-          </div> */}
           <div className="col-md-4 col-sm-12" style={{ overflowY: "scroll" }}>
             <div className=" form-bg">
               <div className="d-flex  justify-content-center mt-2">
-                {/* <button
-                  className="button-style "
-                  style={{ width: "155px" }}
-                  disabled={boolVal}
-                >
-                  Add Serial
-                </button> */}
-
                 <button className="button-style " disabled={boolVal}>
                   Add to stock
                 </button>
@@ -651,10 +572,6 @@ function OpenButtonClosedSheetUnit() {
                       Serial Details
                     </label>
                     <div className="row">
-                      {/* <p className="form-title-deco mt-2">
-                        <h5>Serial Details</h5>
-                      </p> */}
-
                       <div className="col-md-4">
                         <label
                           className="form-label"
@@ -665,7 +582,6 @@ function OpenButtonClosedSheetUnit() {
                       </div>
                       <div className="col-md-8" style={{ marginTop: "8px" }}>
                         <select
-                          // className="ip-select dropdown-field"
                           style={{ width: "100%" }}
                           className="input-disabled mt-1"
                           disabled={boolVal}
@@ -682,38 +598,6 @@ function OpenButtonClosedSheetUnit() {
                       </div>
                     </div>
 
-                    {/* <div className="row">                      
-                      <div className="col-md-4">
-                        <label className="form-label">{para1Label}</label>
-                      </div>
-                      <div className="col-md-6 ">
-                        <input
-                          className="in-field"                        
-                          disabled={boolVal}
-                        />
-                      </div>
-                      <div className="col-md-2">
-                        <label className="form-label">{unitLabel1}</label>
-                      </div>
-                    </div> */}
-                    {/* <div className="row">
-                      <div className="col-md-3">
-                        <label className="form-label">{para2Label}</label>
-                      </div>
-                      <div className="col-md-6 ">
-                        <input className="in-field" disabled={boolVal} />
-                      </div>
-                      <div className="col-md-3"></div>
-                    </div> */}
-                    {/* <div className="row">
-                      <div className="col-md-3">
-                        <label className="form-label">{para3Label}</label>
-                      </div>
-                      <div className="col-md-6 ">
-                        <input className="in-field" disabled={boolVal} />
-                      </div>
-                      <div className="col-md-3"></div>
-                    </div> */}
                     {sheetRowSelect && (
                       <div>
                         <div className="row mt-1">
@@ -1037,7 +921,6 @@ function OpenButtonClosedSheetUnit() {
                         </div>
                         <div className="col-md-6 mt-2">
                           <select
-                            // className="ip-select dropdown-field"
                             className="input-disabled mt-1"
                             style={{ width: "100%" }}
                             disabled={boolVal}
@@ -1052,15 +935,6 @@ function OpenButtonClosedSheetUnit() {
                   </div>
                 </div>
               </div>
-              {/* <div className="row justify-content-center mt-3 mb-4">
-                <button
-                  className="button-style "
-                  style={{ width: "75px" }}
-                  disabled={boolVal}
-                >
-                  Delete
-                </button>
-              </div> */}
             </div>
           </div>
         </div>

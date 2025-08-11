@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Page,
   Document,
@@ -7,12 +6,9 @@ import {
   Text,
   Image,
 } from "@react-pdf/renderer";
-// import MLLogo from "../../../../../../frontend/src/ML-LOGO.png";
+
 import MLLogo from "../../../../../src/ML-LOGO.png";
-
 import { formatDate } from "../../../../utils";
-
-//function PrintMaterialDCTable() {
 
 let headerFontSize = "13px";
 let subheaderFontsize = "11px";
@@ -30,9 +26,7 @@ const styles = StyleSheet.create({
   },
   globalPadding: { padding: "0.6%" },
   footerRowPadding: { padding: "3px" },
-  // globalPadding: { padding: "0.6%" },
   fontBold: {
-    //   fontWeight: "bold",
     fontSize: fontSize,
     fontFamily: "Helvetica-Bold",
   },
@@ -46,40 +40,25 @@ const styles = StyleSheet.create({
   invno: {
     width: "10%",
     marginLeft: "18px",
-    // marginTop: "10px",
-    // fontSize: 10,
-    // fontWeight: "bold",
   },
   customer: {
     width: "40%",
     marginLeft: "25px",
-    // marginTop: "10px",
-    // fontSize: 10,
-    // fontWeight: "bold",
   },
   material: {
     width: "20%",
     marginLeft: "5px",
-    // marginTop: "10px",
-    // fontSize: 10,
-    // fontWeight: "bold",
   },
   weight: {
     width: "20%",
     marginLeft: "5px",
-    // marginTop: "10px",
-    // fontSize: 10,
-    // fontWeight: "bold",
   },
 });
 
-//return <div>PrintMaterialDCTable</div>;
-//}
 const PrintDailyReportInvoiceTable = (props) => (
   <Document>
     <Page size="A4" style={{ ...styles.pageStyling }}>
       <View>
-        {/* Top */}
         <View
           style={{
             display: "flex",
@@ -122,7 +101,6 @@ const PrintDailyReportInvoiceTable = (props) => (
         </View>
         <Text style={{ padding: "1%" }}></Text>
         <View style={{ border: "1px", borderBottom: "none" }}>
-          {/* material stock */}
           <View style={styles.insideBox}>
             <View
               style={{
@@ -156,13 +134,12 @@ const PrintDailyReportInvoiceTable = (props) => (
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "center",
-                    // fontWeight: "bold",
                     padding: "1%",
                   }}
                 >
                   <Text>{item.material}</Text>
                 </View>
-                {/* <Text style={styles.insideBox}></Text> */}
+
                 <View
                   style={{
                     ...styles.insideBox,
@@ -175,7 +152,6 @@ const PrintDailyReportInvoiceTable = (props) => (
                       <>
                         <View
                           style={{
-                            // ...styles.insideBox,
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
@@ -191,9 +167,6 @@ const PrintDailyReportInvoiceTable = (props) => (
                     );
                   })}
 
-                  {/* <Text style={styles.line1}>
-                  _________________________________________________________________________________________
-                </Text> */}
                   <View
                     style={{
                       ...styles.insideBox,
@@ -212,10 +185,6 @@ const PrintDailyReportInvoiceTable = (props) => (
                     </Text>
                     <Text style={styles.weight}>{item.totwt.toFixed(3)}</Text>
                   </View>
-
-                  {/* <Text style={styles.line1}>
-                  _________________________________________________________________________________________
-                </Text> */}
                 </View>
               </>
             );

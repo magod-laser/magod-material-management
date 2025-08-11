@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 function YesNoModal(props) {
@@ -31,16 +29,13 @@ function YesNoModal(props) {
         <Modal.Body style={{ fontSize: "12px" }}>{message}</Modal.Body>
         <Modal.Footer>
           <button
-            // variant="secondary"
             className="button-style"
             onClick={handleYes}
             style={{ fontSize: "12px" }}
-            // style={{ backgroundColor: " #2b3a55", fontSize: "12px" }}
           >
             Yes
           </button>
           <button
-            // variant="secondary"
             className="button-style"
             onClick={handleNo}
             style={{ fontSize: "12px" }}

@@ -52,9 +52,6 @@ mtrlStockListRouter.post("/insertMtrlStockList", async (req, res, next) => {
       accepted,
     } = req.body;
 
-    // console.log("accepted", req.body.accepted);
-    // console.log("Alll", req.body);
-
     let returnData = null;
     //find shape
     misQueryMod(
@@ -77,79 +74,18 @@ mtrlStockListRouter.post("/insertMtrlStockList", async (req, res, next) => {
               (err, data1) => {
                 if (err) logger.error(err);
                 logger.info("successfully inserted data into mtrlstocklist");
-                //returnData = data1;
-                //res.send(data);
               }
             );
           }
         }
       }
     );
-    //console.log("returnData = ", returnData);
+
     res.send({ affectedRows: 1 });
-    /*console.log(
-      `insert into  mtrlstocklist (MtrlStockID,Mtrl_Rv_id,Cust_Code,Customer,RV_No,Cust_Docu_No,Mtrl_Code,Shape,Material,DynamicPara1,DynamicPara2,DynamicPara3,DynamicPara4,Locked,Scrap,Issue,Weight,ScrapWeight,IV_No,NCProgramNo,LocationNo) values ("${mtrlStockId}",${mtrlRvId},"${custCode}","${customer}","${rvNo}","${custDocuNo}","${mtrlCode}","${shape}","${material}",${dynamicPara1},${dynamicPara2},${dynamicPara3},${dynamicPara4},${locked},${scrap},${issue},${weight},${scrapWeight},"${ivNo}","${ncProgramNo}","${locationNo}")`
-    );*/
   } catch (error) {
     next(error);
   }
 });
-
-// mtrlStockListRouter.post("/deleteMtrlStockByRVNo", async (req, res, next) => {
-//   try {
-//     const { Mtrl_Rv_id } = req.body;
-
-//     let countResult, inUseResult, deletionResult;
-
-//     // Query to check count of material stock
-//     misQueryMod(
-//       `SELECT COUNT(*) AS count FROM magodmis.mtrlstocklist m WHERE m.Mtrl_Rv_id = '${Mtrl_Rv_id}'`,
-//       (err, result) => {
-//         if (err) {
-//           logger.error(err);
-//           return res.send(err);
-//         }
-//         countResult = result;
-
-//         // Query to check if material is in use for production
-//         misQueryMod(
-//           `SELECT COUNT(*) AS inUseCount FROM magodmis.mtrlstocklist WHERE Mtrl_Rv_id = '${Mtrl_Rv_id}' AND (Locked OR Scrap OR Issue)`,
-//           (err, result) => {
-//             if (err) {
-//               logger.error(err);
-//               return res.send(err);
-//             }
-//             inUseResult = result;
-
-//             // Query to delete material stock
-//             misQueryMod(
-//               `DELETE FROM magodmis.MtrlStockList WHERE Mtrl_Rv_id = '${Mtrl_Rv_id}'`,
-//               (err, result) => {
-//                 if (err) {
-//                   logger.error(err);
-//                   return res.send(err);
-//                 }
-//                 deletionResult = result;
-//                 // console.log("Deletion Result:", deletionResult);
-
-//                 // Send combined response
-//                 const combinedResult = {
-//                   countResult: countResult,
-//                   inUseResult: inUseResult,
-//                   deletionResult: deletionResult,
-//                 };
-//                 return res.send(combinedResult);
-//               }
-//             );
-//           }
-//         );
-//       }
-//     );
-//   } catch (error) {
-//     logger.error(error);
-//     return res.send(error);
-//   }
-// });
 
 mtrlStockListRouter.post("/deleteMtrlStockByRVNo", async (req, res, next) => {
   try {
@@ -233,7 +169,6 @@ mtrlStockListRouter.post("/deleteMtrlStockByRVNo", async (req, res, next) => {
 mtrlStockListRouter.post("/updateAfterRemoveStock", (req, res, next) => {
   try {
     const { rvId, custCode } = req.body;
-    // console.log("RvId CustCode", req.body);
 
     if (custCode === "0000") {
       misQueryMod(
@@ -262,7 +197,7 @@ mtrlStockListRouter.post("/updateAfterRemoveStock", (req, res, next) => {
             logger.info(
               "successfully inserted data into magod_Material_Sales_Register"
             );
-            // console.log("insertedData1", insertData);
+
             res.send(insertData);
           });
         }
@@ -293,7 +228,7 @@ mtrlStockListRouter.post("/updateAfterRemoveStock", (req, res, next) => {
             logger.info(
               "successfully inserted data into customer_material_return_register"
             );
-            // console.log("insertedData2", insertData);
+
             res.send(insertData);
           });
         }
@@ -322,9 +257,7 @@ mtrlStockListRouter.post("/deleteMtrlStockByIVNo", async (req, res, next) => {
 mtrlStockListRouter.post("/updateIssueIVNo", async (req, res, next) => {
   try {
     let { Issue, Iv_No, MtrlStockID } = req.body;
-    // console.log(
-    //   `update magodmis.mtrlstocklist set Issue="${Issue}", Iv_No = "${Iv_No}" where MtrlStockID =  "${MtrlStockID}"`
-    // );
+
     misQueryMod(
       `update magodmis.mtrlstocklist set Issue="${Issue}", Iv_No = "${Iv_No}" where MtrlStockID =  "${MtrlStockID}"`,
       (err, data) => {
@@ -415,9 +348,7 @@ mtrlStockListRouter.post("/updateMtrlStockLock2", async (req, res, next) => {
 });
 
 mtrlStockListRouter.post("/updateMtrlStockLock3", async (req, res, next) => {
-  // console.log("upate data..........", req.body);
   try {
-    // let { LocationNo, MtrlStockID } = req.body;
     misQueryMod(
       `UPDATE magodmis.mtrlstocklist
           SET
@@ -431,21 +362,12 @@ mtrlStockListRouter.post("/updateMtrlStockLock3", async (req, res, next) => {
           WHERE
               MtrlStockID = '${req.body.MtrlStockID}'`,
 
-      // DynamicPara1 = 0,
-      // DynamicPara2 = 0,
-      // Weight = 0,
-      // left.......................... for upadte....
-
-      // `UPDATE magodmis.mtrlstocklist m
-      // SET m.DynamicPara1=0,m.DynamicPara2=0,m.Weight=0, m.Scrap=-1,
-      // m.Locked=-1, m.LocationNo ='${LocationNo}'
-      // WHERE m.MtrlStockID='${MtrlStockID}'`,
       (err, data) => {
         if (err) logger.error(err);
         logger.info(
           `successfully updated mtrlstocklist for MtrlStockID = '${req.body.MtrlStockID}'`
         );
-        // console.log("response", data);
+
         res.send(data);
       }
     );
@@ -503,23 +425,19 @@ mtrlStockListRouter.post("/insertByMtrlStockID", async (req, res, next) => {
 mtrlStockListRouter.get(
   "/getDataByMtrlStockIdResize",
   async (req, res, next) => {
-    // console.log("${req.query.MtrlStockID}", req.query.MtrlStockID);
     try {
-      // let rvno = req.query.MtrlStockID;
       misQueryMod(
         `
         SELECT * FROM magodmis.mtrlstocklist WHERE MtrlStockID = '${req.query.MtrlStockID}'`,
-        // `Select * from magodmis.mtrlstocklist where MtrlStockID = '${req.query.MtrlStockID}'`,
+
         (err, data) => {
           if (err) logger.error(err);
           logger.info(
             `successfully fetched data from mtrlstocklist for MtrlStockID = '${req.query.MtrlStockID}'`
           );
           res.send(data);
-          // console.log("getDataByMtrlStockIdResize.....data.......", data);
         }
       );
-      //res.send(false);
     } catch (error) {
       next(error);
     }
@@ -536,7 +454,7 @@ mtrlStockListRouter.post(
         (err, data) => {
           if (err) logger.error(err);
           logger.info("successfully inserted data into mtrlstocklist");
-          // console.log("insert done.......", data);
+
           res.send(data);
         }
       );

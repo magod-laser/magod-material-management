@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
-
-import BootstrapTable from "react-bootstrap-table-next";
 import { toast } from "react-toastify";
-import { getWeight } from "../../../../utils";
 import SplitMaterialYesNoModal from "../../components/SplitMaterialYesNoModal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getRequest, postRequest } from "../../../api/apiinstance";
@@ -33,15 +28,6 @@ export default function ResizeModal(props) {
     props.setOpen(false);
   };
   const nav = useNavigate();
-  // const location = useLocation();
-
-  // const [formHeader, setFormHeader] = useState({
-  //   materialCode: props?.selectedTableRows[0]?.Mtrl_Code,
-  //   quantity: props?.selectedTableRows?.length,
-  //   para1: props?.selectedTableRows[0]?.DynamicPara1,
-  //   para2: props?.selectedTableRows[0]?.DynamicPara2,
-  //   selectedCust: props?.selectedCust,
-  // });
 
   const [tableData, setTableData] = useState([]);
   const [selectedTableRow, setSelectedTableRow] = useState([
@@ -84,31 +70,11 @@ export default function ResizeModal(props) {
       InStock: "",
       Weight: "",
       Location: "",
-      // MtrlStock_ID: counter,
     };
-    //setPartArray(newRow);
     setTableData([...tableData, newRow]);
-    // setCounter(counter + 1);
-
-    // //clear all data
-    // setInputData((preValue) => {
-    //   //console.log(preValue)
-    //   return {
-    //     Location: "",
-    //     MtrlStock_ID: counter,
-    //     DynamicPara1: "",
-    //     DynamicPara2: "",
-    //     InStock: "",
-    //     Weight: "",
-    //   };
-    // });
   };
 
   const selectRow = (val, key) => {
-    // mode: "radio",
-    // clickToSelect: true,
-    // bgColor: "#98A8F8",
-    // onSelect: (row, isSelect, rowIndex, e) => {
     setSelectedTableRow([
       {
         SrlNo: key,
@@ -131,8 +97,6 @@ export default function ResizeModal(props) {
 
       Location: val.Location,
     });
-
-    // },
   };
 
   const focusOutEvent = (e) => {
@@ -147,42 +111,8 @@ export default function ResizeModal(props) {
     for (let i = 0; i < tableData.length; i++) {
       const element = tableData[i];
 
-      // console.log(
-      //   "formaheader.........",
-      //   "para1...",
-      //   formHeader.para1,
-      //   "para2...",
-      //   formHeader.para2,
-      //   "amount...",
-
-      //   parseFloat(formHeader.para1) * parseFloat(formHeader.para2)
-      // );
-      // console.log("element", element);
-
       if (i === selectedTableRow[0].SrlNo - 1) {
-        // console.log("yesss");
-
         tableData[i][name] = value;
-        // setTableData(tableData);
-
-        // InStock
-        // DynamicPara2
-        // DynamicPara1
-        // console.log(
-        //   "selectedRow...",
-        //   "length...",
-        //   tableData[i].DynamicPara1,
-        //   "width...",
-        //   tableData[i].DynamicPara2,
-        //   "quantity...",
-        //   tableData[i].InStock
-        // );
-        // console.log(
-        //   "amount...",
-        //   tableData[i].DynamicPara1 *
-        //     tableData[i].DynamicPara2 *
-        //     tableData[i].InStock
-        // );
 
         const percentage =
           (parseFloat(tableData[i].DynamicPara1) *
@@ -193,85 +123,25 @@ export default function ResizeModal(props) {
 
         let weightCalculated =
           parseFloat(props?.selectedTableRows[0].Weight) * percentage;
-        // console.log(
-        //   "get weight...",
-        //   getWeight(
-        //     data,
-        //     parseFloat(tableData[i].DynamicPara1),
-        //     parseFloat(tableData[i].DynamicPara2),
-        //     parseFloat(0)
-        //   )
-        // );
 
         if (weightCalculated >= 0) {
           tableData[i].Weight = weightCalculated.toFixed(3);
         } else {
           tableData[i].Weight = 0.0;
         }
-        // weightCalculated >= 0 ? (tableData[i].Weight = weightCalculated) : "";
 
         setTableData(tableData);
-
-        // let url =
-        //   endpoints.getRowByMtrlCode + "?code=" + formHeader.materialCode;
-        // getRequest(url, async (data) => {
-        //   let totwt = 0;
-        //   totwt = getWeight(
-        //     data,
-        //     parseFloat(tableData[i].DynamicPara1),
-        //     parseFloat(tableData[i].DynamicPara2),
-        //     parseFloat(0)
-        //   );
-        //   console.log("totwt", Math.round(0.000001 * totwt));
-        // tableData[i].Weight = Math.round(0.000001 * totwt);
-        // setShowYesNo(true);
-        // });
       } else {
-        // console.log("nooooo");
         setTableData(tableData);
-
-        // setTableData(tableData)
       }
     }
-    // console.log("tableData", tableData);
-    // console.log(
-    //   "value..",
-    //   value,
-    //   "name..",
-    //   name,
-    //   "srl",
-    //   selectedTableRow[0].SrlNo
-    // );
-
-    // const newArray =
-
-    // tableData.map((p, i) =>
-    //   i === selectedTableRow[0].SrlNo - 1
-    //     ?
-    //     // p[name] :value
-
-    //     return [{
-    //       ...p,
-    //       [name]: value,
-    //     }]
-    //     console.log("yesssssss", p)
-    //     :
-
-    //     // null
-    //     console.log("no")
-    // );
-    // console.log("val.p", p)
 
     setInputData((preValue) => {
-      //console.log(preValue)
       return {
         ...preValue,
         [name]: value,
       };
     });
-
-    // console.log(newArray);
-    // // setTableData(newArray);
   };
 
   const splitMaterialButton = () => {
@@ -279,17 +149,14 @@ export default function ResizeModal(props) {
       parseFloat(props?.selectedTableRows[0]?.DynamicPara1) *
       parseFloat(props?.selectedTableRows[0]?.DynamicPara2);
 
-    var totalSplitArea = 0;
+    let totalSplitArea = 0;
     for (let i = 0; i < tableData.length; i++) {
       totalSplitArea +=
         tableData[i].DynamicPara1 *
         tableData[i].DynamicPara2 *
         tableData[i].InStock;
-      // console.log(`totalSplitArea +${i + 1}`, totalSplitArea);
     }
 
-    // console.log("SheetArea", SheetArea);
-    // console.log("new", totalSplitArea);
     if (SheetArea !== totalSplitArea) {
       toast.error("Split Sheet area does not add up to original sheet area");
     } else {
@@ -301,38 +168,13 @@ export default function ResizeModal(props) {
           tableData[i].InStock < 1
         ) {
           tesFlagArray.push(1);
-          // toast.error("Check Parameters for Resizing");
-          // break;
         } else if (tableData[i].Location.length === 0) {
           tesFlagArray.push(2);
-
-          // toast.error("Select Location for Resized Sheets");
-          // break;
         } else {
           tesFlagArray.push(3);
-
-          // setShowYesNo(true);
-          //get mtrl_data by mtrl_code
-          // let url =
-          //   endpoints.getRowByMtrlCode + "?code=" + formHeader.materialCode;
-          // getRequest(url, async (data) => {
-          //   let totwt = 0;
-          //   totwt = getWeight(
-          //     data,
-          //     parseFloat(tableData[i].DynamicPara1),
-          //     parseFloat(tableData[i].DynamicPara2),
-          //     parseFloat(0)
-          //   );
-
-          //   tableData[i].Weight = Math.round(0.000001 * totwt);
-          //   setShowYesNo(true);
-          // });
         }
       }
-      /*If MsgBox("Do you wish to split the material as indicated and save it. Changes once done cannot be undone", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
-        Exit Sub
-    End If*/
-      // console.log("tesFlagArray", tesFlagArray);
+
       if (tesFlagArray.sort()[0] === 1) {
         toast.error("Check Parameters for Resizing");
       } else if (tesFlagArray.sort()[0] === 2) {
@@ -343,7 +185,6 @@ export default function ResizeModal(props) {
         toast.error("Uncaught Error");
       }
     }
-    // console.log("clicked");
   };
 
   const modalYesNoResponse = (msg) => {
@@ -356,15 +197,11 @@ export default function ResizeModal(props) {
           const element1 = tableData[j];
 
           for (let k = 1; k < parseInt(element1.InStock) + 1; k++) {
-            // new....
-
             let urlGet =
               endpoints.getDataByMtrlStockIdResize +
               "?MtrlStockID=" +
               element0.MtrlStockID;
             getRequest(urlGet, async (selectData) => {
-              // console.log("data from BE selecteData", selectData);
-
               if (selectData.length > 0) {
                 let paraData3 = {
                   MtrlStockID: `${element0.MtrlStockID}/P${counter}`,
@@ -412,7 +249,6 @@ export default function ResizeModal(props) {
         }
       }
 
-      // new
       for (let j = 0; j < props?.selectedTableRows.length; j++) {
         const element = props?.selectedTableRows[j];
         let paraData3 = {
@@ -426,7 +262,6 @@ export default function ResizeModal(props) {
       }
 
       toast.success("Resize Successfull");
-      // new
       props.setSelectedTableRows([]);
 
       setTimeout(() => {
@@ -437,28 +272,15 @@ export default function ResizeModal(props) {
   };
 
   const deleteItem = () => {
-    // console.log("delete clicked...");
-    // console.log("selectedTableRow", selectedTableRow);
-    // console.log(
-    //   "tableData",
-    //   tableData[parseInt(selectedTableRow[0].SrlNo) - 1]
-    // );
-
-    // const newArray = tableData.filter(
-    //   (p) => p.MtrlStock_ID !== selectedRow.srlNo
-    // );
-
     const newArray = [];
     for (let i = 0; i < tableData.length; i++) {
       const element = tableData[i];
 
       if (i !== parseInt(selectedTableRow[0].SrlNo - 1)) {
-        // console.log(`table data... ${i + 1}`, tableData);
-
         newArray.push(element);
       }
     }
-    // console.log("newArray", newArray);
+
     setTableData(newArray);
     setSelectedTableRow([]);
     setInputData({
@@ -624,7 +446,7 @@ export default function ResizeModal(props) {
                   </tbody>
                 </Table>
               </div>
-              {/* form */}
+
               <div
                 className="col-md-4 p-3"
                 style={{ backgroundColor: "#e6e6e6" }}

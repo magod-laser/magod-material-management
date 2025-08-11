@@ -1,4 +1,3 @@
-import React from "react";
 import SheetResizeForm from "./SheetResizeForm";
 
 function ResizeSheets() {

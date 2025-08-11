@@ -1,31 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-
-import Button from "react-bootstrap/Button";
-
 import Modal from "react-bootstrap/Modal";
-
 import SecondModelAcceptReturn from "./SecondModelAcceptReturn";
 
-const { getRequest, postRequest } = require("../../api/apiinstance");
-
+const { postRequest } = require("../../api/apiinstance");
 const { endpoints } = require("../../api/constants");
 
 function ShopFloorAcceptReturnPartsYesNoModal(props) {
-  const {
-    showYN,
-    setShowYN,
-    handleShow,
-    formHeader,
-    setFormHeader,
-    tableData,
-  } = props;
+  const { showYN, setShowYN, formHeader, setFormHeader, tableData } = props;
 
   const [showSecondModal, setShowSecondModal] = useState(false);
-
-  const openSecondModal = () => {
-    setShowSecondModal(true);
-  };
 
   const handleYes = () => {
     for (let i = 0; i < tableData.length; i++) {
@@ -40,9 +24,7 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
       postRequest(
         endpoints.updateQtyIssuedPartReceiptDetails,
         update1,
-        (data) => {
-          console.log("update1");
-        }
+        (data) => {}
       );
 
       //update ncprogram qtyalloated
@@ -51,9 +33,7 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
         Id: formHeader.NcId,
         Qty: formHeader.QtyReturned,
       };
-      postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {
-        console.log("update3");
-      });
+      postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
     }
 
     //update shopfloorpartissueregiser stats closed
@@ -67,15 +47,12 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
       endpoints.updateStatusShopfloorPartIssueRegister,
       update4,
       (data) => {
-        console.log("update4");
         setFormHeader({ ...formHeader, Status: "Closed" });
         toast.success("Issue voucher closed");
       }
     );
 
     setShowYN(false);
-
-    // openSecondModal();
   };
 
   const handleNo = () => {
@@ -91,10 +68,10 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
 
       <Modal show={showYN} onHide={handleNo}>
         <Modal.Header closeButton>
-          <Modal.Title style={{fontSize:'14px'}}>Please Confirm</Modal.Title>
+          <Modal.Title style={{ fontSize: "14px" }}>Please Confirm</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body style={{fontSize:'12px'}}>
+        <Modal.Body style={{ fontSize: "12px" }}>
           All returned quantity will be taken on stock, for rejecting parts use
           Material receipt voucher. Proceed ?
         </Modal.Body>
@@ -102,15 +79,15 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
         <Modal.Footer>
           <button
             className="button-style "
-            style={{ width: "50px", fontSize:'12px' }}
+            style={{ width: "50px", fontSize: "12px" }}
             onClick={handleYes}
           >
             Yes
           </button>
-          {/* backgroundColor: "gray", */}
+
           <button
             className="button-style"
-            style={{ width: "50px",  fontSize:'12px' }}
+            style={{ width: "50px", fontSize: "12px" }}
             onClick={handleNo}
           >
             No

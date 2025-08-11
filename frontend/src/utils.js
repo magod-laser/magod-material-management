@@ -1,17 +1,13 @@
 export const dateToShort = (myDate) => {
-  //console.log("mydate = ", myDate);
-  var convertedStartDate = new Date(myDate.toString().substr(0, 10));
-  //console.log("mydate substr= ", convertedStartDate);
-  //mm/dd/yyyy
-  var mmddformat = convertedStartDate.toLocaleDateString();
-  //convert to dd/mm/yyyy
-  var datearray = mmddformat.split("/");
-  var newdate = datearray[1] + "/" + datearray[0] + "/" + datearray[2];
+  let convertedStartDate = new Date(myDate.toString().substr(0, 10));
+  let mmddformat = convertedStartDate.toLocaleDateString();
+  let datearray = mmddformat.split("/");
+  let newdate = datearray[1] + "/" + datearray[0] + "/" + datearray[2];
   return newdate;
 };
 
 export function formatDate(dateObj, format) {
-  var monthNames = [
+  let monthNames = [
     "January",
     "February",
     "March",
@@ -25,13 +21,13 @@ export function formatDate(dateObj, format) {
     "November",
     "December",
   ];
-  var currdate = dateObj.getDate();
-  var currmonth = dateObj.getMonth();
+  let currdate = dateObj.getDate();
+  let currmonth = dateObj.getMonth();
   currmonth = currmonth + 1;
-  var curryear = dateObj.getFullYear();
-  var currmin = dateObj.getMinutes();
-  var currhr = dateObj.getHours();
-  var currsc = dateObj.getSeconds();
+  let curryear = dateObj.getFullYear();
+  let currmin = dateObj.getMinutes();
+  let currhr = dateObj.getHours();
+  let currsc = dateObj.getSeconds();
   if (currmonth.toString().length === 1) currmonth = "0" + currmonth;
   if (currdate.toString().length === 1) currdate = "0" + currdate;
   if (currhr.toString().length === 1) currhr = "0" + currhr;
@@ -109,37 +105,14 @@ export function formatDate(dateObj, format) {
 }
 
 export function getWeight(obj, para1, para2, para3) {
-  // console.log(" getweight = ", obj);
-  // console.log(" para1 = ", para1);
-  // console.log(" para2 = ", para2);
-  // console.log(" para3 = ", para3);
-
   let dblWeight = 0;
   let dblVol = getVolume(obj, obj.Shape, para1, para2, para3);
-  // console.log(" dblVol = ", dblVol);
+
   // dblWeight = dblVol * obj.SpecificWt;
   dblWeight = dblVol * getDensity(obj);
-  // console.log(" dblweight = ", dblWeight);
+
   return dblWeight;
 }
-
-/*export function  getDensity(obj){
-    if (obj && obj.Mtrl_Code){
-      //check 
-      if obj.MaterialGrade.Specific_Wt > 0 Then
-      Return objMaterialGrade.Specific_Wt
-  Else
-      If objMaterial.SpecificWt > 0 Then
-          Return objMaterial.SpecificWt
-      Else
-          Return 0
-      End If
-  End If
-
-    }
-    else
-        return 0
-}*/
 
 export function getDensity(obj) {
   if (!obj) {
@@ -161,13 +134,10 @@ export function getDensity(obj) {
 export function getVolume(obj, shape, para1, para2, para3) {
   let dblVol = 0;
   if (shape === "Sheet") {
-    //console.log("sheet = ", obj.StaticPara1, "  1 = ", para1, " 2 = ", para2);
     dblVol = obj.StaticPara1 * para1 * para2;
   } else if (shape === "Tiles") {
     dblVol = obj.StaticPara1 * obj.StaticPara2 * obj.StaticPara3;
   } else if (shape === "Tube Rectangle") {
-    // console.log("entering into tube rectangle..............");
-    // debugger;
     dblVol =
       para1 *
       (obj.StaticPara1 * obj.StaticPara2 -
@@ -227,15 +197,6 @@ export function get_Iv_DetailsEntry(
         " " +
         objShape.StaticPara1Unit +
         " ";
-      // Details =
-      //   (dblDP1 + " " + objShape.DynamicPara1Unit + " X " + dblDP2) &
-      //   (" " +
-      //     objShape.DynamicPara2Unit +
-      //     " X " +
-      //     objMaterialCode.StaticPara1 +
-      //     " " +
-      //     objShape.StaticPara1Unit +
-      //     " ");
     }
     if (Shape === "Plate") {
       Details =

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -6,7 +6,7 @@ import PartsInStockAndProcess from "./Components/PartsInStockAndProcess";
 import ReceiptAndUsage from "./Components/ReceiptAndUsage";
 import { Typeahead } from "react-bootstrap-typeahead";
 
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function PartsReport() {
@@ -29,9 +29,6 @@ function PartsReport() {
   }, []);
 
   let changeCustomer = async (e) => {
-    //e.preventDefault();
-    //const { value, name } = e.target;
-    //console.log("value = ", value);
     setCustCode(e[0].Cust_Code);
   };
 
@@ -44,16 +41,6 @@ function PartsReport() {
             <label className="form-label ">Select Customer</label>
           </div>
 
-          {/* <select className="ip-select" onChange={changeCustomer}>
-            <option value="" disabled selected>
-              Select Customer
-            </option>
-            {custdata.map((customer, index) => (
-              <option key={index} value={customer.Cust_Code}>
-                {customer.Cust_name}
-              </option>
-            ))}
-          </select> */}
           <div className="col-md-4 mt-2">
             <Typeahead
               id="basic-example"

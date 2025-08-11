@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -6,7 +6,7 @@ import { formatDate } from "../../../../utils";
 import { useNavigate } from "react-router-dom";
 import PrintMonthlyReport from "../../print/report/PrintMonthlyReport";
 
-const { getRequest, postRequest } = require("../../../api/apiinstance");
+const { getRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
 
 function MonthlyReport() {
@@ -15,8 +15,6 @@ function MonthlyReport() {
   const dateee = new Date();
   const monthhh = dateee.getMonth();
   const yearrr = dateee.getFullYear();
-
-  // console.log("monthhhhhhhhh", yearrr + "-" + (monthhh + 1));
   const [firstTab, setFirstTab] = useState([]);
   const [secondTab, setSecondTab] = useState([]);
   const [thirdTab, setThirdTab] = useState([]);
@@ -30,9 +28,7 @@ function MonthlyReport() {
   const [printReportOpen, setPrintReportOpen] = useState(false);
   const InputEvent = (e) => {
     const { name, value } = e.target;
-    //console.log("value = ", value);
-    //console.log("year = ", formatDate(new Date(value), 6));
-    //console.log("month = ", formatDate(new Date(value), 8));
+
     setDateVal(value);
     setMonthVal(formatDate(new Date(value), 8));
     setYearVal(formatDate(new Date(value), 6));
@@ -51,7 +47,6 @@ function MonthlyReport() {
         data[i].id = i + 1;
       }
       setFirstTab(data);
-      //console.log("first tab : ", data);
     });
 
     //second tab
@@ -66,7 +61,6 @@ function MonthlyReport() {
         data[i].id = i + 1;
       }
       setSecondTab(data);
-      //console.log("second tab : ", data);
     });
 
     //thhird tab
@@ -81,7 +75,6 @@ function MonthlyReport() {
         data[i].id = i + 1;
       }
       setThirdTab(data);
-      //console.log("third tab : ", data);
     });
 
     //fourth tab
@@ -96,7 +89,6 @@ function MonthlyReport() {
         data[i].id = i + 1;
       }
       setFourthTab(data);
-      //console.log("fourth tab : ", data);
     });
 
     //fifth tab
@@ -111,7 +103,6 @@ function MonthlyReport() {
         data[i].id = i + 1;
       }
       setFifthTab(data);
-      //console.log("fifth tab : ", data);
     });
   };
   function statusFormatter(cell, row, rowIndex, formatExtraData) {
@@ -244,9 +235,6 @@ function MonthlyReport() {
     },
   ];
 
-  // print report funtion starts
-
-  //find out total of Receipt and Dispatch
   let tot1 = 0,
     tot2 = 0;
   for (let i = 0; i < fifthTab.length; i++) {
@@ -263,11 +251,10 @@ function MonthlyReport() {
     { type: "Despatch", total: tot2 },
   ];
 
-  //calculate material purchase details
-  var fullStockTable1 = [];
+  let fullStockTable1 = [];
   for (let i = 0; i < fourthTab.length; i++) {
     let tot = 0;
-    var tempdata = [];
+    let tempdata = [];
     for (let j = 0; j < firstTab.length; j++) {
       if (fourthTab[i].Material === firstTab[j].Material) {
         tempdata.push(firstTab[j]);
@@ -282,13 +269,12 @@ function MonthlyReport() {
     fullStockTable1.push(obj);
   }
   delay(300);
-  //console.log("fullStockTable1 = ", fullStockTable1);
 
   //calculate material purchase details
-  var fullStockTable2 = [];
+  let fullStockTable2 = [];
   for (let i = 0; i < thirdTab.length; i++) {
     let tot = 0;
-    var tempdata = [];
+    let tempdata = [];
     for (let j = 0; j < secondTab.length; j++) {
       if (thirdTab[i].Material === secondTab[j].Material) {
         tempdata.push(secondTab[j]);
@@ -302,97 +288,11 @@ function MonthlyReport() {
     };
     fullStockTable2.push(obj);
   }
-  // await delay(300);
-  // //console.log("fullStockTable2 = ", fullStockTable2);
-
-  // nav("/MaterialManagement/Reports/PrintMonthlyReport", {
-  //   state: {
-  //     date: formatDate(new Date(dateVal), 9),
-  //     thirdTab: thirdTab,
-  //     fourthTab: fourthTab,
-  //     fourthTab: fourthTab,
-  //     totalobj: totalobj,
-  //     purchaseDetails: fullStockTable1,
-  //     saleDetails: fullStockTable2,
-  //   },
-  // });
-  // print report funtion ends
 
   const printReport = async () => {
     setPrintReportOpen(true);
-    // //find out total of Receipt and Dispatch
-    // let tot1 = 0,
-    //   tot2 = 0;
-    // for (let i = 0; i < fifthTab.length; i++) {
-    //   if (fifthTab[i].Type === "Receipts") {
-    //     tot1 = tot1 + parseInt(fifthTab[i].qty);
-    //   }
-    //   if (fifthTab[i].Type === "Despatch") {
-    //     tot2 = tot2 + parseInt(fifthTab[i].qty);
-    //   }
-    // }
-    // await delay(100);
-    // let totalobj = [
-    //   { type: "Receipts", total: tot1 },
-    //   { type: "Despatch", total: tot2 },
-    // ];
-
-    // //calculate material purchase details
-    // var fullStockTable1 = [];
-    // for (let i = 0; i < fourthTab.length; i++) {
-    //   let tot = 0;
-    //   var tempdata = [];
-    //   for (let j = 0; j < firstTab.length; j++) {
-    //     if (fourthTab[i].Material === firstTab[j].Material) {
-    //       tempdata.push(firstTab[j]);
-    //       tot = tot + parseInt(firstTab[j].TotalWeight);
-    //     }
-    //   }
-    //   let obj = {
-    //     material: fourthTab[i].Material,
-    //     totwt: tot,
-    //     data: tempdata,
-    //   };
-    //   fullStockTable1.push(obj);
-    // }
-    // await delay(300);
-    // //console.log("fullStockTable1 = ", fullStockTable1);
-
-    // //calculate material purchase details
-    // var fullStockTable2 = [];
-    // for (let i = 0; i < thirdTab.length; i++) {
-    //   let tot = 0;
-    //   var tempdata = [];
-    //   for (let j = 0; j < secondTab.length; j++) {
-    //     if (thirdTab[i].Material === secondTab[j].Material) {
-    //       tempdata.push(secondTab[j]);
-    //       tot = tot + parseInt(secondTab[j].SrlWt);
-    //     }
-    //   }
-    //   let obj = {
-    //     material: thirdTab[i].Material,
-    //     totwt: tot,
-    //     data: tempdata,
-    //   };
-    //   fullStockTable2.push(obj);
-    // }
-    // await delay(300);
-    // //console.log("fullStockTable2 = ", fullStockTable2);
-
-    // nav("/MaterialManagement/Reports/PrintMonthlyReport", {
-    //   state: {
-    //     date: formatDate(new Date(dateVal), 9),
-    //     thirdTab: thirdTab,
-    //     fourthTab: fourthTab,
-    //     fourthTab: fourthTab,
-    //     totalobj: totalobj,
-    //     purchaseDetails: fullStockTable1,
-    //     saleDetails: fullStockTable2,
-    //   },
-    // });
   };
 
-  // console.log("monthhh", monthhh + 1, "yearrr", yearrr);
   return (
     <>
       <div>
@@ -410,7 +310,6 @@ function MonthlyReport() {
               name="month"
               defaultValue={`${yearrr}-${monthhh + 1}`}
               onChange={InputEvent}
-              // placeholder="month,year"
             />
           </div>
 
@@ -441,7 +340,6 @@ function MonthlyReport() {
               style={{ width: "1200px" }}
             >
               <Tab eventKey="mat_rece" title="Material Purchase Details">
-                {/* <MonthlyMatPurDetails /> */}
                 <div style={{ height: "400px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -450,13 +348,11 @@ function MonthlyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
               </Tab>
               <Tab eventKey="mat_sale" title="Material Sales Datails">
-                {/* <MonthlyMatSalesDetails /> */}
                 <div style={{ height: "400px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -465,13 +361,11 @@ function MonthlyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
               </Tab>
               <Tab eventKey="mat_sale_sum" title="Material Sales Summary">
-                {/* <MonthlyMatSalesSummary /> */}
                 <div style={{ height: "400px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -480,13 +374,11 @@ function MonthlyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
               </Tab>
               <Tab eventKey="mat_pur" title="Material Purchase Summary">
-                {/* <MonthlyMatPurSummary /> */}
                 <div style={{ height: "400px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -495,7 +387,6 @@ function MonthlyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
@@ -505,7 +396,6 @@ function MonthlyReport() {
                 eventKey="mat_han_sum"
                 title="Monthly Material Handling Summary"
               >
-                {/* <MonthlyMatHandlingSummary /> */}
                 <div style={{ height: "400px", overflowY: "scroll" }}>
                   <BootstrapTable
                     keyField="id"
@@ -514,7 +404,6 @@ function MonthlyReport() {
                     striped
                     hover
                     condensed
-                    //selectRow={selectRow1}
                     headerClasses="header-class tableHeaderBGColor"
                   ></BootstrapTable>
                 </div>
@@ -529,7 +418,6 @@ function MonthlyReport() {
         date={formatDate(new Date(dateVal), 9)}
         thirdTab={thirdTab}
         fourthTab={fourthTab}
-        //  fourthTab={fourthTab}
         totalobj={totalobj}
         purchaseDetails={fullStockTable1}
         saleDetails={fullStockTable2}

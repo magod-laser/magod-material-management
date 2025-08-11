@@ -1,8 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
-import PrintMaterialDCTable from "./PrintDailyReportReceiptTable";
-import { useLocation } from "react-router-dom";
-import PrintDailyReportReceiptTable from "./PrintDailyReportReceiptTable";
 import PrintMonthlyTable from "./PrintMonthlyTable";
 import { Modal } from "react-bootstrap";
 
@@ -10,22 +7,6 @@ import { postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
 function PrintMonthlyReport(props) {
   const [PDFData, setPDFData] = useState({});
-
-  const location = useLocation();
-  // console.log(
-  //   "date = ",
-  //   location.state.date,
-  //   " thirdTab = ",
-  //   location.state.thirdTab,
-  //   " fourthTab = ",
-  //   location.state.fourthTab,
-  //   " totalobj = ",
-  //   location.state.totalobj,
-  //   " purchaseDetails = ",
-  //   location.state.purchaseDetails,
-  //   " saleDetails = ",
-  //   location.state.saleDetails
-  // );
 
   const handleClose = () => props.setPrintReportOpen(false);
 

@@ -5,7 +5,7 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import PrintLocationStockSummaryReport from "../../print/store/PrintLocationStockSummaryReport";
 import PrintLocationStockDetailReport from "../../print/store/PrintLocationStockDetailReport";
 
-const { getRequest, postRequest } = require("../../../api/apiinstance");
+const { getRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
 
 function LocationStockReport() {
@@ -13,7 +13,6 @@ function LocationStockReport() {
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   let [custdata, setCustdata] = useState([]);
-  let [locdata, setLocdata] = useState([]);
   let [firstTable, setFirstTable] = useState([]);
   let [secondTable, setSecondTable] = useState([]);
   let [secondTableAll, setSecondTableAll] = useState([]);
@@ -49,7 +48,6 @@ function LocationStockReport() {
         data[i].id = i + 1;
       }
       setFirstTable(data);
-      console.log("Location List = ", data);
     });
   }
 
@@ -58,7 +56,6 @@ function LocationStockReport() {
   }, []);
 
   const changeCustomer = (e) => {
-    //const { name, value } = e.target;
     setCustCode(e[0]?.Cust_Code);
 
     document.getElementById("showStockAll").checked = true;
@@ -69,10 +66,8 @@ function LocationStockReport() {
   };
   const radioButtonChanged = async (e) => {
     const { name, value } = e.target;
-    console.log("name = ", name, " value = ", value);
     if (value === "all") {
       setSecondTable(secondTableAll);
-      // setCustCode("-1");
       setThirdTable([]);
     }
     if (value === "customer") {
@@ -86,14 +81,12 @@ function LocationStockReport() {
     }
   };
 
-  // summary report func starts
-
   //find the unique name of customers
-  var custnames = [...new Set(secondTable.map((item) => item.Customer))];
+  let custnames = [...new Set(secondTable.map((item) => item.Customer))];
   custnames = custnames.sort();
 
   //calculate material purchase details
-  var fullTable = [];
+  let fullTable = [];
   for (let i = 0; i < custnames.length; i++) {
     let tot1wt = 0,
       tot1swt = 0,
@@ -101,8 +94,8 @@ function LocationStockReport() {
     let tot2wt = 0,
       tot2swt = 0,
       tot2qty = 0;
-    var raw = [];
-    var scrap = [];
+    let raw = [];
+    let scrap = [];
     for (let j = 0; j < secondTable.length; j++) {
       if (custnames[i] === secondTable[j].Customer) {
         if (secondTable[j].Scrap === 0) {
@@ -134,76 +127,12 @@ function LocationStockReport() {
     fullTable.push(obj);
   }
   delay(300);
-  // console.log("fullTable = ", fullTable);
 
-  // nav("/MaterialManagement/StoreManagement/PrintLocationStockSummaryReport", {
-  //   state: {
-  //     formHeader: selectedfirstRow,
-  //     tableData: fullTable,
-  //   },
-  // });
-  // summary report func ends
   const summaryReport = async () => {
     setSummaryReportPrintOpen(true);
-
-    // //find the unique name of customers
-    // var custnames = [...new Set(secondTable.map((item) => item.Customer))];
-    // custnames = custnames.sort();
-
-    // //calculate material purchase details
-    // var fullTable = [];
-    // for (let i = 0; i < custnames.length; i++) {
-    //   let tot1wt = 0,
-    //     tot1swt = 0,
-    //     tot1qty = 0;
-    //   let tot2wt = 0,
-    //     tot2swt = 0,
-    //     tot2qty = 0;
-    //   var raw = [];
-    //   var scrap = [];
-    //   for (let j = 0; j < secondTable.length; j++) {
-    //     if (custnames[i] === secondTable[j].Customer) {
-    //       if (secondTable[j].Scrap === 0) {
-    //         raw.push(secondTable[j]);
-    //         tot1wt = tot1wt + parseFloat(secondTable[j].Weight);
-    //         tot1swt = tot1swt + parseFloat(secondTable[j].SWeight);
-    //         tot1qty = tot1qty + parseFloat(secondTable[j].Quantity);
-    //       } else {
-    //         scrap.push(secondTable[j]);
-    //         tot2wt = tot2wt + parseFloat(secondTable[j].Weight);
-    //         tot2swt = tot2swt + parseFloat(secondTable[j].SWeight);
-    //         tot2qty = tot2qty + parseFloat(secondTable[j].Quantity);
-    //       }
-    //     }
-    //   }
-    //   let obj = {
-    //     customer: custnames[i],
-    //     rawMaterial: raw,
-    //     scrapMaterial: scrap,
-    //     tot1wt: tot1wt,
-    //     tot1swt: tot1swt,
-    //     tot1qty: tot1qty,
-    //     tot2wt: tot2wt,
-    //     tot2swt: tot2swt,
-    //     tot2qty: tot2qty,
-    //     rawlength: raw.length,
-    //     scraplength: scrap.length,
-    //   };
-    //   fullTable.push(obj);
-    // }
-    // await delay(300);
-    // console.log("fullTable = ", fullTable);
-
-    // nav("/MaterialManagement/StoreManagement/PrintLocationStockSummaryReport", {
-    //   state: {
-    //     formHeader: selectedfirstRow,
-    //     tableData: fullTable,
-    //   },
-    // });
   };
 
-  // details report calc starts
-
+  // details report calc
   let tot1 = 0,
     tot2 = 0;
   for (let i = 0; i < thirdTable.length; i++) {
@@ -215,37 +144,9 @@ function LocationStockReport() {
     tot1: tot1,
     tot2: tot2,
   };
-  // await delay(300);
-  // nav("/MaterialManagement/StoreManagement/PrintLocationStockDetailReport", {
-  //   state: {
-  //     formHeader: selectedSecondRow,
-  //     tableData: thirdTable,
-  //     tabletotal: tabletotal,
-  //   },
-  // });
-  // details report calc ends
 
   const detailsReport = async () => {
     setDetailsReportPrintOpen(true);
-    // let tot1 = 0,
-    //   tot2 = 0;
-    // for (let i = 0; i < thirdTable.length; i++) {
-    //   tot1 = tot1 + parseFloat(thirdTable[i].Weight);
-    //   tot2 = tot2 + parseFloat(thirdTable[i].ScrapWeight);
-    // }
-    // let tabletotal = {
-    //   qty: thirdTable.length,
-    //   tot1: tot1,
-    //   tot2: tot2,
-    // };
-    // await delay(300);
-    // nav("/MaterialManagement/StoreManagement/PrintLocationStockDetailReport", {
-    //   state: {
-    //     formHeader: selectedSecondRow,
-    //     tableData: thirdTable,
-    //     tabletotal: tabletotal,
-    //   },
-    // });
   };
   const columns1 = [
     {
@@ -357,8 +258,7 @@ function LocationStockReport() {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#98A8F8",
-    onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("row = ", row);
+    onSelect: (row) => {
       setSelectedFirstRow(row);
 
       let url =
@@ -374,7 +274,6 @@ function LocationStockReport() {
         } else {
           setSecondTable(data);
         }
-        console.log("second table = ", data);
       });
       setThirdTable([]);
     },
@@ -385,8 +284,6 @@ function LocationStockReport() {
     clickToSelect: true,
     bgColor: "#98A8F8",
     onSelect: (row, isSelect, rowIndex, e) => {
-      console.log("row = ", row);
-      //setSelectedFirstRow(row);
       setSelectedSecondRow(row);
       let url =
         endpoints.getLocationStockThird +
@@ -408,7 +305,6 @@ function LocationStockReport() {
         }
         setThirdTable([]);
         setThirdTable(data);
-        console.log("third table = ", data);
       });
     },
   };
@@ -446,9 +342,6 @@ function LocationStockReport() {
         <h4 className="title">Location Stock Report</h4>
         <div className="row">
           <div className="col-md-4">
-            {/* <h4 className="form-title">
-              <u>Stock Viewer</u>
-            </h4> */}
             <label className="form-label" style={{ fontSize: "14px" }}>
               {" "}
               Stock Viewer
@@ -457,21 +350,6 @@ function LocationStockReport() {
             <div className="row">
               <div className="col-md-12">
                 <label className="form-label"> Select Customer</label>
-                {/* <select
-                className="ip-select"
-                name="customer"
-                onChange={changeCustomer}
-                // disabled={boolVal1}
-              >
-                <option value="" disabled selected>
-                  Select Customer
-                </option>
-                {custdata.map((customer, index) => (
-                  <option key={index} value={customer.Cust_Code}>
-                    {customer.Cust_name}
-                  </option>
-                ))}
-              </select> */}
                 <Typeahead
                   id="basic-example"
                   name="customer"
@@ -537,26 +415,7 @@ function LocationStockReport() {
                 />
               </div>
             </div>
-            <div className="row">
-              {/* <div className="col-md-6">
-                
-                <label className="form-label">Type</label>
-                <input
-                  className=""
-                  name="StorageType"
-                  value={selectedfirstRow.StorageType}
-                />
-              </div> */}
-              {/* <div className="col-md-6">
-                
-                <label className="form-label">Used</label>
-                <input
-                  className=""
-                  name="CapacityUtilised"
-                  value={selectedfirstRow.CapacityUtilised}
-                />
-              </div> */}
-            </div>
+            <div className="row"></div>
           </div>
 
           <div className="col-md-8">
@@ -574,9 +433,6 @@ function LocationStockReport() {
                       id="showStockAll"
                       name="updated"
                       value="all"
-                      //   value={inputPart.upDated}
-                      //disabled={boolVal3 | boolVal4}
-                      //   disabled={true}
                       onChange={radioButtonChanged}
                     />
                     <label className="form-label">All</label>
@@ -594,10 +450,6 @@ function LocationStockReport() {
                       name="updated"
                       onChange={radioButtonChanged}
                       value="customer"
-                      //   value={inputPart.upDated}
-                      //disabled={boolVal3 | boolVal4}
-                      //   disabled={true}
-                      //   onChange={changeMaterialHandle}
                     />
                     <label className="form-label">Customer</label>
                   </div>
@@ -609,17 +461,12 @@ function LocationStockReport() {
                   Summary Report
                 </button>
 
-                <button
-                  className="button-style "
-                  // style={{ width: "155px" }}
-                  onClick={detailsReport}
-                >
+                <button className="button-style " onClick={detailsReport}>
                   Details Report
                 </button>
 
                 <button
                   className="button-style"
-                  // style={{ width: "155px" }}
                   id="btnclose"
                   type="submit"
                   onClick={() => nav("/MaterialManagement")}
@@ -627,11 +474,6 @@ function LocationStockReport() {
                   Close
                 </button>
               </div>
-
-              {/* <div className="col-md-12">
-                <label className="form-label">Customer</label>
-                <input className="" value={selectedSecondRow.Customer} />
-              </div> */}
             </div>
 
             <div className="row">
@@ -669,10 +511,6 @@ function LocationStockReport() {
                     id="flexCheckDefault"
                     name="updated"
                     checked={selectedSecondRow.Scrap !== 0 ? true : false}
-                    //   value={inputPart.upDated}
-                    //disabled={boolVal3 | boolVal4}
-                    //   disabled={true}
-                    //   onChange={changeMaterialHandle}
                   />
                 </div>
                 <div className="col-md-8 col-sm-12">
@@ -698,26 +536,7 @@ function LocationStockReport() {
                 />
               </div>
 
-              <div className="col-md-4 mt-2">
-                {/* <div className="row">
-                  <div className="col-md-1 col-sm-12">
-                    <input
-                      className="form-check-input mt-3"
-                      type="checkbox"
-                      id="flexCheckDefault"
-                      name="updated"
-                      checked={selectedSecondRow.Scrap !== 0 ? true : false}
-                      //   value={inputPart.upDated}
-                      //disabled={boolVal3 | boolVal4}
-                      //   disabled={true}
-                      //   onChange={changeMaterialHandle}
-                    />
-                  </div>
-                  <div className="col-md-8 col-sm-12">
-                    <label className="form-label mt-1">Scrap</label>
-                  </div>
-                </div> */}
-              </div>
+              <div className="col-md-4 mt-2"></div>
             </div>
           </div>
         </div>
@@ -785,7 +604,6 @@ function LocationStockReport() {
                   striped
                   hover
                   condensed
-                  //selectRow={selectRow1}
                   headerClasses="header-class tableHeaderBGColor"
                   sort={sort3}
                   onSortChange={onSortChange3}

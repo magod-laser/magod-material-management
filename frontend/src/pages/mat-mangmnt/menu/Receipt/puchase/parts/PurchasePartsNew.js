@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import CreateYesNoModal from "../../../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../../../components/DeleteSerialYesNoModal";
 import DeleteRVModal from "../../../../components/DeleteRVModal";
 import BootstrapTable from "react-bootstrap-table-next";
-import Table from "react-bootstrap/Table";
 import { formatDate } from "../../../../../../utils";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
@@ -26,20 +24,13 @@ function PurchasePartsNew() {
     .reverse()
     .join("/");
 
-  //initial disable
   const [boolVal1, setBoolVal1] = useState(true);
-  //after clicking save button
   const [boolVal2, setBoolVal2] = useState(false);
-  //after clicking add button
   const [boolVal3, setBoolVal3] = useState(true);
-  //after clicking allot rv button
   const [boolVal4, setBoolVal4] = useState(false);
-  //const [boolVal4, setBoolVal4] = useState(false);
-
   const [partUniqueId, setPartUniqueId] = useState();
   const [partArray, setPartArray] = useState([]);
 
-  const [partVal, setPartVal] = useState([]);
   const [inputPart, setInputPart] = useState({
     id: "",
     partId: "",
@@ -49,19 +40,16 @@ function PurchasePartsNew() {
     qtyRejected: "0",
   });
 
-  //const [custDetailVal, setCustDetailVal] = useState("");
   const [calcWeightVal, setCalcWeightVal] = useState(0);
-
-  //const currDateTime = new Date();
   let [custdata, setCustdata] = useState([]);
   let [mtrlDetails, setMtrlDetails] = useState([]);
   const [saveUpdateCount, setSaveUpdateCount] = useState(0);
 
   let [formHeader, setFormHeader] = useState({
     rvId: "",
-    receiptDate: "", //formatDate(new Date(), 4), //currDate, //.split("/").reverse().join("-"),
+    receiptDate: "",
     rvNo: "Draft",
-    rvDate: "", //currDate, //.split("/").reverse().join("-"),
+    rvDate: "",
     status: "Created",
     customer: "0000",
     customerName: "",
@@ -77,10 +65,7 @@ function PurchasePartsNew() {
       setCustdata(data);
 
       const found = data.find((obj) => obj.Cust_Code == 0);
-      //setCustDetailVal(found.Address);
-
       setFormHeader((preValue) => {
-        //console.log(preValue)
         return {
           ...preValue,
           customerName: found.Cust_name,
@@ -89,9 +74,7 @@ function PurchasePartsNew() {
         };
       });
     });
-    //console.log("data = ", custdata);
 
-    //fetch part
     getRequest(endpoints.getCustBomList, (data) => {
       const foundPart = data.filter((obj) => obj.Cust_code == 0);
       setMtrlDetails(foundPart);
@@ -100,36 +83,8 @@ function PurchasePartsNew() {
 
   useEffect(() => {
     fetchCustData();
-    //setPartArray(partArray);
-  }, []); //[inputPart]);
+  }, []);
 
-  /*  let changeCustomer = async (e) => {
-    e.preventDefault();
-    const { value, name } = e.target;
-
-    const found = custdata.find((obj) => obj.Cust_Code === value);
-    //setCustDetailVal(found.Address);
-
-    setFormHeader((preValue) => {
-      //console.log(preValue)
-      return {
-        ...preValue,
-        [name]: value,
-        customerName: found.Cust_name,
-        customer: found.Cust_Code,
-        address: found.Address,
-      };
-    });
-    //fetchMtrlData();
-
-    //const foundPart = mtrlDetails.filter((obj) => obj.Cust_code == value);
-    //setMtrlDetails(foundPart);
-    getRequest(endpoints.getCustBomList, (data) => {
-      const foundPart = data.filter((obj) => obj.Cust_code == value);
-      setMtrlDetails(foundPart);
-    });
-  };
-*/
   const columns = [
     {
       text: "#",
@@ -154,7 +109,7 @@ function PurchasePartsNew() {
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
       formatter: (cellContent) => {
-        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+        return parseInt(cellContent);
       },
     },
     {
@@ -163,7 +118,7 @@ function PurchasePartsNew() {
       headerStyle: { whiteSpace: "nowrap" },
       sort: true,
       formatter: (cellContent) => {
-        return parseInt(cellContent); // Converts the value to an integer, truncating decimals
+        return parseInt(cellContent);
       },
     },
     {
@@ -187,7 +142,6 @@ function PurchasePartsNew() {
       name === "unitWeight" ? value.replace(/(\.\d{3})\d+/, "$1") : value;
 
     setInputPart((preValue) => {
-      //console.log(preValue)
       return {
         ...preValue,
         [name]: formattedValue,
@@ -203,7 +157,6 @@ function PurchasePartsNew() {
     inputPart.qtyIssued = 0;
     setInputPart(inputPart);
 
-    //update blank row with respected to modified part textfield
     postRequest(endpoints.updatePartReceiptDetails, inputPart, (data) => {
       if (data.affectedRows !== 0) {
       } else {
@@ -211,19 +164,8 @@ function PurchasePartsNew() {
       }
     });
 
-    // const newArray = partArray.map((p) =>
-    //   //p.id === "d28d67b2-6c32-4aae-a7b6-74dc985a3cff"
-    //   p.id === partUniqueId
-    //     ? {
-    //         ...p,
-    //         [name]: value,
-    //       }
-    //     : p
-    // );
-
     const newArray = partArray.map((p) => {
       if (p.id === partUniqueId) {
-        // Calculate the updated qtyRejected based on the new qtyReceived and qtyAccepted values
         const qtyReceived =
           name === "qtyReceived" ? formattedValue : p.qtyReceived;
         const qtyAccepted =
@@ -247,20 +189,17 @@ function PurchasePartsNew() {
       totwt =
         parseFloat(totwt) +
         parseFloat(obj.unitWeight) * parseFloat(obj.qtyAccepted);
-      //console.log(newWeight);
     });
-    // setCalcWeightVal(parseFloat(totwt).toFixed(2));
+
     setCalcWeightVal(parseFloat(totwt).toFixed(3));
     setFormHeader({ ...formHeader, calcWeight: parseFloat(totwt).toFixed(3) });
   };
 
   //add new part
   let { partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected } = inputPart;
-  //let id = uuid();
   const addNewPart = (e) => {
     setBoolVal3(false);
 
-    //clear all part fields
     inputPart.rvId = formHeader.rvId;
     inputPart.partId = "";
     inputPart.qtyAccepted = 0;
@@ -271,9 +210,6 @@ function PurchasePartsNew() {
     inputPart.qtyIssued = 0;
     inputPart.unitWeight = 0;
     inputPart.custBomId = formHeader.customer;
-
-    // console.log("partarray = ", partArray);
-
     //insert blank row in table
     postRequest(endpoints.insertPartReceiptDetails, inputPart, (data) => {
       if (data.affectedRows !== 0) {
@@ -283,10 +219,7 @@ function PurchasePartsNew() {
           ...partArray,
           { id, partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected },
         ]);
-        //const newWeight = calcWeightVal + unitWeight * qtyReceived;
-        //setCalcWeightVal(parseFloat(newWeight).toFixed(2));
 
-        //let uniqueid = uuid();
         setPartUniqueId(id);
         let newRow = {
           id: id,
@@ -296,15 +229,12 @@ function PurchasePartsNew() {
           qtyAccepted: 0,
           qtyRejected: 0,
         };
-        //setPartArray(newRow);
         setPartArray([...partArray, newRow]);
         setInputPart(inputPart);
       } else {
         toast.error("Record Not Inserted");
       }
     });
-
-    //console.log("after = ", partArray);
   };
 
   const deleteButtonState = () => {
@@ -312,17 +242,9 @@ function PurchasePartsNew() {
   };
   //delete part
   const handleDelete = () => {
-    //minus calculated weight
-    // console.log("partarray = ", partArray);
-    console.log("id = ", inputPart.id);
-
     postRequest(endpoints.deletePartReceiptDetails, inputPart, (data) => {
       if (data.affectedRows !== 0) {
-        const newArray = partArray.filter(
-          (p) =>
-            //p.id === "d28d67b2-6c32-4aae-a7b6-74dc985a3cff"
-            p.id !== inputPart.id
-        );
+        const newArray = partArray.filter((p) => p.id !== inputPart.id);
         setPartArray(newArray);
         toast.success("Material Deleted");
       }
@@ -334,7 +256,6 @@ function PurchasePartsNew() {
       totwt =
         parseFloat(totwt) +
         parseFloat(obj.unitWeight) * parseFloat(obj.qtyReceived);
-      //console.log(newWeight);
     });
     setCalcWeightVal(parseFloat(totwt).toFixed(2));
   };
@@ -363,7 +284,6 @@ function PurchasePartsNew() {
     const formattedValue =
       name === "weight" ? value.replace(/(\.\d{3})\d+/, "$1") : value;
     setFormHeader((preValue) => {
-      //console.log(preValue)
       return {
         ...preValue,
         [name]: formattedValue,
@@ -378,7 +298,6 @@ function PurchasePartsNew() {
       endpoints.insertHeaderMaterialReceiptRegister,
       formHeader,
       (data) => {
-        //console.log("data = ", data);
         if (data.affectedRows !== 0) {
           setFormHeader((preValue) => {
             return {
@@ -388,7 +307,6 @@ function PurchasePartsNew() {
           });
           setSaveUpdateCount(saveUpdateCount + 1);
           toast.success("Record Saved Successfully");
-          //enable part section and other 2 buttons
           setBoolVal1(false);
         } else {
           toast.error("Record Not Inserted");
@@ -398,16 +316,13 @@ function PurchasePartsNew() {
   };
 
   const updateHeaderFunction = () => {
-    //console.log("update formheader = ", formHeader);
     postRequest(
       endpoints.updateHeaderMaterialReceiptRegister,
       formHeader,
       (data) => {
-        //console.log("data = ", data);
         if (data.affectedRows !== 0) {
           setSaveUpdateCount(saveUpdateCount + 1);
           toast.success("Record Updated Successfully");
-          //enable part section and other 2 buttons
           setBoolVal1(false);
         } else {
           toast.error("Record Not Updated");
@@ -440,10 +355,7 @@ function PurchasePartsNew() {
         insertHeaderFunction();
         setBoolVal2(true);
       } else {
-        //to update data
-        // updateHeaderFunction();
         let flag1 = 0;
-
         for (let i = 0; i < partArray.length; i++) {
           if (
             partArray[i].partId === "" ||
@@ -474,7 +386,6 @@ function PurchasePartsNew() {
       }
     }
   };
-  console.log("formheader", formHeader);
 
   const allotRVButtonState = (e) => {
     e.preventDefault();
@@ -492,8 +403,6 @@ function PurchasePartsNew() {
         "Enter the Customer Material Weight as per Customer Document"
       );
     } else {
-      // show model form
-
       let flag1 = 0;
       for (let i = 0; i < partArray.length; i++) {
         if (
@@ -506,7 +415,6 @@ function PurchasePartsNew() {
         }
         if (partArray[i].qtyAccepted > partArray[i].qtyReceived) {
           flag1 = 2;
-          console.log("Setting flag1 to 2");
         }
       }
       if (flag1 == 1) {
@@ -514,48 +422,14 @@ function PurchasePartsNew() {
       } else if (flag1 === 2) {
         toast.error("QtyAccepted should be less than or equal to QtyReceived");
       } else {
-        //show model form
         setShow(true);
       }
     }
-    // if (formHeader.weight == "0") {
-    //   toast.error(
-    //     "Enter the Customer Material Weight as per Customer Document"
-    //   );
-    // } else {
-    //   //show model form
-    //   setShow(true);
-    // }
-
-    // ADDED POPUP FOR ALLOTRVNO
-    // if (partArray.length === 0) {
-    //   toast.error("Add Details Before Saving");
-    // } else {
-    //   setShow(true);
-    // }
   };
 
   const allotRVYesButton = (data) => {
-    //console.log("data = ", formHeader);
     setFormHeader(data);
-    //console.log("formheader = ", formHeader);
     setBoolVal4(true);
-
-    //window.location.reload();
-    //nav("/MaterialManagement/Receipt/Purchase/Parts/New");
-    //console.log("formheader = ", formHeader);
-    //formHeader = data;
-    //formHeader.rvNo = data.rvNo;
-    //setFormHeader(formHeader);
-
-    /*setFormHeader((preValue) => {
-      return {
-        ...preValue,
-        rvNo: data.rvNo,
-      };
-    });*/
-
-    //console.log("formHeader = ", formHeader);
   };
   const deleteRVButton = async () => {
     setDeleteRvModalOpen(true);
@@ -689,8 +563,6 @@ function PurchasePartsNew() {
                 className="input-disabled mt-1"
                 type="text"
                 name="weight"
-                // value={formHeader.weight}
-                // value={formHeader.weight === 0 ? "" : formHeader.weight}
                 value={
                   formHeader.weight === "0" || formHeader.weight === 0
                     ? ""
@@ -715,7 +587,6 @@ function PurchasePartsNew() {
             <select
               className="ip-select mt-1"
               name="customer"
-              //onChange={changeCustomer}
               disabled={boolVal1}
             >
               {custdata.map((customer, index) =>
@@ -789,7 +660,6 @@ function PurchasePartsNew() {
             </button>
             <button
               className="button-style"
-              // style={{ width: "196px" }}
               disabled={boolVal1 | boolVal4}
               onClick={allotRVButtonState}
             >
@@ -797,7 +667,6 @@ function PurchasePartsNew() {
             </button>
             <button
               className="button-style"
-              // style={{ width: "196px" }}
               disabled={boolVal1 | boolVal4}
               onClick={deleteRVButton}
             >
@@ -830,41 +699,7 @@ function PurchasePartsNew() {
             headerClasses="header-class tableHeaderBGColor"
           ></BootstrapTable>
         </div>
-        {/*<div className="col-md-6 col-sm-12">
-           <table className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Part Id</th>
-                <th>Unit Wt</th>
-                <th>Qty Received</th>
-                <th>Qty Accepted</th>
-                <th>Qty Rejected</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {partArray.map((part, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{part.partId}</td>
-                  <td>{part.unitWeight}</td>
-                  <td>{part.qtyReceived}</td>
-                  <td>{part.qtyAccepted}</td>
-                  <td>{part.qtyRejected}</td>
-                  <td>
-                    <button
-                      className="btn btn-danger form-control"
-                      onClick={() => handleDelete(part.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> 
-        </div>*/}
+
         <div className="col-md-4 col-sm-12">
           <div className=" form-bg">
             <div className="d-flex justify-content-center mt-2 mb-3">
@@ -890,7 +725,6 @@ function PurchasePartsNew() {
               </div>
               <div className="col-md-8">
                 <select
-                  // className="ip-select dropdown-field"
                   className="input-disabled mt-1"
                   name="partId"
                   value={inputPart.partId}
@@ -916,14 +750,12 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  // value={inputPart.unitWeight}
                   value={
                     inputPart.unitWeight === "0" || inputPart.unitWeight === 0
                       ? ""
                       : inputPart.unitWeight
                   }
                   onChange={changePartHandle}
-                  //onKeyUp={changePartHandle1}
                   onKeyDown={blockInvalidChar}
                   min="0"
                   disabled={boolVal3 | boolVal4}
@@ -939,8 +771,6 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyReceived"
-                  //value={tempVal}
-                  // value={inputPart.qtyReceived}
                   value={
                     inputPart.qtyReceived === "0" || inputPart.qtyReceived === 0
                       ? ""
@@ -959,7 +789,6 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyAccepted"
-                  // value={inputPart.qtyAccepted}
                   value={
                     inputPart.qtyAccepted === "0" || inputPart.qtyAccepted === 0
                       ? ""
@@ -986,17 +815,6 @@ function PurchasePartsNew() {
                 />
               </div>
             </div>
-
-            {/* <div className="row justify-content-center mt-3 mb-4">
-              <button
-                className="button-style "
-                style={{ width: "55px" }}
-                disabled={boolVal3 | boolVal4}
-                onClick={deleteButtonState}
-              >
-                Delete
-              </button>
-            </div> */}
           </div>
         </div>
       </div>

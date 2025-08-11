@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
+import { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import ModalComp from "./ModalComp";
 import { toast } from "react-toastify";
-const { getRequest, postRequest } = require("../../../../api/apiinstance");
+const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
 function LocationModel({ show, setShow, scrapModal }) {
@@ -15,10 +14,8 @@ function LocationModel({ show, setShow, scrapModal }) {
     location: "",
   });
 
-  //   const handleOpen = () => setOpen(true);
   const handleOpen = () => {
-    // alert("The material will be altered as SCRAP, Continue?");
-    var numberPattern = /^[0-9]+$/;
+    let numberPattern = /^[0-9]+$/;
     if (!row.scrapWeight.match(numberPattern)) {
       toast.error("Enter Numeric Value");
     } else if (row.location.length === 0) {
@@ -37,12 +34,6 @@ function LocationModel({ show, setShow, scrapModal }) {
     });
     setShow(false);
   };
-
-  // const InputHeaderEvent = (e) => {
-  //   const { value, name } = e.target;
-
-  //   row[name] = value;
-  // };
 
   const InputHeaderEvent = (e) => {
     const { value, name } = e.target;
@@ -68,10 +59,6 @@ function LocationModel({ show, setShow, scrapModal }) {
       setLocationData(data);
     });
   }, []);
-
-  // getRequest(endpoints.getMaterialLocationList, (data) => {
-  //   setLocationData(data);
-  // });
 
   return (
     <>
@@ -124,16 +111,8 @@ function LocationModel({ show, setShow, scrapModal }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          {/* <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleOpen}>
-            Save
-          </Button> */}
-
           <button
             className="button-style"
-            // backgroundColor: "gray"
             style={{ width: "80px" }}
             onClick={handleClose}
           >

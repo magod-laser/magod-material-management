@@ -159,6 +159,5 @@ app.use("/PDF", savePDF);
 
 // starting the server
 app.listen(process.env.PORT, () => {
-  console.log("listening on port " + process.env.PORT);
   logger.info("listening on port " + process.env.PORT);
 });

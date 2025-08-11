@@ -1,26 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import NestMenu from "./NestMenu";
 
 function FirstNestMenu({ subNav1, subnav }) {
-  const SidebarLink = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    list-style: none;
-    height: 35px;
-    text-decoration: none;
-    font-size: 13px;
-
-    &:hover {
-      background: #707075;
-      border-left: 4px solid #707075;
-      cursor: pointer;
-      color: #ffffff;
-    }
-  `;
-
   const SidebarLabel = styled.span`
     margin-left: 8px;
   `;
@@ -40,11 +23,6 @@ function FirstNestMenu({ subNav1, subnav }) {
       cursor: pointer;
       color: #ffffff;
     }
-  `;
-
-  const IconNav = styled.div`
-    padding-left: 5px;
-    font-size: 1.2rem;
   `;
 
   const [nest, setNest] = useState(false);

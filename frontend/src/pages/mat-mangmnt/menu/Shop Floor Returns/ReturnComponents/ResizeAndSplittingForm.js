@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import BootstrapTable from "react-bootstrap-table-next";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getRequest, postRequest } from "../../../../api/apiinstance";
@@ -56,30 +55,11 @@ export default function ResizeAndSplittingForm() {
       InStock: "",
       Weight: "",
       Location: "",
-      // MtrlStock_ID: counter,
     };
-    //setPartArray(newRow);
-    setTableData([...tableData, newRow]);
-    // setCounter(counter + 1);
 
-    // //clear all data
-    // setInputData((preValue) => {
-    //   //console.log(preValue)
-    //   return {
-    //     Location: "",
-    //     MtrlStock_ID: counter,
-    //     DynamicPara1: "",
-    //     DynamicPara2: "",
-    //     InStock: "",
-    //     Weight: "",
-    //   };
-    // });
+    setTableData([...tableData, newRow]);
   };
   const selectRow = (val, key) => {
-    // mode: "radio",
-    // clickToSelect: true,
-    // bgColor: "#98A8F8",
-    // onSelect: (row, isSelect, rowIndex, e) => {
     setSelectedTableRow([
       {
         SrlNo: key,
@@ -102,8 +82,6 @@ export default function ResizeAndSplittingForm() {
 
       Location: val.Location,
     });
-
-    // },
   };
 
   const changeHandler = (e) => {
@@ -121,10 +99,7 @@ export default function ResizeAndSplittingForm() {
       const element = tableData[i];
 
       if (i === selectedTableRow[0].SrlNo - 1) {
-        // console.log("yesss");
-
         tableData[i][name] = value;
-        // setTableData(tableData);
 
         const percentage =
           (parseFloat(tableData[i].DynamicPara1) *
@@ -134,22 +109,12 @@ export default function ResizeAndSplittingForm() {
 
         let weightCalculated =
           parseFloat(location?.state?.secondTableRow[0].Weight) * percentage;
-        // console.log(
-        //   "get weight...",
-        //   getWeight(
-        //     data,
-        //     parseFloat(tableData[i].DynamicPara1),
-        //     parseFloat(tableData[i].DynamicPara2),
-        //     parseFloat(0)
-        //   )
-        // );
 
         if (weightCalculated >= 0) {
           tableData[i].Weight = weightCalculated.toFixed(2);
         } else {
           tableData[i].Weight = 0.0;
         }
-        // weightCalculated >= 0 ? (tableData[i].Weight = weightCalculated) : "";
 
         setTableData(tableData);
       } else {
@@ -173,31 +138,16 @@ export default function ResizeAndSplittingForm() {
     }
   };
 
-  // console.log("location", location);
-
   const deleteItem = () => {
-    // console.log("delete clicked...");
-    // console.log("selectedTableRow", selectedTableRow);
-    // console.log(
-    //   "tableData",
-    //   tableData[parseInt(selectedTableRow[0].SrlNo) - 1]
-    // );
-
-    // const newArray = tableData.filter(
-    //   (p) => p.MtrlStock_ID !== selectedRow.srlNo
-    // );
-
     const newArray = [];
     for (let i = 0; i < tableData.length; i++) {
       const element = tableData[i];
 
       if (i !== parseInt(selectedTableRow[0].SrlNo - 1)) {
-        // console.log(`table data... ${i + 1}`, tableData);
-
         newArray.push(element);
       }
     }
-    // console.log("newArray", newArray);
+
     setTableData(newArray);
     setSelectedTableRow([]);
     setInputData({
@@ -235,77 +185,32 @@ export default function ResizeAndSplittingForm() {
         } else if (tableData[i].Location.length === 0) {
           toast.error("Select Location for Resized Sheets");
         } else {
-          //get mtrl_data by mtrl_code
-          // let url =
-          //   endpoints.getRowByMtrlCode + "?code=" + formHeader.materialCode;
-          // getRequest(url, async (data) => {
-          //   let totwt = 0;
-          //   totwt = getWeight(
-          //     data,
-          //     parseFloat(tableData[i].DynamicPara1),
-          //     parseFloat(tableData[i].DynamicPara2),
-          //     parseFloat(0)
-          //   );
-
-          //   tableData[i].Weight = Math.round(0.000001 * totwt);
-          //   setShowYesNo(true);
-          // });
           setShowYesNo(true);
         }
       }
     }
-    // console.log("clicked");
   };
 
   const modalYesNoResponse = (msg) => {
-    // console.log("msg = ", msg);
     if (msg == "yes") {
-      // console.log("secondTableRow........", location?.state?.secondTableRow);
-      // console.log("resizeTableData........", tableData);
-      // console.log("location data...........", location.state);
       //insert mtrl stock list
       for (let i = 0; i < location?.state?.secondTableRow.length; i++) {
         const element0 = location?.state?.secondTableRow[i];
         let counter = 1;
 
-        // console.log("forrrr111111111..", element0);
         for (let j = 0; j < tableData.length; j++) {
           const element1 = tableData[j];
-          // console.log("forrrr111111111..", element0);
-          // console.log("forrrr222222222222..", element1);
-
-          // console.log("paraaaaaaaaa.......", paraData3);
 
           for (let k = 1; k < parseInt(element1.InStock) + 1; k++) {
-            // console.log(
-            //   `meterial + ${i + 1} ...... quantity + ${
-            //     element1.InStock
-            //   }........ counter number + ${counter}`
-            // );
-
-            // console.log(
-            //   `meterial + ${i + 1} ...... quantity + ${
-            //     element1.InStock
-            //   }........ counter number + ${counter}`
-            // );
-            // counter = counter + 1;
-            // new....
-
-            // const element = array[k];
-
             let urlGet =
               endpoints.getDataByMtrlStockIdResize +
               "?MtrlStockID=" +
               element0.MtrlStockID;
             getRequest(urlGet, async (selectData) => {
-              // console.log("data from BE selecteData", selectData);
-
               if (selectData.length > 0) {
                 let paraData3 = {
                   MtrlStockID: `${element0.MtrlStockID}/P${counter}`,
-                  // element0.MtrlStockID + "/P" + counter,
                   MtrlStockIDOld: element0.MtrlStockID,
-
                   Mtrl_Rv_id: selectData[0].Mtrl_Rv_id,
                   Cust_Code: selectData[0].Cust_Code,
                   Customer: selectData[0].Customer,
@@ -326,50 +231,14 @@ export default function ResizeAndSplittingForm() {
                   IV_No: selectData[0].IV_No,
                   NCProgramNo: null,
                   LocationNo: element1.Location,
-
-                  // DynamicPara1: element0.DynamicPara1,
-                  // DynamicPara2: element0.DynamicPara2,
-                  // DynamicPara3: 0,
-                  // DynamicPara4: 0,
-                  // LocationNo: element0.Location,
-                  // Weight: element0.Weight,
-                  // MtrlStockID: element1.MtrlStockID + "/P" + (i + 1),
-                  // MtrlStockIDOld: element1.MtrlStockID,
                 };
 
-                // console.log(
-                //   `meterial + ${i + 1} ...... quantity + ${
-                //     element1.InStock
-                //   }........ counter number + ${counter}`
-                // );
-
-                // console.log("paraData...", paraData3);
-
-                // new
-
-                // console.log(
-                //   `meterial + ${i + 1} ...... quantity + ${
-                //     element1.InStock
-                //   }........ counter number + ${counter}`
-                // );
-
-                // console.log(
-                //   `material... + ${i + 1}, quantity... ${
-                //     element1.InStock
-                //   }, counter.... ${counter}`
-                // );
-
-                // console.log("paraa", paraData3);
                 postRequest(
                   endpoints.insertByMtrlStockIDResize,
                   paraData3,
                   (data) => {
                     if (data.affectedRows > 0) {
-                      // flagTest.push(1);
-                      // setFlagTest([...flagTest, 1]);
-                      // console.log("test...");
                     }
-                    // console.log("inserted stock list.....", flagTest);
                   }
                 );
 
@@ -382,57 +251,24 @@ export default function ResizeAndSplittingForm() {
         }
       }
 
-      // //update stock list
-      // for (let i = 0; i < location?.state?.secondTableRow.length; i++) {
-      //   let paraData3 = {
-      //     LocationNo: "ScrapYard",
-      //     MtrlStockID: location?.state?.secondTableRow[i].ShapeMtrlID,
-      //   };
-      //   postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-      //     // console.log("updated stock list");
-      //   });
-      // }
-
-      // update the old mtrl...
-
-      // new
       for (let j = 0; j < location?.state?.secondTableRow.length; j++) {
         const element = location?.state?.secondTableRow[j];
-
-        // console.log("element", element.MtrlStockID);
 
         let paraData3 = {
           LocationNo: "ScrapYard",
           MtrlStockID: element.MtrlStockID,
         };
         postRequest(endpoints.updateMtrlStockLock3, paraData3, (data) => {
-          // console.log("updated stock list", data);
           if (data.affectedRows > 0) {
-            // flagTest.push(2);
-            // setFlagTest([...flagTest, 2]);
           }
         });
       }
 
       toast.success("Resize Successfull");
-      // new
+
       setTimeout(() => {
-        // document.getElementById("result").innerHTML = "Hello, I am here";
         nav("/MaterialManagement/ShopFloorReturns/PendingList");
       }, 500);
-
-      //
-      // flagTest.push(5);
-      // console.log("flagTest", flagTest.length);
-      // if (flagTest.sort().reverse()[0] === 0) {
-      //   toast.error("Error while inserting new material");
-      // } else if (flagTest.sort().reverse()[0] === 1) {
-      //   toast.error("Error while udating the material");
-      // } else if (flagTest.sort().reverse()[0] === 2) {
-      //   toast.success("Resize Successfull");
-      // } else {
-      //   toast.error("Uncaught error while updating Material");
-      // }
     }
   };
 
@@ -537,14 +373,6 @@ export default function ResizeAndSplittingForm() {
                   className={
                     selectedTableRow?.some(
                       (el) => parseInt(el.SrlNo) === parseInt(key + 1)
-                      // &&
-                      // parseInt(el.DynamicPara1) ===
-                      //   parseInt(val.DynamicPara1) &&
-                      // parseInt(el.DynamicPara2) ===
-                      //   parseInt(val.DynamicPara2) &&
-                      // parseInt(el.InStock) === parseInt(val.InStock) &&
-                      // parseInt(el.Weight) === parseInt(val.Weight) &&
-                      // parseInt(el.Location) === parseInt(val.Location)
                     )
                       ? "rowSelectedClass"
                       : ""
@@ -561,7 +389,7 @@ export default function ResizeAndSplittingForm() {
             </tbody>
           </Table>
         </div>
-        {/* form */}
+
         <div className="col-md-4 p-3" style={{ backgroundColor: "#e6e6e6" }}>
           <div className="row">
             <div className="d-flex justify-content-between">
@@ -576,7 +404,6 @@ export default function ResizeAndSplittingForm() {
                 className="button-style m-0"
                 style={{ width: "130px" }}
                 onClick={deleteItem}
-                // disabled={selectedTableRow.length === 0}
               >
                 Delete Item
               </button>

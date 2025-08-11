@@ -1,4 +1,3 @@
-import React from "react";
 import MaterialMoverForm from "./MaterialMoverForm";
 
 function Customer() {

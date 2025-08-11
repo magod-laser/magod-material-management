@@ -3,7 +3,6 @@ var createError = require("http-errors");
 const { createFolder, copyallfiles } = require("../../helpers/folderhelper");
 const { misQuery, setupQuery, misQueryMod } = require("../../helpers/dbconn");
 const req = require("express/lib/request");
-const { sendDueList } = require("../../helpers/sendmail");
 const { logger } = require("../../helpers/logger");
 
 customerRouter.get("/allcustomers", async (req, res, next) => {
@@ -27,7 +26,6 @@ customerRouter.get("/getCustomerByCustCode", async (req, res, next) => {
     misQueryMod(
       `Select * from magodmis.cust_data where Cust_Code = ${code}`,
       (err, data) => {
-        // console.log("getCustomerByCustCode", data);
         if (err) logger.error(err);
         logger.info(
           `Successfully fetched from cust_data with Cust_Code = ${code}`

@@ -1,6 +1,4 @@
-/** @format */
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -77,7 +75,7 @@ function MaterialAllotmentMain() {
           } else {
             data[i].QtyAvailable = 0;
           }
-          // data[i].QtyAvailable = data2[0]["QtyAvialable"];
+
           data[i].issueNow = 0;
           data[i].AlreadyUsed = 0;
           data[i].TotalUsed = 0;
@@ -127,9 +125,7 @@ function MaterialAllotmentMain() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("use state call");
-  }, [firstTable, secondTable]);
+  useEffect(() => {}, [firstTable, secondTable]);
 
   let issuenowchange = (e) => {
     setissuenowval(e.target.value);
@@ -359,7 +355,6 @@ function MaterialAllotmentMain() {
                   header3,
                   async (data) => {
                     if (data.affectedRows !== 0) {
-                      console.log("BOM Issue Details Inserted");
                     }
                   }
                 );
@@ -375,7 +370,6 @@ function MaterialAllotmentMain() {
                 header5,
                 async (data) => {
                   if (data.affectedRows !== 0) {
-                    console.log("Qty Issued Updated");
                   }
                 }
               );
@@ -393,7 +387,6 @@ function MaterialAllotmentMain() {
             header2,
             async (data) => {
               if (data.affectedRows !== 0) {
-                console.log("NC Programs Updated");
               }
             }
           );
@@ -406,9 +399,7 @@ function MaterialAllotmentMain() {
             UnitName: unitName,
           };
 
-          postRequest(endpoints.updateRunNo, inputData, (data) => {
-            console.log("Running Number Updated");
-          });
+          postRequest(endpoints.updateRunNo, inputData, (data) => {});
 
           // Navigate to the next page
           nav(
@@ -638,27 +629,7 @@ function MaterialAllotmentMain() {
               <th>Issue Now</th>
             </tr>
           </thead>
-          {/* <tbody>
-            {firstTable.map((row) => (
-              <tr
-                key={row.Id}
-                style={rowStyle1(row)}
-                onClick={() => {
-                  selectRow1.onSelect(row, true);
-                  // setRow2(row)
-                }}
-              >
-                <td>{row.PartId}</td>
-                <td>{row.QtyPerAssy}</td>
-                <td>{row.QtyRequired}</td>
-                <td>{row.AlreadyUsed}</td>
-                <td>{row.TotalUsed}</td>
-                <td>{row.QtyRejected}</td>
-                <td>{row.QtyAvailable}</td>
-                <td>{row.issueNow}</td>
-              </tr>
-            ))}
-          </tbody> */}
+
           <tbody>
             {loadingFirstTable ? (
               <tr>
@@ -707,12 +678,10 @@ function MaterialAllotmentMain() {
         </div>
 
         <div className="col-md-7">
-          {/* <div style={{ height: "250px", overflowY: "scroll" }}> */}
           <div style={{ height: "480px", overflowY: "scroll" }}>
             <Table className="table custom-table" striped bordered hover>
               <thead className="header-class">
                 <tr>
-                  {/* <th>ID</th> */}
                   <th>RV No</th>
                   <th>RV Date</th>
                   <th>Received</th>
@@ -880,7 +849,6 @@ function MaterialAllotmentMain() {
                   className="input-disabled mt-2"
                   type="text"
                   name="qtyReceived"
-                  // disabled="true"
                   value={row2.QtyReceived}
                   disabled
                 />

@@ -1,5 +1,3 @@
-import React from "react";
-
 function DraftForm() {
   return (
     <>
@@ -27,11 +25,7 @@ function DraftForm() {
                       <label className="form-label">Receipt Date</label>
                     </div>
                     <div className="col-md-8 ">
-                      <input
-                        className="in-field"
-                        type="date"
-                        // onChange={(e) => setDate(e.target.value)}
-                      />
+                      <input className="in-field" type="date" />
                     </div>
                   </div>
                   <div className="row">
@@ -47,11 +41,7 @@ function DraftForm() {
                       <label className="form-label">RV Date</label>
                     </div>
                     <div className="col-md-8 ">
-                      <input
-                        className="in-field"
-                        type="date"
-                        // onChange={(e) => setDate(e.target.value)}
-                      />
+                      <input className="in-field" type="date" />
                     </div>
                   </div>
                   <div className="row">

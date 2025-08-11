@@ -16,7 +16,7 @@ const dbDatabase6 = process.env.DB_DATABASE_6; //magod_mtrl
 var misConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase1,
 });
@@ -24,7 +24,7 @@ var misConn = mysql.createConnection({
 var setupConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase2,
 });
@@ -32,7 +32,7 @@ var setupConn = mysql.createConnection({
 var qtnConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase3,
 });
@@ -40,7 +40,7 @@ var qtnConn = mysql.createConnection({
 var mchConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase4,
 });
@@ -48,7 +48,7 @@ var mchConn = mysql.createConnection({
 var slsConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase5,
 });
@@ -56,7 +56,7 @@ var slsConn = mysql.createConnection({
 var mtrlConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
-  port:dbPort,
+  port: dbPort,
   password: dbPassword,
   database: dbDatabase6,
 });
@@ -102,32 +102,26 @@ let setupQueryMod = async (q, callback) => {
 };
 
 let qtnQuery = (q, callback) => {
-  // console.log(q);
   qtnConn.connect();
   qtnConn.query(q, (err, res, fields) => {
     if (err) throw err;
     callback(res);
-    // return res[0].solution;
   });
 };
 
 let qtnQueryMod = (q, callback) => {
-  // console.log(q);
   qtnConn.connect();
   qtnConn.query(q, (err, res, fields) => {
     if (err) callback(err, null);
     else callback(null, res);
-    // return res[0].solution;
   });
 };
 
 let qtnQueryModv2 = (q, values, callback) => {
-  // console.log(q);
   qtnConn.connect();
   qtnConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);
     else callback(null, res);
-    // return res[0].solution;
   });
 };
 

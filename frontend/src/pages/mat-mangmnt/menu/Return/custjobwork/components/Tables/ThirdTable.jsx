@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
-
 import { FaArrowUp } from "react-icons/fa";
 
 export default function ThirdTable(props) {
@@ -13,7 +11,6 @@ export default function ThirdTable(props) {
           !parseFloat(a[props.sortConfigThird.key]) ||
           !parseFloat(b[props.sortConfigThird.key])
         ) {
-          // console.log("string");
           if (a[props.sortConfigThird.key] < b[props.sortConfigThird.key]) {
             return props.sortConfigThird.direction === "asc" ? -1 : 1;
           }
@@ -22,7 +19,6 @@ export default function ThirdTable(props) {
           }
           return 0;
         } else {
-          // console.log("number");
           if (
             parseFloat(a[props.sortConfigThird.key]) <
             parseFloat(b[props.sortConfigThird.key])

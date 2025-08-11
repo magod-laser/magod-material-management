@@ -20,7 +20,7 @@ custBomListRouter.get("/allCustBomList", async (req, res, next) => {
 
 custBomListRouter.post("/getCustBomId", async (req, res, next) => {
   const { partId, cust_Code } = req.body;
-  console.log("partId", partId);
+
   try {
     misQueryMod(
       `Select * from magodmis.cust_bomlist where PartId = '${partId}' and Cust_code = '${cust_Code}'`,
@@ -30,7 +30,6 @@ custBomListRouter.post("/getCustBomId", async (req, res, next) => {
           `successfully fetched custBomId for PartId=${partId} and cust_code=${cust_Code}`
         );
 
-        console.log("Dataaaaaaaaa", data);
         res.send(data);
       }
     );

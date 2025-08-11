@@ -43,7 +43,6 @@ savePDF.post("/set-adjustment-name", (req, res) => {
   }
 
   globalAdjustmentName = adjustment;
-  // console.log("Global adjustment name set to:", globalAdjustmentName);
   res.status(200).send({ message: "Adjustment name saved successfully." });
 });
 
@@ -54,7 +53,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const dateTime = getFormattedDateTime(); // Get current date and time
-    // console.log(" dateTime :", dateTime);
+
     const ext = path.extname(file.originalname); // Retain the original file extension
     cb(null, `${globalAdjustmentName}_${dateTime}${ext}`); // Use global adjustment name
   },
@@ -66,7 +65,7 @@ savePDF.post("/save-pdf", (req, res) => {
   // Middleware to handle the file upload
   upload(req, res, (err) => {
     if (err) {
-      console.log(" err to:", err);
+      console.error(" err to:", err);
       return res
         .status(500)
         .send({ message: "File upload failed", error: err });
@@ -75,9 +74,6 @@ savePDF.post("/save-pdf", (req, res) => {
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
     }
-
-    // console.log("Adjustment Name:", globalAdjustmentName); // Log the adjustment name
-    // console.log(`File saved to: ${req.file.path}`); // Log the file path
 
     res.status(200).send({
       message: "PDF saved successfully!",

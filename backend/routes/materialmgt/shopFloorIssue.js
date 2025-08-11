@@ -51,13 +51,7 @@ shopFloorIssueRouter.get(
       let id = req.query.id;
       let custCode = req.query.custCode;
 
-      // console.log("custCode", custCode);
-
       misQueryMod(
-        // `SELECT s.*, m.PartId, m1.RV_No,m1.CustDocuNo FROM
-        // magodmis.shopfloor_bom_issuedetails s,magodmis.mtrl_part_receipt_details m,
-        // magodmis.material_receipt_register m1 WHERE m.Id=s.PartReceipt_DetailsID
-        // AND m1.RvID=s.RV_Id AND s.IV_ID=${id} and m1.Cust_Code = '${custCode}'`,
         `SELECT s.*, m.PartId, m1.RV_No,m1.CustDocuNo FROM
         magodmis.shopfloor_bom_issuedetails s,magodmis.mtrl_part_receipt_details m,
         magodmis.material_receipt_register m1 WHERE m.Id=s.PartReceipt_DetailsID
@@ -78,36 +72,13 @@ shopFloorIssueRouter.get(
   async (req, res, next) => {
     try {
       let status = req.query.status;
-      console.log("status", status);
 
       misQueryMod(
         `SELECT s.*, c.Cust_Name, n.TaskNo, n.NcId, n.Machine, n.Operation,
             n.Mtrl_Code, n.CustMtrl, n.Cust_Code
         FROM magodmis.shopfloor_material_issueregister s,magodmis.cust_data c,magodmis.ncprograms n
         WHERE  s.Status="${status}" AND  n.Cust_Code= c.Cust_Code AND s.NcId=n.Ncid order by Issue_date DESC`,
-        // `SELECT s.*, c.Cust_Name, n.TaskNo, n.NcId, n.Machine, n.Operation,
-        //     n.Mtrl_Code, n.CustMtrl, n.Cust_Code
-        // FROM magodmis.shopfloor_material_issueregister s,magodmis.cust_data c,magodmis.ncprograms n
-        // WHERE  s.Status='${status}' AND  n.Cust_Code= c.Cust_Code AND s.NcId=n.Ncid AND s.Issue_date >= DATE_SUB(DATE_FORMAT(CURRENT_DATE(),'%Y-01-01'), INTERVAL 2 YEAR) order by Issue_date DESC`,
-        //         `SELECT
-        //     s.*,
-        //     c.Cust_Name,
-        //     n.TaskNo,
-        //     n.NcId,
-        //     n.Machine,
-        //     n.Operation,
-        //     n.Mtrl_Code,
-        //     n.CustMtrl,
-        //     n.Cust_Code
-        // FROM
-        //     magodmis.shopfloor_material_issueregister s,
-        //     magodmis.cust_data c,
-        //     magodmis.ncprograms n
-        // WHERE
-        //     s.Status = 'Closed' AND
-        //     n.Cust_Code = c.Cust_Code AND
-        //     s.NcId = n.Ncid AND
-        //     s.Issue_date >= '2020-01-01'`,
+
         (err, data) => {
           if (err) logger.error(err);
           res.send(data);

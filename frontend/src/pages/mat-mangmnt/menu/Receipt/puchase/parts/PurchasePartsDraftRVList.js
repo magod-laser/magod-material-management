@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { dateToShort, formatDate } from "../../../../../../utils";
+import { useState, useEffect } from "react";
+import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const { getRequest, postRequest } = require("../../../../../api/apiinstance");
+const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 function PurchasePartsDraftRVList() {
@@ -28,7 +27,6 @@ function PurchasePartsDraftRVList() {
   const fetchData = () => {
     getRequest(endpoints.getPartsCreatedPurchaseMaterial, (data) => {
       setTableData(data);
-      //console.log("data = ", data);
     });
   };
 
@@ -36,14 +34,11 @@ function PurchasePartsDraftRVList() {
     fetchData();
   }, []);
 
-  // Process the returned date in the formatter
-  function statusFormatter(cell, row, rowIndex, formatExtraData) {
+  function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
 
   const openButtonClick = () => {
-    //console.log("data = ", data);
-    //console.log("button click : ");
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonDraftPartList", {
         state: { id: data.RvID },
@@ -57,15 +52,15 @@ function PurchasePartsDraftRVList() {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#8A92F0",
-    onSelect: (row, isSelect, rowIndex, e) => {
+    onSelect: (row) => {
       setData({
         CustDocuNo: row.CustDocuNo,
         Cust_Code: row.Cust_Code,
         Customer: row.Customer,
         RVStatus: row.RVStatus,
-        RV_Date: formatDate(new Date(row.RV_Date), 3), //dateToShort(row.RV_Date),
+        RV_Date: formatDate(new Date(row.RV_Date), 3),
         RV_No: row.RV_No,
-        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3), //dateToShort(row.ReceiptDate),
+        ReceiptDate: formatDate(new Date(row.ReceiptDate), 3),
         RvID: row.RvID,
         TotalWeight: row.TotalWeight,
         TotalCalculatedWeight: row.TotalCalculatedWeight,
@@ -107,7 +102,6 @@ function PurchasePartsDraftRVList() {
             <button
               className="button-style "
               style={{ width: "55px" }}
-              //data.RvID
               onClick={openButtonClick}
             >
               Open
@@ -127,13 +121,11 @@ function PurchasePartsDraftRVList() {
           >
             <BootstrapTable
               keyField="RvID"
-              //keyField="id"
               columns={columns}
               data={tabledata}
               striped
               hover
               condensed
-              //pagination={paginationFactory()}
               selectRow={selectRow}
               headerClasses="header-class tableHeaderBGColor"
             ></BootstrapTable>
