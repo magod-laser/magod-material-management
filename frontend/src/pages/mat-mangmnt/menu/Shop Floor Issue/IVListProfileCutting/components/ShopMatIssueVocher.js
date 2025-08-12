@@ -3,8 +3,13 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import PrintIVListProfileCutting from "../../../../print/shopfloorissue/PrintIVListProfileCutting";
+import { PDFViewer, StyleSheet, pdf } from "@react-pdf/renderer";
+import axios from "axios";
+import { toast } from "react-toastify";
+import PrintIVListProfileCuttingTable1 from "../../../../print/shopfloorissue/PrintIVListProfileCuttingTable1";
+import PrintIVListProfileCuttingTable2 from "../../../../print/shopfloorissue/PrintIVListProfileCuttingTable2";
 
-const { getRequest } = require("../../../../../api/apiinstance");
+const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
 
 function ShopMatIssueVocher() {
@@ -13,6 +18,7 @@ function ShopMatIssueVocher() {
   const [noDetails, setNoDetails] = useState(0);
   const [combineSheets, setCombineSheets] = useState("");
   const [tableData, setTableData] = useState([]);
+  const [PDFData, setPDFData] = useState({});
 
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
@@ -153,11 +159,62 @@ function ShopMatIssueVocher() {
     }
   };
 
+  function fetchPDFData() {
+    let url1 = endpoints.getPDFData;
+    postRequest(url1, {}, async (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer = async () => {
+    try {
+      const adjustment = "IVListProfileCutting";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        noDetails === 0 ? (
+          <PrintIVListProfileCuttingTable1
+            formHeader={formHeader}
+            tableData={tableData}
+            PDFData={PDFData}
+          />
+        ) : (
+          <PrintIVListProfileCuttingTable2
+            formHeader={formHeader}
+            tableData={tableData}
+            combineSheets={combineSheets}
+            PDFData={PDFData}
+          />
+        )
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
   const printButton = () => {
     if (noDetails === 1 && combineSheets.length > 0) {
       setIsPrintModalOpen(true);
+      savePdfToServer();
     } else {
       setIsPrintModalOpen(true);
+      savePdfToServer();
     }
   };
 
