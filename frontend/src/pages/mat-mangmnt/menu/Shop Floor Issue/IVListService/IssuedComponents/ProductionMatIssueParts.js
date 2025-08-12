@@ -5,9 +5,12 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import OkModal from "../../../../components/OkModal";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { PDFViewer, StyleSheet, pdf } from "@react-pdf/renderer";
 import ShopFloorAcceptReturnPartsYesNoModal from "../../../../components/ShopFloorAcceptReturnPartsYesNoModal";
 
 import PrintIVListServicePart from "../../../../print/shopfloorissue/PrintIVListServicePart";
+import PrintIVListServicePartTable from "../../../../print/shopfloorissue/PrintIVListServicePartTable";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -23,6 +26,7 @@ function ProductionMatIssueParts() {
   const [showYN, setShowYN] = useState(false);
 
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [PDFData, setPDFData] = useState({});
 
   const [modalMessage, setModalMessage] = useState(
     "By cancelling this Issue Voucher the material stock will revert to Receipt Voucher. Continue?"
@@ -203,9 +207,52 @@ function ProductionMatIssueParts() {
       setShowYN(true);
     }
   };
+
+  function fetchPDFData() {
+    let url1 = endpoints.getPDFData;
+    postRequest(url1, {}, async (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer = async () => {
+    try {
+      const adjustment = "IVListPart";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintIVListServicePartTable
+          formHeader={formHeader}
+          tableData={tableData}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
   const printButton = () => {
     setIsPrintModalOpen(true);
+    savePdfToServer();
   };
+
   return (
     <div>
       <ShopFloorAcceptReturnPartsYesNoModal

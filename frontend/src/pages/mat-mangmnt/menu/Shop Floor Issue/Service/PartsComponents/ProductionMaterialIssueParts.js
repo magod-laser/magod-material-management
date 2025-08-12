@@ -6,7 +6,7 @@ function ProductionMaterialIssueParts() {
 
   return (
     <div>
-      <h4 className="title">Production Material Issue :Parts </h4>
+      <h4 className="title">Production Material Issue :Parts</h4>
       <div className="table_top_style">
         <form action="">
           <div className="row">
