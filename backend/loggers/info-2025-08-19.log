@@ -1,0 +1,18 @@
+{
+  level: 'info',
+  message: 'listening on port 4026',
+  timestamp: '2025-08-19T11:27:41+05:30'
+}
+{
+  endpoint: '/allcustomers',
+  method: 'GET',
+  level: 'info',
+  message: 'Requested for all customers list',
+  timestamp: '2025-08-19T11:29:22+05:30'
+}
+{
+  endpoint: '/allcustomers',
+  level: 'info',
+  message: 'Fetched all customers list successfully',
+  timestamp: '2025-08-19T11:29:22+05:30'
+}

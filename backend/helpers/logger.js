@@ -1,63 +1,57 @@
 const winston = require("winston");
+const { format } = require("winston");
+const moment = require("moment-timezone");
 const DailyRotateFile = require("winston-daily-rotate-file");
-// import "winston-daily-rotate-file";
+const path = require("path");
 
-const myFormat = winston.format.printf(
-  ({ level, message, label, timestamp }) => {
-    return `${timestamp} [${label}] ${level}: ${message}`;
-  }
+// Define a custom timestamp format function for IST
+const customTimestamp = format((info) => {
+  info.timestamp = moment().tz("Asia/Kolkata").format();
+  return info;
+});
+
+const logDir = path.join(__dirname, "../loggers");
+
+// Common format
+const logFormat = format.combine(
+  format.timestamp(),
+  customTimestamp(),
+  format.json(),
+  format.prettyPrint()
 );
 
-const logger = winston.createLogger({
-  levels: winston.config.syslog.levels,
-  format: winston.format.combine(
-    winston.format.label({ label: "test" }),
-    winston.format.timestamp(),
-    myFormat
-  ),
+// Create an info logger with daily rotation
+const infoLogger = winston.createLogger({
   transports: [
-    new winston.transports.Console(),
     new DailyRotateFile({
+      filename: path.join(logDir, "info-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
       level: "info",
-      filename: "logs/info/%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH",
-      zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
-    new DailyRotateFile({
-      level: "error",
-      filename: "logs/error/%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH",
-      zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
-    new DailyRotateFile({
-      level: "http",
-      filename: "logs/http/%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH",
-      zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
-    new DailyRotateFile({
-      level: "warn",
-      filename: "logs/warn/%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH",
-      zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
-    new DailyRotateFile({
-      level: "debug",
-      filename: "logs/debug/%DATE%.log",
-      datePattern: "YYYY-MM-DD-HH",
-      zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
+      format: logFormat,
     }),
   ],
 });
 
-module.exports = { logger };
+// Create an error logger with daily rotation
+const errorLogger = winston.createLogger({
+  transports: [
+    new DailyRotateFile({
+      filename: path.join(logDir, "error-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      level: "error",
+      format: logFormat,
+    }),
+  ],
+});
+
+// Unified logger for convenience
+const logger = {
+  info: (message, meta) => {
+    infoLogger.info(message, meta);
+  },
+  error: (message, meta) => {
+    errorLogger.error(message, meta);
+  },
+};
+
+module.exports = { infoLogger, errorLogger, logger };

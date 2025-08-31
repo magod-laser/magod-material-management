@@ -1,8 +1,9 @@
 const dcRegisterRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
 const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
+// Insert a new DC register record into magodmis.dc_register
 dcRegisterRouter.post("/insert", async (req, res, next) => {
   try {
     let {
@@ -40,6 +41,7 @@ dcRegisterRouter.post("/insert", async (req, res, next) => {
   }
 });
 
+// Get a DC register record by its DC_Id
 dcRegisterRouter.get("/getDCRegisterByID", async (req, res, next) => {
   let id = req.query.id;
   try {

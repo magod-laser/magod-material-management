@@ -69,9 +69,17 @@ let misQuery = async (q, callback) => {
   });
 };
 
-let misQueryMod = async (q, callback) => {
+// let misQueryMod = async (q, callback) => {
+//   misConn.connect();
+//   misConn.query(q, (err, res, fields) => {
+//     if (err) callback(err, null);
+//     else callback(null, res);
+//   });
+// };
+
+let misQueryMod = async (q, values, callback) => {
   misConn.connect();
-  misConn.query(q, (err, res, fields) => {
+  misConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);
     else callback(null, res);
   });
@@ -93,9 +101,17 @@ let setupQuery = (q, callback) => {
   });
 };
 
-let setupQueryMod = async (q, callback) => {
+// let setupQueryMod = async (q, callback) => {
+//   setupConn.connect();
+//   setupConn.query(q, (err, res, fields) => {
+//     if (err) callback(err, null);
+//     else callback(null, res);
+//   });
+// };
+
+let setupQueryMod = async (q, values, callback) => {
   setupConn.connect();
-  setupConn.query(q, (err, res, fields) => {
+  setupConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);
     else callback(null, res);
   });

@@ -1,9 +1,8 @@
 /** @format */
 
 const runningNoRouter = require("express").Router();
-const { setupQuery, setupQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
+const { setupQueryMod } = require("../../helpers/dbconn");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
 runningNoRouter.get("/getRunningNoBySrlType", async (req, res, next) => {
   try {
@@ -284,12 +283,11 @@ runningNoRouter.post("/getAndInsertRunningNo", async (req, res, next) => {
   }
 });
 
+// Insert a running number row
 runningNoRouter.post("/insertRunNoRow", async (req, res, next) => {
   const { unit, srlType, ResetPeriod, ResetValue, VoucherNoLength } = req.body;
 
-  const unitName = `${unit}`;
   const date = new Date();
-  // const date = new Date("2024-04-01");
   const year = date.getFullYear();
 
   const YearStartDate = new Date(`${year}-01-01`);
@@ -298,45 +296,101 @@ runningNoRouter.post("/insertRunNoRow", async (req, res, next) => {
   const formattedStartDate = YearStartDate.toISOString().slice(0, 10);
   const formattedEndDate = YearEndDate.toISOString().slice(0, 10);
 
+  infoLogger.info("Requested insert for running number row", {
+    endpoint: "/insertRunNoRow",
+    method: req.method,
+    unit,
+    srlType,
+    year,
+  });
+
   try {
     const selectQuery = `
-    SELECT COUNT(Id) FROM magod_setup.magod_runningno  WHERE SrlType='${srlType}'
-    AND UnitName='${unit}' AND Period='${year}'
+      SELECT COUNT(Id) AS count
+      FROM magod_setup.magod_runningno
+      WHERE SrlType = ? AND UnitName = ? AND Period = ?
     `;
 
-    setupQueryMod(selectQuery, (selectError, selectResult) => {
+    const selectValues = [srlType, unit, year];
+
+    setupQueryMod(selectQuery, selectValues, (selectError, selectResult) => {
       if (selectError) {
-        logger.error(selectError);
-        return next(selectResult);
+        errorLogger.error("Error selecting running number row", selectError, {
+          endpoint: "/insertRunNoRow",
+          unit,
+          srlType,
+          year,
+        });
+        return next(selectError);
       }
 
-      const count = selectResult[0]["COUNT(Id)"];
+      const count = selectResult[0].count;
 
       if (count === 0) {
-        // If count is 0, execute the INSERT query
         const insertQuery = `
-        INSERT INTO magod_setup.magod_runningno
-        (UnitName, SrlType, ResetPeriod, ResetValue, EffectiveFrom_date, Reset_date, Running_No, Length, Period, Running_EffectiveDate)
-        VALUES ('${unit}', '${srlType}', '${ResetPeriod}', ${ResetValue}, '${formattedStartDate}', '${formattedEndDate}', ${ResetValue}, ${VoucherNoLength}, '${year}', CURDATE());
-
+          INSERT INTO magod_setup.magod_runningno
+          (UnitName, SrlType, ResetPeriod, ResetValue, EffectiveFrom_date, Reset_date, Running_No, Length, Period, Running_EffectiveDate)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE())
         `;
 
-        // Execute the INSERT query
-        setupQueryMod(insertQuery, (insertError, insertResult) => {
-          if (insertError) {
-            logger.error(insertError);
-            return next(insertResult);
-          }
-          logger.info("successfully inserted data into magod_runningno");
+        const insertValues = [
+          unit,
+          srlType,
+          ResetPeriod,
+          ResetValue,
+          formattedStartDate,
+          formattedEndDate,
+          ResetValue,
+          VoucherNoLength,
+          year,
+        ];
 
-          res.json({ message: "Record inserted successfully." });
-        });
+        setupQueryMod(
+          insertQuery,
+          insertValues,
+          (insertError, insertResult) => {
+            if (insertError) {
+              errorLogger.error(
+                "Error inserting running number row",
+                insertError,
+                {
+                  endpoint: "/insertRunNoRow",
+                  unit,
+                  srlType,
+                  year,
+                }
+              );
+              return next(insertError);
+            }
+
+            infoLogger.info("Successfully inserted running number row", {
+              endpoint: "/insertRunNoRow",
+              unit,
+              srlType,
+              year,
+              recordsAffected: insertResult.affectedRows,
+            });
+
+            res.json({ message: "Record inserted successfully." });
+          }
+        );
       } else {
+        infoLogger.info("Running number row already exists", {
+          endpoint: "/insertRunNoRow",
+          unit,
+          srlType,
+          year,
+        });
         res.json({ message: "Record already exists." });
       }
     });
   } catch (error) {
-    console.error("An error occurred:", error);
+    errorLogger.error("Unexpected error in insertRunNoRow", error, {
+      endpoint: "/insertRunNoRow",
+      unit,
+      srlType,
+      year,
+    });
     next(error);
   }
 });

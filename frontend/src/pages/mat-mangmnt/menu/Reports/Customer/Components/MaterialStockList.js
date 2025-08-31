@@ -113,7 +113,7 @@ function MaterialStockList() {
   return (
     <div>
       <>
-        <h4 className="form-title">Material Stock List </h4>
+        <h4 className="form-title">Material Stock List</h4>
         <hr className="horizontal-line" />
         <h4 className="form-title">Customer Material Stock List</h4>
         <div className="row">

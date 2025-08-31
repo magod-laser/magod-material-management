@@ -40,6 +40,7 @@ dcDetailsRouter.get("/getLastInsertID", async (req, res, next) => {
       "SELECT DC_ID from magodmis.dc_details order by DC_ID DESC limit 1",
       (err, data) => {
         if (err) logger.error(err);
+
         res.send(data[0]);
       }
     );

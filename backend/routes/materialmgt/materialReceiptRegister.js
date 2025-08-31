@@ -1,69 +1,126 @@
 const materialReceiptRegisterRouter = require("express").Router();
-var createError = require("http-errors");
-const { createFolder, copyallfiles } = require("../../helpers/folderhelper");
-const { misQuery, setupQuery, misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
+const { misQueryMod } = require("../../helpers/dbconn");
+const { infoLogger, errorLogger } = require("../../helpers/logger");
 const { formatDate } = require("../../helpers/utils");
 
+// Fetch material receipt register by type
 materialReceiptRegisterRouter.get(
   "/getByTypeMaterialReceiptRegister",
   async (req, res, next) => {
+    const { type1, type2, type3 } = req.query;
+
+    infoLogger.info("Requested fetch for material receipt register by type", {
+      endpoint: "/getByTypeMaterialReceiptRegister",
+      method: req.method,
+      type1,
+      type2,
+    });
+
     try {
-      let type1 = req.query.type1;
-      let type2 = req.query.type2;
-      if (req.query.type3) {
-        misQueryMod(
-          `SELECT * FROM material_receipt_register where RVStatus = '${type1}' and Type = '${type2}' and Cust_Code = 0 order by ReceiptDate DESC`,
-          (err, data) => {
-            if (err) logger.error(err);
-            logger.info(
-              `Successfully fetched material_receipt_register data for rv_status=${type1} and type=${type2}`
-            );
-            res.send(data);
-          }
-        );
+      let query = "";
+      let values = [];
+
+      if (type3) {
+        query = `
+        SELECT * FROM material_receipt_register
+        WHERE RVStatus = ? AND Type = ? AND Cust_Code = 0
+        ORDER BY ReceiptDate DESC
+      `;
+        values = [type1, type2];
       } else {
-        misQueryMod(
-          `SELECT * FROM material_receipt_register where RVStatus = '${type1}' and Type = '${type2}'   and Cust_Code  not like '0000' order by ReceiptDate DESC `,
-          (err, data) => {
-            if (err) logger.error(err);
-            logger.info(
-              `Successfully fetched material_receipt_register data for rv_status=${type1} and type=${type2}`
-            );
-            res.send(data);
+        query = `
+        SELECT * FROM material_receipt_register
+        WHERE RVStatus = ? AND Type = ? AND Cust_Code NOT LIKE '0000'
+        ORDER BY ReceiptDate DESC
+      `;
+        values = [type1, type2];
+      }
+
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error fetching material_receipt_register by type",
+            err,
+            {
+              endpoint: "/getByTypeMaterialReceiptRegister",
+              type1,
+              type2,
+            }
+          );
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully fetched material_receipt_register by type",
+          {
+            endpoint: "/getByTypeMaterialReceiptRegister",
+            type1,
+            type2,
+            recordsFetched: data.length,
           }
         );
-      }
+
+        res.send(data);
+      });
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error fetching material_receipt_register by type",
+        error,
+        {
+          endpoint: "/getByTypeMaterialReceiptRegister",
+          type1,
+          type2,
+        }
+      );
       next(error);
     }
   }
 );
 
+// Fetch material receipt register by RvID
 materialReceiptRegisterRouter.get(
   "/getByTypeMaterialReceiptRegisterByRvID",
   async (req, res, next) => {
     try {
-      let id = req.query.id;
+      const { id } = req.query;
 
-      misQueryMod(
-        `SELECT * FROM material_receipt_register where RvID = ${id} order by RvID`,
-        (err, data) => {
-          if (err) logger.error(err);
+      infoLogger.info("Requested material receipt register by RvID", {
+        endpoint: "/getByTypeMaterialReceiptRegisterByRvID",
+        method: req.method,
+        RvID: id,
+      });
 
-          logger.info(
-            `successfully fetched data from material_receipt_register for RvID=${id}`
+      const selectQuery = `SELECT * FROM material_receipt_register WHERE RvID = ? ORDER BY RvID`;
+
+      misQueryMod(selectQuery, [id], (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error fetching material_receipt_register by RvID",
+            err,
+            { RvID: id }
           );
-          res.send(data[0]);
+          return next(err);
         }
-      );
+
+        infoLogger.info("Successfully fetched material_receipt_register", {
+          RvID: id,
+        });
+        res.json(data[0]);
+      });
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error in /getByTypeMaterialReceiptRegisterByRvID",
+        error,
+        { RvID: req.query.id }
+      );
       next(error);
     }
   }
 );
 
+// Insert header for material receipt register
 materialReceiptRegisterRouter.post(
   "/insertHeaderMaterialReceiptRegister",
   async (req, res, next) => {
@@ -84,22 +141,73 @@ materialReceiptRegisterRouter.post(
       receiptDate = formatDate(new Date(), 5);
       rvDate = rvDate.split("/").reverse().join("-");
 
-      misQueryMod(
-        `insert into  material_receipt_register (ReceiptDate,RV_No,RV_Date,Cust_Code,Customer,CustDocuNo,RVStatus,TotalWeight,TotalCalculatedWeight,Type) values ("${receiptDate}","${rvNo}","${rvDate}","${customer}","${customerName}","${reference}","${status}","${weight}","${calcWeight}","${type}")`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            "successfully inserted data into  material_receipt_register"
+      infoLogger.info("Requested insert for material receipt register header", {
+        endpoint: "/insertHeaderMaterialReceiptRegister",
+        method: req.method,
+        customer,
+        rvNo,
+      });
+
+      const query = `
+      INSERT INTO material_receipt_register
+      (ReceiptDate, RV_No, RV_Date, Cust_Code, Customer, CustDocuNo, RVStatus, TotalWeight, TotalCalculatedWeight, Type)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+      const values = [
+        receiptDate,
+        rvNo,
+        rvDate,
+        customer,
+        customerName,
+        reference,
+        status,
+        weight,
+        calcWeight,
+        type,
+      ];
+
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error inserting into material_receipt_register header",
+            err,
+            {
+              endpoint: "/insertHeaderMaterialReceiptRegister",
+              customer,
+            }
           );
-          res.json(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully inserted into material_receipt_register header",
+          {
+            endpoint: "/insertHeaderMaterialReceiptRegister",
+            customer,
+            recordsAffected: data.affectedRows,
+          }
+        );
+
+        res.json(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error inserting into material_receipt_register header",
+        error,
+        {
+          endpoint: "/insertHeaderMaterialReceiptRegister",
+          customer,
         }
       );
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Update header for material receipt register
 materialReceiptRegisterRouter.post(
   "/updateHeaderMaterialReceiptRegister",
   async (req, res, next) => {
@@ -121,49 +229,153 @@ materialReceiptRegisterRouter.post(
       receiptDate = formatDate(new Date(), 5);
       rvDate = rvDate.split("/").reverse().join("-");
 
-      misQueryMod(
-        `update material_receipt_register set ReceiptDate = "${receiptDate}",RV_No="${rvNo}",RV_Date="${rvDate}",Cust_Code="${customer}",Customer="${customerName}",CustDocuNo="${reference}",RVStatus="${status}",TotalWeight="${weight}",TotalCalculatedWeight="${calcWeight}" where  RvID = ${rvId}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully updated material_receipt_register data for rvId=${rvId}`
+      infoLogger.info("Requested update for material receipt register header", {
+        endpoint: "/updateHeaderMaterialReceiptRegister",
+        method: req.method,
+        rvId,
+        customer,
+      });
+
+      const query = `
+      UPDATE material_receipt_register
+      SET ReceiptDate = ?, RV_No = ?, RV_Date = ?, Cust_Code = ?, Customer = ?, CustDocuNo = ?, RVStatus = ?, TotalWeight = ?, TotalCalculatedWeight = ?
+      WHERE RvID = ?
+    `;
+
+      const values = [
+        receiptDate,
+        rvNo,
+        rvDate,
+        customer,
+        customerName,
+        reference,
+        status,
+        weight,
+        calcWeight,
+        rvId,
+      ];
+
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error updating material_receipt_register header",
+            err,
+            {
+              endpoint: "/updateHeaderMaterialReceiptRegister",
+              rvId,
+            }
           );
-          res.send(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully updated material_receipt_register header",
+          {
+            endpoint: "/updateHeaderMaterialReceiptRegister",
+            rvId,
+            recordsAffected: data.affectedRows,
+          }
+        );
+
+        res.send(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error updating material_receipt_register header",
+        error,
+        {
+          endpoint: "/updateHeaderMaterialReceiptRegister",
+          rvId,
         }
       );
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Delete details of material receipt register and material_receipt_register
 materialReceiptRegisterRouter.post(
   "/deleteHeaderMaterialReceiptRegisterAndDetails",
   async (req, res, next) => {
-    try {
-      let { rvId } = req.body;
-      misQueryMod(
-        `delete from mtrl_part_receipt_details  where  RvID = ${rvId}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully deleted data from mtrl_part_receipt_details with RvId=${rvId}`
-          );
+    const { rvId } = req.body;
 
-          misQueryMod(
-            `delete from material_receipt_register  where  RvID = ${rvId}`,
-            (err, data) => {
-              if (err) logger.error(err);
-              logger.info(
-                `successfully deleted data from material_receipt_register with RvId=${rvId}`
-              );
-              res.send(data);
+    infoLogger.info(
+      "Requested delete for material receipt register and details",
+      {
+        endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+        method: req.method,
+        rvId,
+      }
+    );
+
+    try {
+      const deleteDetailsQuery =
+        "DELETE FROM mtrl_part_receipt_details WHERE RvID = ?";
+      const deleteHeaderQuery =
+        "DELETE FROM material_receipt_register WHERE RvID = ?";
+      const values = [rvId];
+
+      // Delete mtrl_part_receipt_details
+      misQueryMod(deleteDetailsQuery, values, (err, detailsResult) => {
+        if (err) {
+          errorLogger.error(
+            "Error deleting from mtrl_part_receipt_details",
+            err,
+            {
+              endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+              rvId,
             }
           );
-          //res.send(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Successfully deleted from mtrl_part_receipt_details", {
+          endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+          rvId,
+          recordsAffected: detailsResult.affectedRows,
+        });
+
+        // Delete material_receipt_register details
+        misQueryMod(deleteHeaderQuery, values, (err, headerResult) => {
+          if (err) {
+            errorLogger.error(
+              "Error deleting from material_receipt_register",
+              err,
+              {
+                endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+                rvId,
+              }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info(
+            "Successfully deleted from material_receipt_register",
+            {
+              endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+              rvId,
+              recordsAffected: headerResult.affectedRows,
+            }
+          );
+
+          res.json({ message: "Header and details deleted successfully." });
+        });
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error deleting material receipt register and details",
+        error,
+        {
+          endpoint: "/deleteHeaderMaterialReceiptRegisterAndDetails",
+          rvId,
         }
       );
-    } catch (error) {
       next(error);
     }
   }
