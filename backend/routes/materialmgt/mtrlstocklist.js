@@ -1,28 +1,44 @@
 const mtrlStockListRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
-const { log } = require("winston");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
+// Check if stock is available by RV_No
 mtrlStockListRouter.get("/checkStockAvailable", async (req, res, next) => {
   try {
-    let rvno = req.query.rvno;
-    misQueryMod(
-      `Select * from magodmis.mtrlstocklist where RV_No =  "${rvno}"`,
-      (err, data) => {
-        if (err) logger.error(err);
-        logger.info(
-          `successfully fetched data from mtrlstocklist with RV_No="${rvno}"`
-        );
-        res.send(data);
+    const { rvno } = req.query;
+
+    infoLogger.info("Requested stock availability by RV_No", {
+      endpoint: "/checkStockAvailable",
+      method: req.method,
+      RV_No: rvno,
+    });
+
+    const selectQuery = `SELECT * FROM magodmis.mtrlstocklist WHERE RV_No = ?`;
+
+    misQueryMod(selectQuery, [rvno], (err, data) => {
+      if (err) {
+        errorLogger.error("Error fetching stock from mtrlstocklist", err, {
+          RV_No: rvno,
+        });
+        return next(err);
       }
-    );
-    //res.send(false);
+
+      infoLogger.info("Successfully fetched stock data", {
+        RV_No: rvno,
+        records: data.length,
+      });
+
+      res.json(data);
+    });
   } catch (error) {
+    errorLogger.error("Unexpected error in /checkStockAvailable", error, {
+      RV_No: req.query.rvno,
+    });
     next(error);
   }
 });
 
+// Insert multiple rows into mtrlstocklist based on accepted quantity
 mtrlStockListRouter.post("/insertMtrlStockList", async (req, res, next) => {
   try {
     let {
@@ -52,189 +68,306 @@ mtrlStockListRouter.post("/insertMtrlStockList", async (req, res, next) => {
       accepted,
     } = req.body;
 
-    let returnData = null;
-    //find shape
+    infoLogger.info("Requested insertion into mtrlstocklist", {
+      endpoint: "/insertMtrlStockList",
+      method: req.method,
+      Mtrl_Rv_id: mtrlRvId,
+      acceptedQty: accepted,
+    });
+
+    // Find shape by ShapeID
     misQueryMod(
-      `select * from shapes where ShapeID = ${shapeID}`,
+      "SELECT * FROM shapes WHERE ShapeID = ?",
+      [shapeID],
       (err, data) => {
         if (err) {
-          logger.error(err);
-
-          return;
+          errorLogger.error("Error fetching shape by ShapeID", err, {
+            endpoint: "/insertMtrlStockList",
+            ShapeID: shapeID,
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
         }
-        logger.info(
-          `successfully fetched data from shapes with ShapeID=${shapeID}`
-        );
+
+        infoLogger.info("Successfully fetched shape", {
+          endpoint: "/insertMtrlStockList",
+          ShapeID: shapeID,
+          recordsFetched: data.length,
+        });
+
         if (data && data.length > 0 && data[0].Shape) {
           shape = data[0].Shape;
+
           for (let i = 0; i < accepted; i++) {
-            mtrlStockId = rvNo + "/" + srl + "/" + (i + 1);
-            misQueryMod(
-              `insert into  mtrlstocklist (MtrlStockID,Mtrl_Rv_id,Cust_Code,Customer,RV_No,Cust_Docu_No,Mtrl_Code,Shape,Material,DynamicPara1,DynamicPara2,DynamicPara3,DynamicPara4,Locked,Scrap,Issue,Weight,ScrapWeight,IV_No,NCProgramNo,LocationNo) values ("${mtrlStockId}",${mtrlRvId},"${custCode}","${customer}","${rvNo}","${custDocuNo}","${mtrlCode}","${shape}","${material}",${dynamicPara1},${dynamicPara2},${dynamicPara3},${dynamicPara4},${locked},${scrap},${issue},${weight},${scrapWeight},"${ivNo}","${ncProgramNo}","${locationNo}")`,
-              (err, data1) => {
-                if (err) logger.error(err);
-                logger.info("successfully inserted data into mtrlstocklist");
+            mtrlStockId = `${rvNo}/${srl}/${i + 1}`;
+
+            const insertQuery = `
+              INSERT INTO mtrlstocklist 
+              (MtrlStockID,Mtrl_Rv_id,Cust_Code,Customer,RV_No,Cust_Docu_No,Mtrl_Code,Shape,Material,
+               DynamicPara1,DynamicPara2,DynamicPara3,DynamicPara4,Locked,Scrap,Issue,Weight,ScrapWeight,IV_No,NCProgramNo,LocationNo)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+            const values = [
+              mtrlStockId,
+              mtrlRvId,
+              custCode,
+              customer,
+              rvNo,
+              custDocuNo,
+              mtrlCode,
+              shape,
+              material,
+              dynamicPara1,
+              dynamicPara2,
+              dynamicPara3,
+              dynamicPara4,
+              locked,
+              scrap,
+              issue,
+              weight,
+              scrapWeight,
+              ivNo,
+              ncProgramNo,
+              locationNo,
+            ];
+
+            misQueryMod(insertQuery, values, (insertErr, insertData) => {
+              if (insertErr) {
+                errorLogger.error(
+                  "Error inserting into mtrlstocklist",
+                  insertErr,
+                  {
+                    endpoint: "/insertMtrlStockList",
+                    MtrlStockID: mtrlStockId,
+                  }
+                );
+              } else {
+                infoLogger.info("Successfully inserted into mtrlstocklist", {
+                  endpoint: "/insertMtrlStockList",
+                  MtrlStockID: mtrlStockId,
+                });
               }
-            );
+            });
           }
         }
+
+        res.json({ affectedRows: accepted });
       }
     );
-
-    res.send({ affectedRows: 1 });
   } catch (error) {
+    errorLogger.error("Unexpected error in /insertMtrlStockList", error, {
+      endpoint: "/insertMtrlStockList",
+    });
     next(error);
   }
 });
 
+// Delete material stock by RV number after validation checks
 mtrlStockListRouter.post("/deleteMtrlStockByRVNo", async (req, res, next) => {
   try {
-    const { Mtrl_Rv_id, Mtrl_Code, Accepted } = req.body;
+    const { Mtrl_Rv_id, Accepted } = req.body;
 
-    let countResult, inUseResult, deletionResult;
+    infoLogger.info("Requested deletion of material stock by RV number", {
+      endpoint: "/deleteMtrlStockByRVNo",
+      method: req.method,
+      Mtrl_Rv_id,
+      Accepted,
+    });
 
     // Query to check count of material stock
-    misQueryMod(
-      `SELECT COUNT(*) AS count FROM magodmis.mtrlstocklist m WHERE m.Mtrl_Rv_id = '${Mtrl_Rv_id}'`,
-      (err, result) => {
-        if (err) {
-          logger.error(err);
-          return res.send(err);
-        }
-        logger.info(
-          `successfully fetched count from mtrlstocklist for Mtrl_Rv_id = '${Mtrl_Rv_id}'`
-        );
-        countResult = result;
-
-        // Query to check if material is in use for production
-        misQueryMod(
-          `SELECT COUNT(*) AS inUseCount FROM magodmis.mtrlstocklist WHERE Mtrl_Rv_id = '${Mtrl_Rv_id}' AND (Locked OR Scrap OR Issue)`,
-          (err, result) => {
-            if (err) {
-              logger.error(err);
-
-              return res.send(err);
-            }
-            logger.info(
-              `successfully fetched inUseCount from mtrlstocklist for Mtrl_Rv_id = '${Mtrl_Rv_id}'`
-            );
-            inUseResult = result;
-
-            // Check conditions similar to React code
-            if (countResult[0].count < parseFloat(Accepted)) {
-              return res.send({
-                error:
-                  "Received Material Already used, to return create a Issue Voucher",
-              });
-            } else if (inUseResult[0].inUseCount > 0) {
-              return res.send({
-                error:
-                  "Material already in use for production, cannot take out from stock",
-              });
-            } else {
-              // Query to delete material stock
-              misQueryMod(
-                `DELETE FROM magodmis.MtrlStockList WHERE Mtrl_Rv_id = '${Mtrl_Rv_id}'`,
-                (err, result) => {
-                  if (err) {
-                    logger.error(err);
-
-                    return res.send(err);
-                  }
-                  logger.info(
-                    `successfully deleted data from MtrlStockList with Mtrl_Rv_id = '${Mtrl_Rv_id}'`
-                  );
-                  deletionResult = result;
-
-                  // Send combined response
-                  const combinedResult = {
-                    countResult: countResult,
-                    inUseResult: inUseResult,
-                    deletionResult: deletionResult,
-                  };
-                  return res.send(combinedResult);
-                }
-              );
-            }
-          }
-        );
+    const countQuery = `SELECT COUNT(*) AS count FROM magodmis.mtrlstocklist WHERE Mtrl_Rv_id = ?`;
+    misQueryMod(countQuery, [Mtrl_Rv_id], (err, countResult) => {
+      if (err) {
+        errorLogger.error("Error fetching count from mtrlstocklist", err, {
+          endpoint: "/deleteMtrlStockByRVNo",
+          Mtrl_Rv_id,
+        });
+        return res
+          .status(500)
+          .json({ Status: "Error", Message: "Database error" });
       }
-    );
+
+      infoLogger.info("Fetched count from mtrlstocklist", {
+        endpoint: "/deleteMtrlStockByRVNo",
+        Mtrl_Rv_id,
+        count: countResult[0].count,
+      });
+
+      // Query to check if material is in use for production
+      const inUseQuery = `SELECT COUNT(*) AS inUseCount FROM magodmis.mtrlstocklist WHERE Mtrl_Rv_id = ? AND (Locked OR Scrap OR Issue)`;
+      misQueryMod(inUseQuery, [Mtrl_Rv_id], (err, inUseResult) => {
+        if (err) {
+          errorLogger.error(
+            "Error fetching in-use count from mtrlstocklist",
+            err,
+            {
+              endpoint: "/deleteMtrlStockByRVNo",
+              Mtrl_Rv_id,
+            }
+          );
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Fetched in-use count from mtrlstocklist", {
+          endpoint: "/deleteMtrlStockByRVNo",
+          Mtrl_Rv_id,
+          inUseCount: inUseResult[0].inUseCount,
+        });
+
+        // Validation checks
+        if (countResult[0].count < parseFloat(Accepted)) {
+          return res.json({
+            error:
+              "Received Material Already used, to return create an Issue Voucher",
+          });
+        } else if (inUseResult[0].inUseCount > 0) {
+          return res.json({
+            error:
+              "Material already in use for production, cannot take out from stock",
+          });
+        }
+
+        // Delete query
+        const deleteQuery = `DELETE FROM magodmis.mtrlstocklist WHERE Mtrl_Rv_id = ?`;
+        misQueryMod(deleteQuery, [Mtrl_Rv_id], (err, deletionResult) => {
+          if (err) {
+            errorLogger.error("Error deleting material stock", err, {
+              endpoint: "/deleteMtrlStockByRVNo",
+              Mtrl_Rv_id,
+            });
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info("Successfully deleted material stock", {
+            endpoint: "/deleteMtrlStockByRVNo",
+            Mtrl_Rv_id,
+          });
+
+          return res.json({
+            countResult,
+            inUseResult,
+            deletionResult,
+          });
+        });
+      });
+    });
   } catch (error) {
-    logger.error(error);
-    return res.send(error);
+    errorLogger.error("Unexpected error in /deleteMtrlStockByRVNo", error, {
+      endpoint: "/deleteMtrlStockByRVNo",
+    });
+    return res
+      .status(500)
+      .json({ Status: "Error", Message: "Internal server error" });
   }
 });
 
+// Update material sales or return register after removing stock
 mtrlStockListRouter.post("/updateAfterRemoveStock", (req, res, next) => {
   try {
     const { rvId, custCode } = req.body;
 
+    infoLogger.info("Requested updateAfterRemoveStock", {
+      endpoint: "/updateAfterRemoveStock",
+      method: req.method,
+      rvId,
+      custCode,
+    });
+
     if (custCode === "0000") {
-      misQueryMod(
-        `DELETE FROM magodmis.magod_material_sales_register WHERE RvID = '${rvId}'`,
-        (deleteErr, deleteData) => {
-          if (deleteErr) {
-            logger.error(deleteErr);
-            // return next(deleteErr);
-          }
-          logger.info(
-            `successfully deleted data from magod_material_sales_register with RvID = '${rvId}'`
+      // Delete existing records from magod_material_sales_register
+      const deleteQuery = `DELETE FROM magodmis.magod_material_sales_register WHERE RvID = ?`;
+      misQueryMod(deleteQuery, [rvId], (deleteErr, deleteData) => {
+        if (deleteErr) {
+          errorLogger.error(
+            "Error deleting from magod_material_sales_register",
+            deleteErr,
+            { rvId }
           );
-
-          const insertQuery1 = `INSERT INTO magodmis.magod_Material_Sales_Register(Cust_Code, Cust_Name, MDate, Mtrl_Type, Weight, Rv_No, RvID, Cust_Dc_No, txnType)
-              SELECT  m.Cust_Code, m.Customer, m.RV_Date, m.Material, ROUND(SUM(m.TotalWeightCalculated), 2) as tw, m.Rv_no, m.RvID, m.Cust_Docu_No, 'Receive'
-              FROM magodmis.mtrlreceiptdetails m
-            WHERE m.Rvid = '${rvId}' AND m.UpDated
-            GROUP BY m.Cust_Code, m.Customer, m.RV_Date, m.Material, m.Rv_no, m.RvID, m.Cust_Docu_No`;
-
-          misQueryMod(insertQuery1, (insertErr, insertData) => {
-            if (insertErr) {
-              logger.error(insertErr);
-
-              return next(insertErr);
-            }
-            logger.info(
-              "successfully inserted data into magod_Material_Sales_Register"
-            );
-
-            res.send(insertData);
+        } else {
+          infoLogger.info("Deleted data from magod_material_sales_register", {
+            rvId,
           });
         }
-      );
+
+        // Insert updated summary data
+        const insertQuery = `
+          INSERT INTO magodmis.magod_Material_Sales_Register
+          (Cust_Code, Cust_Name, MDate, Mtrl_Type, Weight, Rv_No, RvID, Cust_Dc_No, txnType)
+          SELECT m.Cust_Code, m.Customer, m.RV_Date, m.Material, ROUND(SUM(m.TotalWeightCalculated), 2) as tw,
+                 m.Rv_no, m.RvID, m.Cust_Docu_No, 'Receive'
+          FROM magodmis.mtrlreceiptdetails m
+          WHERE m.RvID = ? AND m.UpDated
+          GROUP BY m.Cust_Code, m.Customer, m.RV_Date, m.Material, m.Rv_no, m.RvID, m.Cust_Docu_No
+        `;
+        misQueryMod(insertQuery, [rvId], (insertErr, insertData) => {
+          if (insertErr) {
+            errorLogger.error(
+              "Error inserting into magod_material_sales_register",
+              insertErr,
+              { rvId }
+            );
+            return next(insertErr);
+          }
+          infoLogger.info("Inserted data into magod_material_sales_register", {
+            rvId,
+          });
+          res.json(insertData);
+        });
+      });
     } else {
-      misQueryMod(
-        `DELETE FROM magodmis.customer_material_return_register WHERE RvID = '${rvId}'`,
-        (deleteErr, deleteData) => {
-          if (deleteErr) {
-            logger.error(deleteErr);
-            return next(deleteErr);
-          }
-
-          logger.info(
-            `successfully deleted data from customer_material_return_register with RvID = '${rvId}'`
+      // Delete existing records from customer_material_return_register
+      const deleteQuery = `DELETE FROM magodmis.customer_material_return_register WHERE RvID = ?`;
+      misQueryMod(deleteQuery, [rvId], (deleteErr, deleteData) => {
+        if (deleteErr) {
+          errorLogger.error(
+            "Error deleting from customer_material_return_register",
+            deleteErr,
+            { rvId }
           );
-
-          const insertQuery2 = `INSERT INTO magodmis.customer_material_return_register(Cust_Code, Cust_Name, MDate, Mtrl_Type, Weight, Rv_No, RvID, Cust_Dc_No, txnType)
-            SELECT  m.Cust_Code, m.Customer, m.RV_Date, m.Material, ROUND(SUM(m.TotalWeightCalculated), 2) as tw, m.Rv_no, m.RvID, m.Cust_Docu_No, 'Receive'
-            FROM magodmis.mtrlreceiptdetails m
-            WHERE m.Rvid = '${rvId}' AND m.UpDated GROUP BY m.Cust_Code, m.Customer, m.RV_Date, m.Material, m.Rv_no, m.RvID, m.Cust_Docu_No`;
-
-          misQueryMod(insertQuery2, (insertErr, insertData) => {
-            if (insertErr) {
-              logger.error(insertErr);
-              return next(insertErr);
-            }
-            logger.info(
-              "successfully inserted data into customer_material_return_register"
-            );
-
-            res.send(insertData);
-          });
+          return next(deleteErr);
         }
-      );
+        infoLogger.info("Deleted data from customer_material_return_register", {
+          rvId,
+        });
+
+        // Insert updated summary data
+        const insertQuery = `
+          INSERT INTO magodmis.customer_material_return_register
+          (Cust_Code, Cust_Name, MDate, Mtrl_Type, Weight, Rv_No, RvID, Cust_Dc_No, txnType)
+          SELECT m.Cust_Code, m.Customer, m.RV_Date, m.Material, ROUND(SUM(m.TotalWeightCalculated), 2) as tw,
+                 m.Rv_no, m.RvID, m.Cust_Docu_No, 'Receive'
+          FROM magodmis.mtrlreceiptdetails m
+          WHERE m.RvID = ? AND m.UpDated
+          GROUP BY m.Cust_Code, m.Customer, m.RV_Date, m.Material, m.Rv_no, m.RvID, m.Cust_Docu_No
+        `;
+        misQueryMod(insertQuery, [rvId], (insertErr, insertData) => {
+          if (insertErr) {
+            errorLogger.error(
+              "Error inserting into customer_material_return_register",
+              insertErr,
+              { rvId }
+            );
+            return next(insertErr);
+          }
+          infoLogger.info(
+            "Inserted data into customer_material_return_register",
+            { rvId }
+          );
+          res.json(insertData);
+        });
+      });
     }
   } catch (error) {
+    errorLogger.error("Unexpected error in /updateAfterRemoveStock", error, {
+      rvId,
+      custCode,
+    });
     next(error);
   }
 });

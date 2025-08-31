@@ -322,6 +322,7 @@ export default function PrintMaterialDCTable(props) {
                         style={{
                           display: "flex",
                           flexDirection: "column",
+                          marginTop: "80px",
                           alignItems: "flex-end",
                         }}
                       >
@@ -351,6 +352,7 @@ export default function PrintMaterialDCTable(props) {
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "center",
+                            marginTop: "80px",
                           }}
                         >
                           <Text>Authorised Signatory</Text>

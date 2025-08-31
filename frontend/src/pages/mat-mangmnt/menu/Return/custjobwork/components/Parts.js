@@ -36,7 +36,6 @@ function Parts(props) {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ unitName: userData.unitName });
   const [runningNoData, setRunningNoData] = useState([]);
 
   const [sortConfigFirst, setSortConfigFirst] = useState({
@@ -187,7 +186,7 @@ function Parts(props) {
 
   const getDCNo = async () => {
     let Period = `${todayDate.getFullYear()}`;
-
+    const UnitName = userData.UnitName;
     const srlType = "MaterialReturnIV";
     const ResetPeriod = "Year";
     const ResetValue = 0;
@@ -199,7 +198,7 @@ function Parts(props) {
       endpoints.insertAndGetRunningNo,
       {
         Period: Period,
-        unitName: formData.unitName,
+        unitName: UnitName,
         srlType: srlType,
         ResetPeriod: ResetPeriod,
         ResetValue: ResetValue,

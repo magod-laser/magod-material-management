@@ -160,6 +160,14 @@ function PNew() {
             custBomId: data[0].Id,
           }));
 
+          setPartArray((prevPartArray) =>
+            prevPartArray.map((item) =>
+              item.id === partUniqueId
+                ? { ...item, custBomId: data[0].Id }
+                : item
+            )
+          );
+
           postRequest(
             endpoints.updatePartReceiptDetails,
             {
@@ -255,7 +263,8 @@ function PNew() {
   };
 
   //add new part
-  let { partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected } = inputPart;
+  let { partId, unitWeight, custBomId, qtyReceived, qtyAccepted, qtyRejected } =
+    inputPart;
 
   const addNewPart = (e) => {
     const isAnyPartIDEmpty = partArray.some((item) => item.partId === "");
@@ -289,7 +298,15 @@ function PNew() {
           inputPart.id = id;
           setPartArray([
             ...partArray,
-            { id, partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected },
+            {
+              id,
+              partId,
+              unitWeight,
+              custBomId,
+              qtyReceived,
+              qtyAccepted,
+              qtyRejected,
+            },
           ]);
           setPartUniqueId(id);
 
@@ -297,6 +314,7 @@ function PNew() {
             id: id,
             partId: "",
             unitWeight: "",
+            custBomId: null,
             qtyReceived: "",
             qtyAccepted: "",
             qtyRejected: "",
@@ -311,6 +329,7 @@ function PNew() {
       });
     }
   };
+
   const deleteButtonState = () => {
     setModalOpen(true);
   };
@@ -359,14 +378,16 @@ function PNew() {
     bgColor: "#8A92F0",
     onSelect: (row) => {
       setPartUniqueId(row.id);
-      setInputPart({
+      setInputPart((prev) => ({
+        ...prev,
         id: row.id,
         partId: row.partId,
         unitWeight: row.unitWeight,
+        custBomId: row.custBomId,
+        qtyReceived: row.qtyReceived,
         qtyAccepted: row.qtyAccepted,
         qtyRejected: row.qtyRejected,
-        qtyReceived: row.qtyReceived,
-      });
+      }));
 
       setSelectedPart([{ PartId: row.partId }]);
     },
@@ -481,7 +502,7 @@ function PNew() {
 
   const getRVNo = async () => {
     const requestData = {
-      unit: userData.UniName,
+      unit: userData.UnitName,
       srlType: "MaterialReceiptVoucher",
       ResetPeriod: "Year",
       ResetValue: 0,

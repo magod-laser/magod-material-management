@@ -1,21 +1,45 @@
 const materialLocationListRouter = require("express").Router();
 const { setupQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
+// Fetch all material location list ordered by LocationNo
 materialLocationListRouter.get(
   "/allMaterialLocationList",
   async (req, res, next) => {
+    infoLogger.info("Requested all material location list", {
+      endpoint: "/allMaterialLocationList",
+      method: req.method,
+    });
+
     try {
-      setupQueryMod(
-        "Select * from magod_setup.material_location_list order by LocationNo asc",
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info("successfully fetched material_location_list data");
-          res.send(data);
+      const query =
+        "SELECT * FROM magod_setup.material_location_list ORDER BY LocationNo ASC";
+
+      setupQueryMod(query, [], (err, data) => {
+        if (err) {
+          errorLogger.error("Error fetching material_location_list data", err, {
+            endpoint: "/allMaterialLocationList",
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Successfully fetched material_location_list data", {
+          endpoint: "/allMaterialLocationList",
+          recordsFetched: data.length,
+        });
+
+        res.send(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error fetching material_location_list data",
+        error,
+        {
+          endpoint: "/allMaterialLocationList",
         }
       );
-    } catch (error) {
       next(error);
     }
   }

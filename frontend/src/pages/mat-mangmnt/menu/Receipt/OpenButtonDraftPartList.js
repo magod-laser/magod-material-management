@@ -109,6 +109,7 @@ function OpenButtonDraftPartList() {
             obj["qtyReceived"] = obj["QtyReceived"];
             obj["qtyAccepted"] = obj["QtyAccepted"];
             obj["qtyRejected"] = obj["QtyRejected"];
+            obj["custBomId"] = obj["CustBOM_Id"] || "";
           });
           setPartArray(data2);
         });
@@ -167,6 +168,8 @@ function OpenButtonDraftPartList() {
 
   const changePartID = (selected) => {
     setSelectedPart(selected);
+
+    // Update partId in inputPart state
     setInputPart((prevInputPart) => ({
       ...prevInputPart,
       partId: selected.length > 0 ? selected[0].PartId : "",
@@ -182,6 +185,14 @@ function OpenButtonDraftPartList() {
             ...prevInputPart,
             custBomId: data[0].Id,
           }));
+
+          setPartArray((prevPartArray) =>
+            prevPartArray.map((item) =>
+              item.id === partUniqueId
+                ? { ...item, custBomId: data[0].Id }
+                : item
+            )
+          );
 
           postRequest(
             endpoints.updatePartReceiptDetails,
@@ -201,6 +212,7 @@ function OpenButtonDraftPartList() {
       });
     }
 
+    // Update partArray with the selected partId
     const newArray = partArray.map((p) =>
       p.id === partUniqueId
         ? {
@@ -277,7 +289,8 @@ function OpenButtonDraftPartList() {
     setFormHeader({ ...formHeader, calcWeight: parseFloat(totwt).toFixed(3) });
   };
 
-  let { partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected } = inputPart;
+  let { partId, unitWeight, custBomId, qtyReceived, qtyAccepted, qtyRejected } =
+    inputPart;
 
   const addNewPart = (e) => {
     const isAnyPartIDEmpty = partArray.some((item) => item.partId === "");
@@ -307,7 +320,15 @@ function OpenButtonDraftPartList() {
         inputPart.id = id;
         setPartArray([
           ...partArray,
-          { id, partId, unitWeight, qtyReceived, qtyAccepted, qtyRejected },
+          {
+            id,
+            partId,
+            unitWeight,
+            custBomId,
+            qtyReceived,
+            qtyAccepted,
+            qtyRejected,
+          },
         ]);
 
         setPartUniqueId(id);
@@ -315,6 +336,7 @@ function OpenButtonDraftPartList() {
           id: id,
           partId: "",
           unitWeight: "",
+          custBomId: null,
           qtyReceived: "",
           qtyAccepted: "",
           qtyRejected: "",
@@ -381,21 +403,19 @@ function OpenButtonDraftPartList() {
     mode: "radio",
     clickToSelect: true,
     bgColor: "#8A92F0",
-    onSelect: (row, isSelect, rowIndex, e) => {
+    onSelect: (row) => {
       setPartUniqueId(row.id);
-
-      setInputPart({
+      setInputPart((prev) => ({
+        ...prev,
         id: row.id,
         partId: row.partId,
         unitWeight: row.unitWeight,
+        custBomId: row.custBomId,
+        qtyReceived: row.qtyReceived,
         qtyAccepted: row.qtyAccepted,
         qtyRejected: row.qtyRejected,
-        qtyReceived: row.qtyReceived,
-        custBomId: formHeader.customer,
-        qtyUsed: row.QtyUsed,
-        qtyReturned: row.QtyReturned,
-        qtyIssued: row.QtyIssued,
-      });
+      }));
+
       setSelectedPart([{ PartId: row.partId }]);
     },
   };

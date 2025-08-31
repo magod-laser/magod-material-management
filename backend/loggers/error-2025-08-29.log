@@ -1,0 +1,135 @@
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3",
+    sql: 'SELECT m.*, m1.RV_No, m1.RV_Date \n' +
+      '          FROM magodmis.mtrl_part_receipt_details m,magodmis.material_receipt_register m1 \n' +
+      '          WHERE m.QtyAccepted >  m.QtyUsed+m.QtyReturned AND m1.Cust_Code= AND m1.RvID=m.RVId'
+  },
+  timestamp: '2025-08-29T21:55:52+05:30'
+}
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2",
+    sql: 'SELECT m.* FROM magodmis.material_receipt_register m \n' +
+      "        WHERE m.Type='Parts' AND m.Cust_Code = ORDER BY m.RV_Date Desc"
+  },
+  timestamp: '2025-08-29T21:55:52+05:30'
+}
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2",
+    sql: 'SELECT m.* FROM magodmis.material_receipt_register m \n' +
+      "        WHERE m.Type='Parts' AND m.Cust_Code = ORDER BY m.RV_Date Desc"
+  },
+  timestamp: '2025-08-29T21:56:43+05:30'
+}
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3",
+    sql: 'SELECT m.*, m1.RV_No, m1.RV_Date \n' +
+      '          FROM magodmis.mtrl_part_receipt_details m,magodmis.material_receipt_register m1 \n' +
+      '          WHERE m.QtyAccepted >  m.QtyUsed+m.QtyReturned AND m1.Cust_Code= AND m1.RvID=m.RVId'
+  },
+  timestamp: '2025-08-29T21:56:43+05:30'
+}
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND m1.RvID=m.RVId' at line 3",
+    sql: 'SELECT m.*, m1.RV_No, m1.RV_Date \n' +
+      '          FROM magodmis.mtrl_part_receipt_details m,magodmis.material_receipt_register m1 \n' +
+      '          WHERE m.QtyAccepted >  m.QtyUsed+m.QtyReturned AND m1.Cust_Code= AND m1.RvID=m.RVId'
+  },
+  timestamp: '2025-08-29T21:59:15+05:30'
+}
+{
+  level: 'error',
+  message: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2
+      at Packet.asError (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packets\packet.js:728:17)
+      at Query.execute (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\commands\command.js:29:26)
+      at Connection.handlePacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:456:32)
+      at PacketParser.onPacket (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:85:12)
+      at PacketParser.executeStart (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\packet_parser.js:75:16)
+      at Socket.<anonymous> (C:\Users\KanakaCS\Magod\magod-material-management\backend\node_modules\mysql2\lib\connection.js:92:25)
+      at Socket.emit (node:events:524:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5) {
+    code: 'ER_PARSE_ERROR',
+    errno: 1064,
+    sqlState: '42000',
+    sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY m.RV_Date Desc' at line 2",
+    sql: 'SELECT m.* FROM magodmis.material_receipt_register m \n' +
+      "        WHERE m.Type='Parts' AND m.Cust_Code = ORDER BY m.RV_Date Desc"
+  },
+  timestamp: '2025-08-29T21:59:15+05:30'
+}

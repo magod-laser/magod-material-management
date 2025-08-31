@@ -1,7 +1,6 @@
 const shapeRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
 shapeRouter.get("/getAllShapes", async (req, res, next) => {
   try {
@@ -13,19 +12,49 @@ shapeRouter.get("/getAllShapes", async (req, res, next) => {
     next(error);
   }
 });
-shapeRouter.get("/getRowByShape", async (req, res, next) => {
-  try {
-    let shape = req.query.shape;
 
-    misQueryMod(
-      `Select * from magodmis.shapes where Shape =  "${shape}"`,
-      (err, data) => {
-        if (err) logger.error(err);
-        logger.info(`successfully fetched data from shapes for Shape=${shape}`);
-        res.send(data[0] || {});
+// Fetch a single shape row by Shape
+shapeRouter.get("/getRowByShape", async (req, res, next) => {
+  const { shape } = req.query;
+
+  infoLogger.info("Requested shape data row by Shape", {
+    endpoint: "/getRowByShape",
+    method: req.method,
+    shape,
+  });
+
+  try {
+    const query = "SELECT * FROM magodmis.shapes WHERE Shape = ?";
+    const values = [shape];
+
+    misQueryMod(query, values, (err, data) => {
+      if (err) {
+        errorLogger.error("Error fetching data from shapes by Shape", err, {
+          endpoint: "/getRowByShape",
+          shape,
+        });
+        return res
+          .status(500)
+          .json({ Status: "Error", Message: "Database error" });
+      }
+
+      infoLogger.info("Successfully fetched data from shapes by Shape", {
+        endpoint: "/getRowByShape",
+        shape,
+        recordsFetched: data.length,
+      });
+
+      res.send(data[0] || {});
+    });
+  } catch (error) {
+    errorLogger.error(
+      "Unexpected error fetching data from shapes by Shape",
+      error,
+      {
+        endpoint: "/getRowByShape",
+        shape,
       }
     );
-  } catch (error) {
     next(error);
   }
 });

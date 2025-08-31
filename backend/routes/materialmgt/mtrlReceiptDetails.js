@@ -1,58 +1,149 @@
 const mtrlReceiptDetailsRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger } = require("../../helpers/logger");
-const { log } = require("winston");
+const { infoLogger, errorLogger } = require("../../helpers/logger");
 
+// Fetch mtrlreceiptdetails row by Mtrl_Rv_id
 mtrlReceiptDetailsRouter.get(
   "/getMtrlReceiptDetailsByID",
   async (req, res, next) => {
-    try {
-      let id = req.query.id;
+    const { id } = req.query;
 
-      misQueryMod(
-        `SELECT * FROM mtrlreceiptdetails where Mtrl_Rv_id = ${id}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully fetched data from mtrlreceiptdetails for Mtrl_Rv_id = ${id}`
+    infoLogger.info("Requested mtrlreceiptdetails by Mtrl_Rv_id", {
+      endpoint: "/getMtrlReceiptDetailsByID",
+      method: req.method,
+      Mtrl_Rv_id: id,
+    });
+
+    try {
+      const query = `SELECT * FROM mtrlreceiptdetails WHERE Mtrl_Rv_id = ?`;
+      const values = [id];
+
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error fetching mtrlreceiptdetails by Mtrl_Rv_id",
+            err,
+            {
+              endpoint: "/getMtrlReceiptDetailsByID",
+              Mtrl_Rv_id: id,
+            }
           );
-          res.json(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully fetched mtrlreceiptdetails by Mtrl_Rv_id",
+          {
+            endpoint: "/getMtrlReceiptDetailsByID",
+            Mtrl_Rv_id: id,
+            recordsFetched: data.length,
+          }
+        );
+
+        res.json(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error fetching mtrlreceiptdetails by Mtrl_Rv_id",
+        error,
+        {
+          endpoint: "/getMtrlReceiptDetailsByID",
+          Mtrl_Rv_id: id,
         }
       );
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Fetch mtrlreceiptdetails by RvID
 mtrlReceiptDetailsRouter.get(
   "/getMtrlReceiptDetailsByRvID",
   async (req, res, next) => {
     try {
-      let id = req.query.id;
+      const { id } = req.query;
 
-      misQueryMod(
-        `SELECT * FROM mtrlreceiptdetails where RvID = ${id} order by RvID`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully fetched data from mtrlreceiptdetails for RvID=${id}`
-          );
-          res.send(data);
+      infoLogger.info("Requested mtrlreceiptdetails by RvID", {
+        endpoint: "/getMtrlReceiptDetailsByRvID",
+        method: req.method,
+        RvID: id,
+      });
+
+      const selectQuery = `SELECT * FROM mtrlreceiptdetails WHERE RvID = ? ORDER BY RvID`;
+
+      misQueryMod(selectQuery, [id], (err, data) => {
+        if (err) {
+          errorLogger.error("Error fetching mtrlreceiptdetails by RvID", err, {
+            RvID: id,
+          });
+          return next(err);
         }
-      );
+
+        infoLogger.info("Successfully fetched mtrlreceiptdetails data", {
+          RvID: id,
+          records: data.length,
+        });
+        res.json(data);
+      });
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error in /getMtrlReceiptDetailsByRvID",
+        error,
+        { RvID: req.query.id }
+      );
       next(error);
     }
   }
 );
 
+// Insert a new row into mtrlreceiptdetails
 mtrlReceiptDetailsRouter.post(
   "/insertMtrlReceiptDetails",
   async (req, res, next) => {
+    let {
+      rvId,
+      srl,
+      custCode,
+      mtrlCode,
+      material,
+      shapeMtrlId,
+      shapeID,
+      dynamicPara1,
+      dynamicPara2,
+      dynamicPara3,
+      qty,
+      inspected,
+      accepted,
+      totalWeightCalculated,
+      totalWeight,
+      locationNo,
+      updated,
+      qtyAccepted,
+      qtyReceived,
+      qtyRejected,
+      qtyUsed,
+      qtyReturned,
+    } = req.body;
+
+    inspected = inspected === "on" ? "1" : "0";
+
+    infoLogger.info("Requested insert into mtrlreceiptdetails", {
+      endpoint: "/insertMtrlReceiptDetails",
+      method: req.method,
+      RvID: rvId,
+    });
+
     try {
-      let {
+      const query = `
+      INSERT INTO mtrlreceiptdetails
+      (RvID, Srl, Cust_Code, Mtrl_Code, Material, ShapeMtrlID, ShapeID, DynamicPara1, DynamicPara2, DynamicPara3,
+       Qty, Inspected, Accepted, TotalWeightCalculated, TotalWeight, LocationNo, Updated, QtyRejected, QtyUsed, QtyReturned)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+      const values = [
         rvId,
         srl,
         custCode,
@@ -70,90 +161,198 @@ mtrlReceiptDetailsRouter.post(
         totalWeight,
         locationNo,
         updated,
-        qtyAccepted,
-        qtyReceived,
         qtyRejected,
         qtyUsed,
         qtyReturned,
-      } = req.body;
+      ];
 
-      misQueryMod(
-        `insert into  mtrlreceiptdetails (RvID,Srl,Cust_Code,Mtrl_Code,Material,ShapeMtrlID,ShapeID, DynamicPara1,DynamicPara2,DynamicPara3,Qty,Inspected,Accepted,TotalWeightCalculated,TotalWeight,LocationNo,Updated,QtyRejected, QtyUsed,QtyReturned) values ("${rvId}","${srl}","${custCode}","${mtrlCode}","${material}",${shapeMtrlId},${shapeID}, ${dynamicPara1},${dynamicPara2},${dynamicPara3},${qty},${inspected},${accepted},${totalWeightCalculated},${totalWeight},"${locationNo}",${updated},"${qtyRejected}","${qtyUsed}","${qtyReturned}")`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info("successfully inserted data into mtrlreceiptdetails");
-          res.send(data);
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error("Error inserting into mtrlreceiptdetails", err, {
+            endpoint: "/insertMtrlReceiptDetails",
+            RvID: rvId,
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Successfully inserted data into mtrlreceiptdetails", {
+          endpoint: "/insertMtrlReceiptDetails",
+          RvID: rvId,
+        });
+
+        res.send(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error inserting into mtrlreceiptdetails",
+        error,
+        {
+          endpoint: "/insertMtrlReceiptDetails",
+          RvID: rvId,
         }
       );
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Update specific fields in mtrlreceiptdetails after processing
 mtrlReceiptDetailsRouter.post(
   "/updateMtrlReceiptDetailsAfter",
   async (req, res, next) => {
+    let {
+      accepted,
+      dynamicPara1,
+      dynamicPara2,
+      dynamicPara3,
+      id,
+      inspected,
+      locationNo,
+      mtrlCode,
+      qty,
+      updated,
+      qtyAccepted,
+      qtyReceived,
+      qtyRejected,
+      srl,
+      totalWeightCalculated,
+      totalWeight,
+    } = req.body;
+
+    inspected = inspected === true ? "1" : "0";
+
+    infoLogger.info(
+      "Requested update for mtrlreceiptdetails after processing",
+      {
+        endpoint: "/updateMtrlReceiptDetailsAfter",
+        method: req.method,
+        Mtrl_Rv_id: id,
+      }
+    );
+
     try {
-      let {
-        accepted,
+      const query = `
+      UPDATE mtrlreceiptdetails SET 
+        Srl = ?, 
+        Mtrl_Code = ?, 
+        DynamicPara1 = ?, 
+        DynamicPara2 = ?, 
+        DynamicPara3 = ?, 
+        Qty = ?, 
+        Inspected = ?, 
+        Accepted = ?, 
+        TotalWeightCalculated = ?, 
+        TotalWeight = ?, 
+        LocationNo = ?, 
+        QtyRejected = ?
+      WHERE Mtrl_Rv_id = ?
+    `;
+
+      const values = [
+        srl,
+        mtrlCode,
         dynamicPara1,
         dynamicPara2,
         dynamicPara3,
-        id,
-        inspected,
-        locationNo,
-        mtrlCode,
         qty,
-        updated,
-        qtyAccepted,
-        qtyReceived,
-        qtyRejected,
-        srl,
+        inspected,
+        accepted,
         totalWeightCalculated,
         totalWeight,
-      } = req.body;
-      inspected = inspected == true ? "1" : "0";
+        locationNo,
+        qtyRejected,
+        id,
+      ];
 
-      misQueryMod(
-        `UPDATE mtrlreceiptdetails SET 
-          Srl = '${srl}', 
-          Mtrl_Code = '${mtrlCode}', 
-          DynamicPara1 = ${dynamicPara1}, 
-          DynamicPara2 = ${dynamicPara2}, 
-          DynamicPara3 = ${dynamicPara3}, 
-          Qty = ${qty}, 
-          Inspected = ${inspected}, 
-          Accepted = ${accepted}, 
-          TotalWeightCalculated = ${totalWeightCalculated}, 
-          TotalWeight = ${totalWeight},
-          LocationNo = '${locationNo}',      
-          Accepted = ${accepted}, 
-          QtyRejected = '${qtyRejected}' 
-          WHERE Mtrl_Rv_id = ${id}`,
-        (err, data) => {
-          if (err) logger.error(err);
-
-          logger.info(
-            `successfully updated mtrlreceiptdetails data with Mtrl_Rv_id = ${id} `
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error updating mtrlreceiptdetails after processing",
+            err,
+            {
+              endpoint: "/updateMtrlReceiptDetailsAfter",
+              Mtrl_Rv_id: id,
+            }
           );
-          res.json(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully updated mtrlreceiptdetails after processing",
+          {
+            endpoint: "/updateMtrlReceiptDetailsAfter",
+            Mtrl_Rv_id: id,
+          }
+        );
+
+        res.json(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error updating mtrlreceiptdetails after processing",
+        error,
+        {
+          endpoint: "/updateMtrlReceiptDetailsAfter",
+          Mtrl_Rv_id: id,
         }
       );
-      // }
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Update mtrlreceiptdetails row by Mtrl_Rv_id
 mtrlReceiptDetailsRouter.post(
   "/updateMtrlReceiptDetails",
   async (req, res, next) => {
-    try {
-      let {
-        id,
+    let {
+      id,
+      srl,
+      custCode,
+      mtrlCode,
+      material,
+      shapeMtrlId,
+      shapeID,
+      dynamicPara1,
+      dynamicPara2,
+      dynamicPara3,
+      qty,
+      inspected,
+      accepted,
+      totalWeightCalculated,
+      totalWeight,
+      locationNo,
+      updated,
+      qtyAccepted,
+      qtyReceived,
+      qtyRejected,
+      qtyUsed,
+      qtyReturned,
+    } = req.body;
 
+    inspected = inspected === "on" ? "1" : "0";
+
+    infoLogger.info("Requested update for mtrlreceiptdetails", {
+      endpoint: "/updateMtrlReceiptDetails",
+      method: req.method,
+      Mtrl_Rv_id: id,
+    });
+
+    try {
+      const query = `
+      UPDATE mtrlreceiptdetails 
+      SET Srl = ?, Cust_Code = ?, Mtrl_Code = ?, Material = ?, 
+          ShapeMtrlID = ?, ShapeID = ?, DynamicPara1 = ?, DynamicPara2 = ?, DynamicPara3 = ?, 
+          Qty = ?, Inspected = ?, Accepted = ?, TotalWeightCalculated = ?, TotalWeight = ?, 
+          LocationNo = ?, UpDated = ?, QtyRejected = ?, QtyUsed = ?, QtyReturned = ?
+      WHERE Mtrl_Rv_id = ?
+    `;
+
+      const values = [
         srl,
         custCode,
         mtrlCode,
@@ -170,70 +369,121 @@ mtrlReceiptDetailsRouter.post(
         totalWeight,
         locationNo,
         updated,
-        qtyAccepted,
-        qtyReceived,
         qtyRejected,
         qtyUsed,
         qtyReturned,
-      } = req.body;
-      inspected = inspected == "on" ? "1" : "0";
+        id,
+      ];
 
-      misQueryMod(
-        `update mtrlreceiptdetails set Srl = "${srl}",Cust_Code = "${custCode}",Mtrl_Code = "${mtrlCode}",Material = "${material}",ShapeMtrlID = ${shapeMtrlId},ShapeID = ${shapeID}, DynamicPara1 = ${dynamicPara1},DynamicPara2 = ${dynamicPara2},DynamicPara3 = ${dynamicPara3},Qty = ${qty},Inspected = ${inspected},Accepted = ${accepted}, TotalWeightCalculated = ${totalWeightCalculated},TotalWeight = ${totalWeight},LocationNo = "${locationNo}",UpDated = "${updated}",QtyRejected = "${qtyRejected}",QtyUsed = "${qtyUsed}",QtyReturned = "${qtyReturned}" where Mtrl_Rv_id = ${id}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully updated mtrlreceiptdetails with Mtrl_Rv_id = ${id}`
-          );
-
-          res.send(data);
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error("Error updating mtrlreceiptdetails", err, {
+            endpoint: "/updateMtrlReceiptDetails",
+            Mtrl_Rv_id: id,
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
         }
-      );
+
+        infoLogger.info("Successfully updated mtrlreceiptdetails", {
+          endpoint: "/updateMtrlReceiptDetails",
+          Mtrl_Rv_id: id,
+        });
+
+        res.send(data);
+      });
     } catch (error) {
+      errorLogger.error("Unexpected error updating mtrlreceiptdetails", error, {
+        endpoint: "/updateMtrlReceiptDetails",
+        Mtrl_Rv_id: id,
+      });
       next(error);
     }
   }
 );
 
+// Update the UpDated field of a mtrlreceiptdetails row
 mtrlReceiptDetailsRouter.post(
   "/updateMtrlReceiptDetailsUpdated",
   async (req, res, next) => {
     try {
-      let { id, upDated } = req.body;
-      misQueryMod(
-        `update mtrlreceiptdetails set UpDated = ${upDated} where Mtrl_Rv_id = ${id}`,
-        (err, data) => {
-          if (err) logger.error(err);
+      const { id, upDated } = req.body;
 
-          logger.info(
-            `successfully updated mtrlreceiptdetails for Mtrl_Rv_id = ${id}`
-          );
-          res.send(data);
+      infoLogger.info("Requested update for mtrlreceiptdetails UpDated field", {
+        endpoint: "/updateMtrlReceiptDetailsUpdated",
+        method: req.method,
+        Mtrl_Rv_id: id,
+        UpDated: upDated,
+      });
+
+      const query = `UPDATE mtrlreceiptdetails SET UpDated = ? WHERE Mtrl_Rv_id = ?`;
+
+      misQueryMod(query, [upDated, id], (err, data) => {
+        if (err) {
+          errorLogger.error("Error updating mtrlreceiptdetails", err, {
+            endpoint: "/updateMtrlReceiptDetailsUpdated",
+            Mtrl_Rv_id: id,
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Successfully updated mtrlreceiptdetails", {
+          endpoint: "/updateMtrlReceiptDetailsUpdated",
+          Mtrl_Rv_id: id,
+        });
+
+        res.send(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error in /updateMtrlReceiptDetailsUpdated",
+        error,
+        {
+          endpoint: "/updateMtrlReceiptDetailsUpdated",
         }
       );
-    } catch (error) {
       next(error);
     }
   }
 );
 
+// Delete material receipt details by Mtrl_Rv_id
 mtrlReceiptDetailsRouter.post(
   "/deleteMtrlReceiptDetails",
   async (req, res, next) => {
     try {
-      let { id } = req.body;
+      const { id } = req.body;
 
-      misQueryMod(
-        `delete from mtrlreceiptdetails where Mtrl_Rv_id = ${id}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully deleted data from mtrlreceiptdetails for Mtrl_Rv_id = ${id}`
-          );
-          res.send(data);
+      infoLogger.info("Requested deleteMtrlReceiptDetails", {
+        endpoint: "/deleteMtrlReceiptDetails",
+        method: req.method,
+        Mtrl_Rv_id: id,
+      });
+
+      const deleteQuery = `DELETE FROM mtrlreceiptdetails WHERE Mtrl_Rv_id = ?`;
+
+      misQueryMod(deleteQuery, [id], (err, data) => {
+        if (err) {
+          errorLogger.error("Error deleting from mtrlreceiptdetails", err, {
+            Mtrl_Rv_id: id,
+          });
+          return next(err);
         }
-      );
+
+        infoLogger.info("Successfully deleted from mtrlreceiptdetails", {
+          Mtrl_Rv_id: id,
+        });
+        res.json(data);
+      });
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error in /deleteMtrlReceiptDetails",
+        error,
+        { Mtrl_Rv_id: req.body.id }
+      );
       next(error);
     }
   }
