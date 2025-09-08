@@ -8,9 +8,6 @@ const dbPort = process.env.DB_PORT;
 const dbPassword = process.env.DB_PASSWORD;
 const dbDatabase1 = process.env.DB_DATABASE_1; //magodmis
 const dbDatabase2 = process.env.DB_DATABASE_2; //magod_setup
-const dbDatabase3 = process.env.DB_DATABASE_3; //magodqtn
-const dbDatabase4 = process.env.DB_DATABASE_4; //machine_data
-const dbDatabase5 = process.env.DB_DATABASE_5; //magod_sales
 const dbDatabase6 = process.env.DB_DATABASE_6; //magod_mtrl
 
 var misConn = mysql.createConnection({
@@ -29,30 +26,6 @@ var setupConn = mysql.createConnection({
   database: dbDatabase2,
 });
 
-var qtnConn = mysql.createConnection({
-  host: dbHost,
-  user: dbUser,
-  port: dbPort,
-  password: dbPassword,
-  database: dbDatabase3,
-});
-
-var mchConn = mysql.createConnection({
-  host: dbHost,
-  user: dbUser,
-  port: dbPort,
-  password: dbPassword,
-  database: dbDatabase4,
-});
-
-var slsConn = mysql.createConnection({
-  host: dbHost,
-  user: dbUser,
-  port: dbPort,
-  password: dbPassword,
-  database: dbDatabase5,
-});
-
 var mtrlConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
@@ -69,14 +42,6 @@ let misQuery = async (q, callback) => {
   });
 };
 
-// let misQueryMod = async (q, callback) => {
-//   misConn.connect();
-//   misConn.query(q, (err, res, fields) => {
-//     if (err) callback(err, null);
-//     else callback(null, res);
-//   });
-// };
-
 let misQueryMod = async (q, values, callback) => {
   misConn.connect();
   misConn.query(q, values, (err, res, fields) => {
@@ -85,29 +50,21 @@ let misQueryMod = async (q, values, callback) => {
   });
 };
 
-let mtrlQueryMod = async (m, callback) => {
+let mtrlQueryMod = (q, values, callback) => {
   mtrlConn.connect();
-  mtrlConn.query(m, (err, res, fields) => {
+  mtrlConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);
     else callback(null, res);
   });
 };
 
-let setupQuery = (q, callback) => {
+let setupQuery = (q, values, callback) => {
   setupConn.connect();
-  setupConn.query(q, (err, res, fields) => {
-    if (err) throw err;
-    callback(res);
+  setupConn.query(q, values, (err, res, fields) => {
+    if (err) callback(err, null);
+    else callback(null, res);
   });
 };
-
-// let setupQueryMod = async (q, callback) => {
-//   setupConn.connect();
-//   setupConn.query(q, (err, res, fields) => {
-//     if (err) callback(err, null);
-//     else callback(null, res);
-//   });
-// };
 
 let setupQueryMod = async (q, values, callback) => {
   setupConn.connect();
@@ -117,55 +74,10 @@ let setupQueryMod = async (q, values, callback) => {
   });
 };
 
-let qtnQuery = (q, callback) => {
-  qtnConn.connect();
-  qtnConn.query(q, (err, res, fields) => {
-    if (err) throw err;
-    callback(res);
-  });
-};
-
-let qtnQueryMod = (q, callback) => {
-  qtnConn.connect();
-  qtnConn.query(q, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
-let qtnQueryModv2 = (q, values, callback) => {
-  qtnConn.connect();
-  qtnConn.query(q, values, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
-let slsQueryMod = (s, callback) => {
-  slsConn.connect();
-  slsConn.query(s, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
-let mchQueryMod = (m, callback) => {
-  mchConn.connect();
-  mchConn.query(m, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
 module.exports = {
   misQuery,
   setupQuery,
-  qtnQuery,
   misQueryMod,
-  qtnQueryMod,
-  qtnQueryModv2,
-  slsQueryMod,
-  mchQueryMod,
   mtrlQueryMod,
   setupQueryMod,
 };

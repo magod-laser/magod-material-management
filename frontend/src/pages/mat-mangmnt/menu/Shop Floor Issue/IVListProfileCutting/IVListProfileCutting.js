@@ -14,7 +14,7 @@ function IVListProfileCutting(props) {
   const [rowData, setRowData] = useState({});
   const [issueIDVal, setIssueIDVal] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [perPage] = useState(1000);
+  const [perPage] = useState(500);
   const [loading, setLoading] = useState(true);
 
   const fetchData = () => {

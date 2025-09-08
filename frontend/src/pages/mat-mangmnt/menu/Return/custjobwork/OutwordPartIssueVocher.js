@@ -190,6 +190,7 @@ function OutwordPartIssueVocher(props) {
       toast.warning("Serial Weight cannot be zero. Set Weight and try again");
     }
   };
+
   let getDCID = async (data) => {
     setdcID(data);
 

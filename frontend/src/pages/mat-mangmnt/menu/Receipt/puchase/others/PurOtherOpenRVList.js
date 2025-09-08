@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
+import { HashLoader } from "react-spinners";
 
 const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -9,6 +11,7 @@ const { endpoints } = require("../../../../../api/constants");
 function PurOtherOpenRVList() {
   const nav = useNavigate();
   const [tabledata, setTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     CustDocuNo: "",
     Cust_Code: "",
@@ -22,9 +25,15 @@ function PurOtherOpenRVList() {
     TotalCalculatedWeight: "",
   });
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const [perPage] = useState(500);
+
   const fetchData = () => {
+    setLoading(true);
     getRequest(endpoints.getSheetsOpenedPurchaseMaterial, (data) => {
       setTableData(data);
+      setLoading(false);
+      setCurrentPage(0);
     });
   };
 
@@ -35,6 +44,15 @@ function PurOtherOpenRVList() {
   function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
+
+  const pageCount = Math.ceil(tabledata.length / perPage);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const offset = currentPage * perPage;
+  const currentPageData = tabledata.slice(offset, offset + perPage);
 
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenSheetUnit", {
@@ -88,6 +106,12 @@ function PurOtherOpenRVList() {
   ];
   return (
     <div>
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <>
         <h4 className="title">Magod : Sheets Receipt List Received</h4>
         <div className="row">
@@ -120,21 +144,47 @@ function PurOtherOpenRVList() {
               Close
             </button>
           </div>
-
-          <div
-            style={{ height: "350px", overflowY: "scroll" }}
-            className="col-md-7 col-sm-12"
-          >
-            <BootstrapTable
-              keyField="RvID"
-              columns={columns}
-              data={tabledata}
-              striped
-              hover
-              condensed
-              selectRow={selectRow}
-              headerClasses="header-class tableHeaderBGColor"
-            ></BootstrapTable>
+          <div className="col-md-7 col-sm-12">
+            <div style={{ height: "350px", overflowY: "scroll" }}>
+              <BootstrapTable
+                keyField="RvID"
+                columns={columns}
+                data={currentPageData}
+                striped
+                hover
+                condensed
+                selectRow={selectRow}
+                headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? "Fetching data..." : "No data available"
+                }
+              ></BootstrapTable>
+            </div>
+            <div>
+              <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                previousLinkClassName={"pagination__link"}
+                nextLinkClassName={"pagination__link"}
+                disabledClassName={"pagination__link--disabled"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"}
+                previousClassName={
+                  currentPage === 0 ? "pagination__link--disabled" : ""
+                }
+                nextClassName={
+                  currentPage === pageCount - 1
+                    ? "pagination__link--disabled"
+                    : ""
+                }
+              />
+            </div>
           </div>
 
           <div className="col-md-5 col-sm-12">

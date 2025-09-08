@@ -3,6 +3,8 @@ import { formatDate } from "../../../../../../utils";
 import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
+import { HashLoader } from "react-spinners";
+import ReactPaginate from "react-paginate";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -11,6 +13,7 @@ export default function UnitsDraftRVList(props) {
   const nav = useNavigate();
 
   let [custdata, setCustdata] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [tabledata, setTableData] = useState([]);
   const [allData, setAllData] = useState([]);
@@ -28,6 +31,9 @@ export default function UnitsDraftRVList(props) {
     TotalCalculatedWeight: "",
   });
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const [perPage] = useState(500);
+
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -35,10 +41,12 @@ export default function UnitsDraftRVList(props) {
       }
       setCustdata(data);
     });
-
+    setLoading(true);
     getRequest(endpoints.getUnitsCreatedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
+      setLoading(false);
+      setCurrentPage(0);
     });
   };
 
@@ -54,6 +62,15 @@ export default function UnitsDraftRVList(props) {
   function statusFormatter(cell) {
     return formatDate(new Date(cell), 3);
   }
+
+  const pageCount = Math.ceil(tabledata.length / perPage);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const offset = currentPage * perPage;
+  const currentPageData = tabledata.slice(offset, offset + perPage);
 
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
@@ -110,6 +127,12 @@ export default function UnitsDraftRVList(props) {
 
   return (
     <div>
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <>
         <h4 className="title">Customer : Units Receipt List Created</h4>
         <div className="row">
@@ -145,20 +168,48 @@ export default function UnitsDraftRVList(props) {
               Close
             </button>
           </div>
-          <div
-            style={{ height: "350px", overflowY: "scroll" }}
-            className="col-md-7 col-sm-12"
-          >
-            <BootstrapTable
-              keyField="RvID"
-              columns={columns}
-              data={tabledata}
-              striped
-              hover
-              condensed
-              selectRow={selectRow}
-              headerClasses="header-class tableHeaderBGColor"
-            ></BootstrapTable>
+
+          <div className="col-md-7 col-sm-12">
+            <div style={{ height: "350px", overflowY: "scroll" }}>
+              <BootstrapTable
+                keyField="RvID"
+                columns={columns}
+                data={currentPageData}
+                striped
+                hover
+                condensed
+                selectRow={selectRow}
+                headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? "Fetching data..." : "No data available"
+                }
+              ></BootstrapTable>
+            </div>
+            <div>
+              <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                previousLinkClassName={"pagination__link"}
+                nextLinkClassName={"pagination__link"}
+                disabledClassName={"pagination__link--disabled"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"}
+                previousClassName={
+                  currentPage === 0 ? "pagination__link--disabled" : ""
+                }
+                nextClassName={
+                  currentPage === pageCount - 1
+                    ? "pagination__link--disabled"
+                    : ""
+                }
+              />
+            </div>
           </div>
 
           <div className="col-md-5 col-sm-12">

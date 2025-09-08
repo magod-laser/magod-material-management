@@ -1,6 +1,5 @@
 const custBomListRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
 const { infoLogger, errorLogger } = require("../../helpers/logger");
 
 // Fetch all customer BOM list from magodmis.cust_bomlist ordered by part description

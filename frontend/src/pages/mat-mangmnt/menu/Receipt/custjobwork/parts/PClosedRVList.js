@@ -4,6 +4,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Typeahead } from "react-bootstrap-typeahead";
+import { HashLoader } from "react-spinners";
+import ReactPaginate from "react-paginate";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -12,6 +14,7 @@ function PClosedRVList() {
   const nav = useNavigate();
 
   let [custdata, setCustdata] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [tabledata, setTableData] = useState([]);
   const [allData, setAllData] = useState([]);
@@ -29,6 +32,9 @@ function PClosedRVList() {
     TotalCalculatedWeight: "",
   });
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const [perPage] = useState(500);
+
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -36,10 +42,12 @@ function PClosedRVList() {
       }
       setCustdata(data);
     });
-
+    setLoading(true);
     getRequest(endpoints.getPartsClosedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
+      setLoading(false);
+      setCurrentPage(0);
     });
   };
 
@@ -56,6 +64,15 @@ function PClosedRVList() {
   function statusFormatter(cell, row, rowIndex, formatExtraData) {
     return formatDate(new Date(cell), 3);
   }
+
+  const pageCount = Math.ceil(tabledata.length / perPage);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const offset = currentPage * perPage;
+  const currentPageData = tabledata.slice(offset, offset + perPage);
 
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
@@ -115,6 +132,12 @@ function PClosedRVList() {
   ];
   return (
     <div>
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <>
         <h4 className="title">Customer : Parts Receipt List Closed</h4>
         <div className="row">
@@ -145,20 +168,47 @@ function PClosedRVList() {
               Close
             </button>
           </div>
-          <div
-            style={{ height: "350px", overflowY: "scroll" }}
-            className="col-md-7 col-sm-12"
-          >
-            <BootstrapTable
-              keyField="RvID"
-              columns={columns}
-              data={tabledata}
-              striped
-              hover
-              condensed
-              selectRow={selectRow}
-              headerClasses="header-class tableHeaderBGColor"
-            ></BootstrapTable>
+          <div className="col-md-7 col-sm-12">
+            <div style={{ height: "350px", overflowY: "scroll" }}>
+              <BootstrapTable
+                keyField="RvID"
+                columns={columns}
+                data={currentPageData}
+                striped
+                hover
+                condensed
+                selectRow={selectRow}
+                headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? "Fetching data..." : "No data available"
+                }
+              ></BootstrapTable>
+            </div>
+            <div>
+              <ReactPaginate
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                breakLabel={"..."}
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                containerClassName={"pagination"}
+                previousLinkClassName={"pagination__link"}
+                nextLinkClassName={"pagination__link"}
+                disabledClassName={"pagination__link--disabled"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"}
+                previousClassName={
+                  currentPage === 0 ? "pagination__link--disabled" : ""
+                }
+                nextClassName={
+                  currentPage === pageCount - 1
+                    ? "pagination__link--disabled"
+                    : ""
+                }
+              />
+            </div>
           </div>
 
           <div className="col-md-5 col-sm-12">

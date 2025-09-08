@@ -1,6 +1,7 @@
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
+// Return As Scrap
 function ModalComp({ open, setOpen, setShow, row, scrapModal, setRow }) {
   const handleClose = () => {
     scrapModal({});
