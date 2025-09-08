@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Typeahead } from "react-bootstrap-typeahead";
 import ReactPaginate from "react-paginate";
+import { HashLoader } from "react-spinners";
 
 const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -12,7 +13,7 @@ const { endpoints } = require("../../../../../api/constants");
 function SheetsClosedRVList() {
   const nav = useNavigate();
   let [custdata, setCustdata] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [tabledata, setTableData] = useState([]);
   const [allData, setAllData] = useState([]);
 
@@ -30,7 +31,7 @@ function SheetsClosedRVList() {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const [perPage] = useState(1000);
+  const [perPage] = useState(500);
 
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
@@ -39,10 +40,12 @@ function SheetsClosedRVList() {
       }
       setCustdata(data);
     });
-
+    setLoading(true);
     getRequest(endpoints.getSheetsClosedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
+      setLoading(false);
+      setCurrentPage(0);
     });
   };
 
@@ -124,6 +127,12 @@ function SheetsClosedRVList() {
 
   return (
     <div>
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <>
         <h4 className="title">Customer : Sheets Receipt List Closed</h4>
         <div className="row">
@@ -170,6 +179,9 @@ function SheetsClosedRVList() {
                 condensed
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? "Fetching data..." : "No data available"
+                }
               ></BootstrapTable>
             </div>
             <div>

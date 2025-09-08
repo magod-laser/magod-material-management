@@ -1,7 +1,6 @@
 const mtrlPartReceiptDetailsRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const req = require("express/lib/request");
-const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
+const { infoLogger, errorLogger } = require("../../helpers/logger");
 
 // Fetch mtrl_part_receipt_details by RvID
 mtrlPartReceiptDetailsRouter.get(
@@ -258,97 +257,295 @@ mtrlPartReceiptDetailsRouter.post(
   }
 );
 
+// Update QtyReturned in material part receipt details
 mtrlPartReceiptDetailsRouter.post(
   "/updateQtyReturnedPartReceiptDetails",
   async (req, res, next) => {
+    const { Id, QtyReturned } = req.body;
+
+    infoLogger.info("Requested to update QtyReturned for part receipt detail", {
+      endpoint: "/updateQtyReturnedPartReceiptDetails",
+      method: req.method,
+      Id,
+      QtyReturned,
+    });
+
     try {
-      let { Id, QtyReturned } = req.body;
       misQueryMod(
-        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyReturned=m.QtyReturned-${QtyReturned} WHERE m.Id=${Id}`,
+        `UPDATE magodmis.mtrl_part_receipt_details 
+         SET QtyReturned = QtyReturned - ? 
+         WHERE Id = ?`,
+        [QtyReturned, Id],
         (err, data) => {
-          if (err) logger.error(err);
+          if (err) {
+            errorLogger.error(
+              "Error updating QtyReturned for part receipt detail",
+              err,
+              {
+                endpoint: "/updateQtyReturnedPartReceiptDetails",
+                Id,
+                QtyReturned,
+              }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info(
+            "Updated QtyReturned for part receipt detail successfully",
+            {
+              endpoint: "/updateQtyReturnedPartReceiptDetails",
+              Id,
+              QtyReturned,
+            }
+          );
+
           res.send(data);
         }
       );
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error updating QtyReturned for part receipt detail",
+        error,
+        { endpoint: "/updateQtyReturnedPartReceiptDetails", Id, QtyReturned }
+      );
       next(error);
     }
   }
 );
 
+// Increment QtyReturned in material part receipt details
 mtrlPartReceiptDetailsRouter.post(
   "/updateQtyReturnedPartReceiptDetails1",
   async (req, res, next) => {
-    try {
-      let { Id, QtyReturned } = req.body;
+    const { Id, QtyReturned } = req.body;
 
+    infoLogger.info(
+      "Requested to increment QtyReturned for part receipt detail",
+      {
+        endpoint: "/updateQtyReturnedPartReceiptDetails1",
+        method: req.method,
+        Id,
+        QtyReturned,
+      }
+    );
+
+    try {
       misQueryMod(
-        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyReturned=m.QtyReturned+${QtyReturned} WHERE m.Id=${Id}`,
+        `UPDATE magodmis.mtrl_part_receipt_details 
+         SET QtyReturned = QtyReturned + ? 
+         WHERE Id = ?`,
+        [QtyReturned, Id],
         (err, data) => {
-          if (err) logger.error(err);
+          if (err) {
+            errorLogger.error(
+              "Error incrementing QtyReturned for part receipt detail",
+              err,
+              {
+                endpoint: "/updateQtyReturnedPartReceiptDetails1",
+                Id,
+                QtyReturned,
+              }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info(
+            "Incremented QtyReturned for part receipt detail successfully",
+            {
+              endpoint: "/updateQtyReturnedPartReceiptDetails1",
+              Id,
+              QtyReturned,
+            }
+          );
+
           res.send(data);
         }
       );
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error incrementing QtyReturned for part receipt detail",
+        error,
+        { endpoint: "/updateQtyReturnedPartReceiptDetails1", Id, QtyReturned }
+      );
       next(error);
     }
   }
 );
 
+// Update quantity issued in part receipt details
 mtrlPartReceiptDetailsRouter.post(
   "/updateQtyIssuedPartReceiptDetails",
   async (req, res, next) => {
+    const { Id, Qty } = req.body;
+
+    infoLogger.info(
+      "Requested update of quantity issued in part receipt details",
+      {
+        endpoint: "/updateQtyIssuedPartReceiptDetails",
+        method: req.method,
+        Id,
+        Qty,
+      }
+    );
+
     try {
-      let { Id, Qty } = req.body;
       misQueryMod(
-        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyIssued=m.QtyIssued-${Qty} WHERE m.Id=${Id}`,
+        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyIssued = m.QtyIssued - ? WHERE m.Id = ?`,
+        [Qty, Id],
         (err, data) => {
-          if (err) logger.error(err);
+          if (err) {
+            errorLogger.error(
+              "Error updating quantity issued in part receipt details",
+              err,
+              {
+                endpoint: "/updateQtyIssuedPartReceiptDetails",
+                Id,
+                Qty,
+              }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info("Updated quantity issued successfully", {
+            endpoint: "/updateQtyIssuedPartReceiptDetails",
+            Id,
+            Qty,
+          });
+
           res.send(data);
         }
       );
     } catch (error) {
+      errorLogger.error("Unexpected error updating quantity issued", error, {
+        endpoint: "/updateQtyIssuedPartReceiptDetails",
+        Id,
+        Qty,
+      });
       next(error);
     }
   }
 );
 
+// Increment QtyIssued in material part receipt details
 mtrlPartReceiptDetailsRouter.post(
   "/updateQtyIssuedPartReceiptDetails1",
   async (req, res, next) => {
+    const { Id, Qty } = req.body;
+
+    infoLogger.info(
+      "Requested to increment QtyIssued for part receipt detail",
+      {
+        endpoint: "/updateQtyIssuedPartReceiptDetails1",
+        method: req.method,
+        Id,
+        Qty,
+      }
+    );
+
     try {
-      let { Id, Qty } = req.body;
       misQueryMod(
-        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyIssued=m.QtyIssued+${Qty} WHERE m.Id=${Id}`,
+        `UPDATE magodmis.mtrl_part_receipt_details 
+         SET QtyIssued = QtyIssued + ? 
+         WHERE Id = ?`,
+        [Qty, Id],
         (err, data) => {
-          if (err) logger.error(err);
+          if (err) {
+            errorLogger.error(
+              "Error incrementing QtyIssued for part receipt detail",
+              err,
+              { endpoint: "/updateQtyIssuedPartReceiptDetails1", Id, Qty }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
+
+          infoLogger.info(
+            "Incremented QtyIssued for part receipt detail successfully",
+            { endpoint: "/updateQtyIssuedPartReceiptDetails1", Id, Qty }
+          );
+
           res.send(data);
         }
       );
     } catch (error) {
+      errorLogger.error(
+        "Unexpected error incrementing QtyIssued for part receipt detail",
+        error,
+        { endpoint: "/updateQtyIssuedPartReceiptDetails1", Id, Qty }
+      );
       next(error);
     }
   }
 );
 
+// Update QtyIssued in material part receipt details
 mtrlPartReceiptDetailsRouter.post(
   "/updateQtyIssuedPartReceiptDetails2",
   async (req, res, next) => {
+    const { Id, Qty } = req.body;
+
+    infoLogger.info(
+      "Request received to update QtyIssued in material part receipt details",
+      {
+        endpoint: "/updateQtyIssuedPartReceiptDetails2",
+        method: req.method,
+        payload: { Id, Qty },
+      }
+    );
+
     try {
-      let { Id, Qty } = req.body;
-      misQueryMod(
-        `UPDATE magodmis.mtrl_part_receipt_details m SET m.QtyIssued= 
-        CASE WHEN m.QtyIssued<= m.QtyIssued+${Qty} THEN m.QtyIssued+${Qty}
-        ELSE m.QtyIssued END WHERE m.Id=${Id}`,
-        (err, data) => {
-          if (err) logger.error(err);
-          logger.info(
-            `successfully updated mtrl_part_receipt_details for Id=${Id}`
+      const query = `
+        UPDATE magodmis.mtrl_part_receipt_details m
+        SET m.QtyIssued = CASE 
+          WHEN m.QtyIssued <= m.QtyIssued + ? THEN m.QtyIssued + ?
+          ELSE m.QtyIssued 
+        END
+        WHERE m.Id = ?
+      `;
+      const values = [Qty, Qty, Id];
+
+      misQueryMod(query, values, (err, data) => {
+        if (err) {
+          errorLogger.error(
+            "Error updating QtyIssued in mtrl_part_receipt_details",
+            err,
+            {
+              endpoint: "/updateQtyIssuedPartReceiptDetails2",
+              payload: { Id, Qty },
+            }
           );
-          res.send(data);
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info(
+          "Successfully updated QtyIssued in mtrl_part_receipt_details",
+          {
+            endpoint: "/updateQtyIssuedPartReceiptDetails2",
+            Id,
+            recordsAffected: data?.affectedRows || 0,
+          }
+        );
+
+        res.send(data);
+      });
+    } catch (error) {
+      errorLogger.error(
+        "Unexpected error in updateQtyIssuedPartReceiptDetails2",
+        error,
+        {
+          endpoint: "/updateQtyIssuedPartReceiptDetails2",
+          payload: { Id, Qty },
         }
       );
-    } catch (error) {
       next(error);
     }
   }

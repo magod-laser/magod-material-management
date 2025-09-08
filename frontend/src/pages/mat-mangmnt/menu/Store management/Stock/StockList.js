@@ -394,7 +394,7 @@ function StockList(props) {
       <div>
         {" "}
         <>
-          <h4 className="title">Material Stock List </h4>
+          <h4 className="title">Material Stock List</h4>
 
           <div className="row">
             <div className="d-flex col-md-8 col-sm-12" style={{ gap: "10px" }}>

@@ -41,6 +41,7 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
       setOpen1(false);
     }
   };
+
   const handleCancel = () => {
     setLocalRow({
       ReminderPara1: (row.RemPara1 || 0) - 10,

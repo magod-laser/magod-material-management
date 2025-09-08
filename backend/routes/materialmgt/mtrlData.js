@@ -1,6 +1,6 @@
 const mtrlDataRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
+const { infoLogger, errorLogger } = require("../../helpers/logger");
 
 // Fetch all material data ordered by Mtrl_Code
 mtrlDataRouter.get("/allmtrldata", async (req, res, next) => {

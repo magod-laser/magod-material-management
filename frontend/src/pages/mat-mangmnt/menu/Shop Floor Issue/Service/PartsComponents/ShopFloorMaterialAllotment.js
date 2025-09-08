@@ -210,7 +210,7 @@ function ShopFloorMaterialAllotment(props) {
         (CustMtrl === "Magod" || CustMtrl !== "Customer")
           ? toast.error("Can't allot material for sales(Magod) orders")
           : nav(
-              "/MaterialManagement/ShopFloorIssue/Service/Parts/ShopFloorAllotmentForm", //MaterialAllotmentMain
+              "/MaterialManagement/ShopFloorIssue/Service/Parts/ShopFloorAllotmentForm",
 
               {
                 state: { ncid, custCode },
@@ -218,7 +218,7 @@ function ShopFloorMaterialAllotment(props) {
             );
       } else if (props.formtype == "Units" || props.formtype == "Others") {
         nav(
-          "/MaterialManagement/ShopFloorIssue/Service/Units/MaterialAllotmentForm", //UnitsMatAllotmentForm
+          "/MaterialManagement/ShopFloorIssue/Service/Units/MaterialAllotmentForm",
           {
             state: { ncid, custCode },
           }

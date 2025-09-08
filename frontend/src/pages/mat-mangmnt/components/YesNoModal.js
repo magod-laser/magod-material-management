@@ -1,5 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 
+// Return To Stock
 function YesNoModal(props) {
   let { show, setShow, message, modalResponse, resetState } = props;
 

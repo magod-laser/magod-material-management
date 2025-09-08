@@ -222,6 +222,7 @@ function PendingList(props) {
       setSecondTable([]);
 
       let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
+      // console.log("row.IssueID", row.IssueID);
       setIsSecondTableLoading(true);
       getRequest(url1, (data) => {
         data.forEach((sheet) => {
@@ -350,6 +351,9 @@ function PendingList(props) {
     }
   };
 
+  // console.log("secondTableRow", secondTableRow);
+
+  // Return To Stock
   const modalYesNoResponse = (msg) => {
     if (msg == "yes") {
       if (rowValResize.ReminderPara1 < 10 || rowValResize.ReminderPara2 < 10) {
@@ -465,6 +469,7 @@ function PendingList(props) {
     setShow(true);
   };
 
+  // Return As Scrap
   const scrapModal = (data) => {
     if (Object.keys(data).length !== 0) {
       for (let i = 0; i < selectedSecondTableRows.length; i++) {
@@ -538,6 +543,7 @@ function PendingList(props) {
 
   return (
     <>
+      {/* Return To Stock */}
       <YesNoModal
         show={showYesNo}
         setShow={setShowYesNo}
@@ -545,7 +551,11 @@ function PendingList(props) {
         modalResponse={modalYesNoResponse}
         resetState={resetYesNoModalState}
       />
+
+      {/* Return As Scrap */}
       <LocationModel show={show} setShow={setShow} scrapModal={scrapModal} />
+
+      {/* Resize and Return */}
       <ResizeReturnModal
         isOpen={isModalOpen}
         secondTableRow={selectedSecondTableRows}

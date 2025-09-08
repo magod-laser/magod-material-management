@@ -4,6 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
 import ReactPaginate from "react-paginate";
+import { HashLoader } from "react-spinners";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -12,7 +13,7 @@ function SheetsOpenRVList() {
   const nav = useNavigate();
 
   let [custdata, setCustdata] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [tabledata, setTableData] = useState([]);
   const [allData, setAllData] = useState([]);
   const [data, setData] = useState({
@@ -29,7 +30,7 @@ function SheetsOpenRVList() {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const [perPage] = useState(1000);
+  const [perPage] = useState(500);
 
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
@@ -38,10 +39,12 @@ function SheetsOpenRVList() {
       }
       setCustdata(data);
     });
-
+    setLoading(true);
     getRequest(endpoints.getSheetsOpenedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
+      setLoading(false);
+      setCurrentPage(0);
     });
   };
 
@@ -120,6 +123,12 @@ function SheetsOpenRVList() {
 
   return (
     <div>
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <>
         <h4 className="title">Customer : Sheets Receipt List Received</h4>
         <div className="row">
@@ -166,6 +175,9 @@ function SheetsOpenRVList() {
                 condensed
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
+                noDataIndication={() =>
+                  loading ? "Fetching data..." : "No data available"
+                }
               ></BootstrapTable>
             </div>
             <div>
