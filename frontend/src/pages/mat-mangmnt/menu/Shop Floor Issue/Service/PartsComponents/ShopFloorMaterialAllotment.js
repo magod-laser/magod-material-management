@@ -4,6 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import TreeView from "react-treeview";
 import "react-treeview/react-treeview.css";
 import { toast } from "react-toastify";
+import { HashLoader } from "react-spinners";
 
 const { getRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -15,9 +16,11 @@ function ShopFloorMaterialAllotment(props) {
   const [ncid, setncid] = useState("");
   const [custCode, setCustCode] = useState("");
   const [CustMtrl, setCustMtrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const fetchData = async () => {
+    setLoading(true);
     //get table data
     let url1 =
       endpoints.getShopFloorServicePartTable +
@@ -71,6 +74,7 @@ function ShopFloorMaterialAllotment(props) {
         await delay(800);
       }
       setTreeData(data);
+      setLoading(false);
     });
   };
 
@@ -228,100 +232,112 @@ function ShopFloorMaterialAllotment(props) {
   };
   return (
     <div>
-      <h4 className="title">Shop Floor Material Allotment</h4>
-      <div className="row col-md-8 ">
-        <label className="col-md-2 ms-2">{props.formtype}</label>
-        <button
-          className=" col-md-3 button-style "
-          style={{ width: "100px" }}
-          onClick={allotMaterial}
-        >
-          Allot Material
-        </button>
-        <button
-          className="button-style  col-md-2"
-          style={{ width: "50px" }}
-          id="btnclose"
-          type="submit"
-          onClick={() => nav("/MaterialManagement")}
-        >
-          Close
-        </button>
-      </div>
-      <div className="row mt-4">
-        <div className="col-md-2">
-          {treeData?.map((node, i) => {
-            const machine = node.machine;
-            const label = (
-              <span className="node" style={{ fontSize: "12px" }}>
-                {machine}
-              </span>
-            );
-            return (
-              <TreeView
-                key={machine + "|" + i}
-                nodeLabel={label}
-                defaultCollapsed={true}
-                onClick={() => treeViewclickMachine(machine)}
-              >
-                {node.process?.map((pro) => {
-                  const label2 = (
-                    <span className="node" style={{ fontSize: "12px" }}>
-                      {pro.MProcess}
-                    </span>
-                  );
-                  return (
-                    <TreeView
-                      nodeLabel={label2}
-                      key={pro.MProcess}
-                      defaultCollapsed={true}
-                      onClick={() =>
-                        treeViewclickProcess(machine, pro.MProcess)
-                      }
-                    >
-                      {pro.material?.map((mat) => {
-                        const label3 = (
-                          <span className="node" style={{ fontSize: "12px" }}>
-                            {mat.Mtrl_Code}
-                          </span>
-                        );
-                        return (
-                          <TreeView
-                            nodeLabel={label3}
-                            key={mat.Mtrl_Code}
-                            defaultCollapsed={true}
-                            onClick={() =>
-                              treeViewclickMaterial(
-                                machine,
-                                pro.MProcess,
-                                mat.Mtrl_Code
-                              )
-                            }
-                          ></TreeView>
-                        );
-                      })}
-                    </TreeView>
-                  );
-                })}
-              </TreeView>
-            );
-          })}
+      {loading ? (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
         </div>
-        <div className="col-md-10">
-          <div style={{ height: "520px", overflow: "scroll" }}>
-            <BootstrapTable
-              keyField="Ncid"
-              columns={columns}
-              data={tableData}
-              striped
-              hover
-              condensed
-              selectRow={selectRow}
-              headerClasses="header-class tableHeaderBGColor"
-            ></BootstrapTable>
+      ) : (
+        <>
+          <h4 className="title">Shop Floor Material Allotment</h4>
+          <div className="row col-md-8 ">
+            <label className="col-md-2 ms-2">{props.formtype}</label>
+            <button
+              className=" col-md-3 button-style "
+              style={{ width: "100px" }}
+              onClick={allotMaterial}
+            >
+              Allot Material
+            </button>
+            <button
+              className="button-style  col-md-2"
+              style={{ width: "50px" }}
+              id="btnclose"
+              type="submit"
+              onClick={() => nav("/MaterialManagement")}
+            >
+              Close
+            </button>
           </div>
-        </div>
-      </div>
+          <div className="row mt-4">
+            <div className="col-md-2">
+              {treeData?.map((node, i) => {
+                const machine = node.machine;
+                const label = (
+                  <span className="node" style={{ fontSize: "12px" }}>
+                    {machine}
+                  </span>
+                );
+                return (
+                  <TreeView
+                    key={machine + "|" + i}
+                    nodeLabel={label}
+                    defaultCollapsed={true}
+                    onClick={() => treeViewclickMachine(machine)}
+                  >
+                    {node.process?.map((pro) => {
+                      const label2 = (
+                        <span className="node" style={{ fontSize: "12px" }}>
+                          {pro.MProcess}
+                        </span>
+                      );
+                      return (
+                        <TreeView
+                          nodeLabel={label2}
+                          key={pro.MProcess}
+                          defaultCollapsed={true}
+                          onClick={() =>
+                            treeViewclickProcess(machine, pro.MProcess)
+                          }
+                        >
+                          {pro.material?.map((mat) => {
+                            const label3 = (
+                              <span
+                                className="node"
+                                style={{ fontSize: "12px" }}
+                              >
+                                {mat.Mtrl_Code}
+                              </span>
+                            );
+                            return (
+                              <TreeView
+                                nodeLabel={label3}
+                                key={mat.Mtrl_Code}
+                                defaultCollapsed={true}
+                                onClick={() =>
+                                  treeViewclickMaterial(
+                                    machine,
+                                    pro.MProcess,
+                                    mat.Mtrl_Code
+                                  )
+                                }
+                              ></TreeView>
+                            );
+                          })}
+                        </TreeView>
+                      );
+                    })}
+                  </TreeView>
+                );
+              })}
+            </div>
+            <div className="col-md-10">
+              <div style={{ height: "520px", overflow: "scroll" }}>
+                <BootstrapTable
+                  keyField="Ncid"
+                  columns={columns}
+                  data={tableData}
+                  striped
+                  hover
+                  condensed
+                  selectRow={selectRow}
+                  headerClasses="header-class tableHeaderBGColor"
+                ></BootstrapTable>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -64,6 +64,7 @@ function PrintPartsDC(props) {
   useEffect(() => {
     fetchPDFData();
   }, []);
+
   return (
     <>
       <Modal show={props.printOpen} onHide={handleClose} fullscreen>

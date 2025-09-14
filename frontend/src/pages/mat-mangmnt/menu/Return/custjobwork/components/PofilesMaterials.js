@@ -72,7 +72,7 @@ function PofilesMaterials(props) {
         setAllData(data);
       });
 
-      // getAllMaterial for create return vocuher
+      // Fetch all material data
       getRequest(endpoints.getMtrlData, async (MtrlData) => {
         setObjMaterial(MtrlData);
       });

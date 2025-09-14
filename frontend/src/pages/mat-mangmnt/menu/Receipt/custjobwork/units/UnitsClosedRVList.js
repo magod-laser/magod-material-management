@@ -33,6 +33,7 @@ function UnitsClosedRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch all customers
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -41,6 +42,8 @@ function UnitsClosedRVList() {
       setCustdata(data);
     });
     setLoading(true);
+
+    // Fetch material receipt register by type
     getRequest(endpoints.getUnitsClosedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
@@ -71,6 +74,7 @@ function UnitsClosedRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Opens the Closed Sheet Unit page if a customer (receipt ID) is selected
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonClosedSheetUnit", {

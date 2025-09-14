@@ -60,6 +60,7 @@ export default function LocationList() {
       setShape(data);
     });
 
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;
@@ -98,6 +99,7 @@ export default function LocationList() {
           Capacity: inputData.capacity,
         };
         postRequest(endpoints.insertMaterialLocationList, paraData1, (data) => {
+          // Fetch all material location list
           getRequest(endpoints.getMaterialLocationList, (data) => {
             for (let i = 0; i < data.length; i++) {
               data[i].id = i + 1;
@@ -170,6 +172,7 @@ export default function LocationList() {
       };
       postRequest(endpoints.deleteMaterialLocationList, paraData1, (data) => {
         toast.success("Location Deleted");
+        // Fetch all material location list
         getRequest(endpoints.getMaterialLocationList, (data) => {
           for (let i = 0; i < data.length; i++) {
             data[i].id = i + 1;
@@ -196,6 +199,7 @@ export default function LocationList() {
           Capacity: inputData.capacity,
         };
         postRequest(endpoints.updateMaterialLocationList, paraData1, (data) => {
+          // Fetch all material location list
           getRequest(endpoints.getMaterialLocationList, (data) => {
             for (let i = 0; i < data.length; i++) {
               data[i].id = i + 1;
@@ -232,7 +236,7 @@ export default function LocationList() {
     if (
       e.which === 38 ||
       e.which === 40 ||
-      ["e", "E", "+", "-", "0"].includes(e.key)
+      ["e", "E", "+", "-"].includes(e.key)
     ) {
       e.preventDefault();
     }

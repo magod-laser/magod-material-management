@@ -14,6 +14,7 @@ function PartsReport() {
   let [custdata, setCustdata] = useState([]);
   let [custCode, setCustCode] = useState("");
 
+  // Fetch all customers
   async function fetchData() {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {

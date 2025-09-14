@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   title1: {
     width: "100%",
     marginTop: "6px",
-    marginLeft: "160px",
+    marginLeft: "140px",
     fontSize: "13px",
     fontWeight: "bolder",
     textDecoration: "underline",
@@ -40,14 +40,14 @@ const styles = StyleSheet.create({
 
   title2: {
     width: "100%",
-    marginLeft: "140px",
+    marginLeft: "135px",
     fontSize: "11px",
     fontWeight: "bold",
     fontFamily: "Helvetica-Bold",
   },
 
   line1: {
-    marginTop: "8px",
+    marginTop: "5px",
     fontWeight: "bold",
     width: "100%",
   },
@@ -56,11 +56,11 @@ const styles = StyleSheet.create({
   },
   line3: {
     width: "100%",
-    marginTop: "-7px",
+    marginTop: "-5px",
   },
   blockRightAlign: {
     width: "10%",
-    textAlign: "left",
+    textAlign: "right",
     marginLeft: "10px",
     marginTop: "10px",
     fontSize: "9px",
@@ -68,13 +68,13 @@ const styles = StyleSheet.create({
   },
   blockLeftAlign: {
     width: "20%",
-    marginLeft: "10px",
+    marginLeft: "40px",
     marginTop: "10px",
     fontSize: "9px",
   },
   blockLeftAlignBigger: {
     width: "50%",
-    marginLeft: "10px",
+    marginLeft: "50px",
     marginTop: "10px",
     fontSize: "9px",
   },
@@ -228,19 +228,19 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
                 <Text style={styles.title2}>{PDFData.RegisteredName}</Text>
               </View>
               <View style={{ justifyContent: "center" }}>
-                <Text style={{ ...styles.companyInfo, marginLeft: "100px" }}>
+                <Text style={{ ...styles.companyInfo, marginLeft: "120px" }}>
                   GSTIN: {PDFData.GST_No}, CIN: {PDFData.CIN_No}
                 </Text>
               </View>
 
               <View style={{ justifyContent: "center" }}>
-                <Text style={{ ...styles.companyInfo, marginLeft: "70px" }}>
+                <Text style={{ ...styles.companyInfo, marginLeft: "90px" }}>
                   {PDFData.RegistredOfficeAddress}
                 </Text>
               </View>
 
               <View style={{ justifyContent: "center" }}>
-                <Text style={{ ...styles.companyInfo }}>
+                <Text style={{ ...styles.companyInfo, marginLeft: "50px" }}>
                   {PDFData.PhonePrimary} {PDFData.PhoneSecondary},{" "}
                   {PDFData.Email}, {PDFData.URL}
                 </Text>
@@ -250,47 +250,49 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
           <Text style={styles.line1}>
             ___________________________________________________________________________________________________________________
           </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={[styles.blockRightAlign, { marginLeft: 20 }]}>
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>IV No</Text>
+              <Text style={styles.linegap}>Date</Text>
+              <Text style={styles.linegap}>Task No</Text>
+              <Text style={styles.linegap}>Program No</Text>
+              <Text style={styles.linegap}>Set Issued</Text>
+              <Text style={styles.linegap}>Set Returned</Text>
+            </View>
+            <View style={styles.blockLeftAlign}>
+              <Text>{formHeader?.IV_No}</Text>
+              <Text style={styles.linegap}>{formHeader.Issue_date}</Text>
+              <Text style={styles.linegap}>{formHeader.TaskNo}</Text>
+              <Text style={styles.linegap}>{formHeader.NCProgramNo}</Text>
+              <Text style={styles.linegap}>{formHeader.QtyIssued}</Text>
+            </View>
 
-          <View style={styles.blockRightAlign}>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>IV No</Text>
-            <Text style={styles.linegap}>Date</Text>
-            <Text style={styles.linegap}>Task No</Text>
-            <Text style={styles.linegap}>Program No</Text>
-            <Text style={styles.linegap}>Set Issued</Text>
-            <Text style={styles.linegap}>Set Returned</Text>
-          </View>
-          <View style={styles.blockLeftAlign}>
-            <Text>{formHeader?.IV_No}</Text>
-            <Text style={styles.linegap}>{formHeader.Issue_date}</Text>
-            <Text style={styles.linegap}>{formHeader.TaskNo}</Text>
-            <Text style={styles.linegap}>{formHeader.NCProgramNo}</Text>
-            <Text style={styles.linegap}>{formHeader.QtyIssued}</Text>
+            <View style={[styles.blockRightAlign, { marginLeft: 100 }]}>
+              <Text>Customer</Text>
+              <Text style={styles.linegap}>Assy Name</Text>
+              <Text style={styles.linegap}>Operation</Text>
+              <Text style={styles.linegap}>Mtrl Code</Text>
+              <Text style={styles.linegap}>Machine</Text>
+              <Text style={styles.linegap}>Remarks</Text>
+            </View>
+
+            <View style={styles.blockLeftAlignBigger}>
+              <Text>{formHeader.Cust_name}</Text>
+              <Text style={styles.linegap}>{formHeader.AssyName}</Text>
+              <Text style={styles.linegap}>{formHeader.Operation}</Text>
+              <Text style={styles.linegap}>{formHeader.Mtrl_Code}</Text>
+              <Text style={styles.linegap}>{formHeader.Machine}</Text>
+              <Text style={styles.linegap}>{formHeader.Remarks}</Text>
+            </View>
           </View>
 
-          <View style={styles.blockRightAlign}>
-            <Text>Customer</Text>
-            <Text style={styles.linegap}>Assy Name</Text>
-            <Text style={styles.linegap}>Operation</Text>
-            <Text style={styles.linegap}>Mtrl Code</Text>
-            <Text style={styles.linegap}>Machine</Text>
-            <Text style={styles.linegap}>Remarks</Text>
-          </View>
-
-          <View style={styles.blockLeftAlignBigger}>
-            <Text>{formHeader.Cust_name}</Text>
-            <Text style={styles.linegap}>{formHeader.AssyName}</Text>
-            <Text style={styles.linegap}>{formHeader.Operation}</Text>
-            <Text style={styles.linegap}>{formHeader.Mtrl_Code}</Text>
-            <Text style={styles.linegap}>{formHeader.Machine}</Text>
-            <Text style={styles.linegap}>{formHeader.Remarks}</Text>
-          </View>
           <Text style={styles.line1}>
             ___________________________________________________________________________________________________________________
           </Text>
           <Text style={styles.assemblyPartList}>Assembly Parts List</Text>
           <Text style={styles.partQuantity}>Part Quantity</Text>
           {/* Table Header */}
-          <View></View>
+
           <Text style={styles.partID}>Part ID</Text>
           <Text style={styles.rvNO}>RV No</Text>
           <Text style={styles.issued}>Issued</Text>
@@ -328,6 +330,42 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
               </React.Fragment>
             );
           })}
+
+          {/* {Object.values(groupedTableData).map((group, groupIndex) => {
+            return (
+              <React.Fragment key={groupIndex}>
+                {group.map((item, itemIndex) => {
+                  const renderPartId = itemIndex === 0;
+                  return (
+                    <View key={itemIndex} style={{ flexDirection: "row" }}>
+                      <Text style={styles.partIDVal}>
+                        {renderPartId && item.PartId}
+                      </Text>
+
+                     
+                      <Text
+                        style={{
+                          ...styles.rvNOVal,
+                          borderBottom: "1px solid black",
+                          paddingBottom: 2,
+                        }}
+                      >
+                        {item.RV_No} ({item.CustDocuNo})
+                      </Text>
+
+                      <Text style={styles.issuedVal}>{item.QtyIssued}</Text>
+                      <Text style={styles.usedVal}></Text>
+                      <Text style={styles.returnedVal}></Text>
+                    </View>
+                  );
+                })}
+
+                {groupIndex < Object.values(groupedTableData).length - 1 && (
+                  <Text style={styles.linegap}></Text>
+                )}
+              </React.Fragment>
+            );
+          })} */}
 
           <Text style={styles.line2}>
             ___________________________________________________________________________________________________________________

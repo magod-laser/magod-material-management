@@ -60,6 +60,7 @@ function PurchasePartsNew() {
     address: "",
   });
 
+  // Fetch all customers
   async function fetchCustData() {
     getRequest(endpoints.getCustomers, (data) => {
       setCustdata(data);
@@ -130,6 +131,7 @@ function PurchasePartsNew() {
     },
   ];
 
+  // Handles changes to part input fields, updates state, recalculates rejected qty and total weight
   const changePartHandle = (e) => {
     const { value, name } = e.target;
 
@@ -294,6 +296,7 @@ function PurchasePartsNew() {
 
   const insertHeaderFunction = () => {
     //to save data
+    // Insert header for material receipt register
     postRequest(
       endpoints.insertHeaderMaterialReceiptRegister,
       formHeader,
@@ -315,6 +318,7 @@ function PurchasePartsNew() {
     );
   };
 
+  // Updates the header record in the Material Receipt Register and shows success/error message
   const updateHeaderFunction = () => {
     postRequest(
       endpoints.updateHeaderMaterialReceiptRegister,
@@ -331,6 +335,7 @@ function PurchasePartsNew() {
     );
   };
 
+  // Validates header and part details, then saves or updates the Material Receipt Register accordingly
   const saveButtonState = async (e) => {
     e.preventDefault();
     if (formHeader.customer.length == 0) {
@@ -387,6 +392,7 @@ function PurchasePartsNew() {
     }
   };
 
+  // Validates part details and customer weight before allowing the Material Receipt allotment modal to open
   const allotRVButtonState = (e) => {
     e.preventDefault();
 
@@ -435,6 +441,7 @@ function PurchasePartsNew() {
     setDeleteRvModalOpen(true);
   };
 
+  // Deletes the selected Material Receipt record and reloads the page
   const deleteRVButtonState = () => {
     postRequest(
       endpoints.deleteHeaderMaterialReceiptRegisterAndDetails,

@@ -35,6 +35,7 @@ function PDraftRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch all customers
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -75,6 +76,7 @@ function PDraftRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Opens the Draft Part List page if a table row (receipt ID) is selected
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonDraftPartList", {

@@ -1,6 +1,6 @@
 const shopFloorAllotmentRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
-const { infoLogger, errorLogger } = require("../../helpers/logger");
+const { logger, infoLogger, errorLogger } = require("../../helpers/logger");
 
 // Fetch shop floor allotment first table by NCID
 shopFloorAllotmentRouter.get(
@@ -73,51 +73,54 @@ shopFloorAllotmentRouter.get(
   async (req, res, next) => {
     const { id } = req.query;
 
-    infoLogger.info(
-      "Request received for available quantity of shop floor allotment part",
-      {
-        endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
-        method: req.method,
-        CustBOM_Id: id,
-      }
-    );
+    infoLogger.info("Requested available quantity for Shop Floor Allotment", {
+      endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
+      method: req.method,
+      id,
+    });
 
     try {
-      const query = `
-        SELECT SUM(m.QtyAccepted - m.QtyIssued - m.QtyReturned) AS QtyAvailable
-        FROM magodmis.mtrl_part_receipt_details m
-        JOIN magodmis.material_receipt_register m1 ON m.RvID = m1.RvID
-        WHERE m.CustBOM_Id = ? 
-          AND m1.RVStatus = 'Received' 
-          AND m.QtyAccepted > m.QtyIssued + m.QtyReturned
-      `;
+      misQueryMod(
+        `SELECT SUM(m.QtyAccepted - m.QtyIssued - m.QtyReturned) AS QtyAvialable
+         FROM magodmis.mtrl_part_receipt_details m
+         JOIN magodmis.material_receipt_register m1 ON m.RvID = m1.RvID
+         WHERE m.CustBOM_Id = ?
+           AND m1.RVStatus = 'Received'
+           AND m.QtyAccepted > m.QtyIssued + m.QtyReturned`,
+        [id],
+        (err, data) => {
+          if (err) {
+            errorLogger.error(
+              "Error fetching available quantity for Shop Floor Allotment",
+              err,
+              {
+                endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
+                id,
+              }
+            );
+            return res
+              .status(500)
+              .json({ Status: "Error", Message: "Database error" });
+          }
 
-      misQueryMod(query, [id], (err, data) => {
-        if (err) {
-          errorLogger.error("Database error fetching available quantity", err, {
-            endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
-            CustBOM_Id: id,
-          });
-          return res
-            .status(500)
-            .json({ Status: "Error", Message: "Database error" });
+          infoLogger.info(
+            "Fetched available quantity for Shop Floor Allotment successfully",
+            {
+              endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
+              id,
+              records: data.length,
+            }
+          );
+          res.send(data);
         }
-
-        infoLogger.info("Successfully fetched available quantity", {
-          endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
-          CustBOM_Id: id,
-          QtyAvailable: data?.[0]?.QtyAvailable || 0,
-        });
-
-        res.send(data || [{ QtyAvailable: 0 }]);
-      });
+      );
     } catch (error) {
       errorLogger.error(
-        "Unexpected error in getShopFloorAllotmentPartFirstTableQtyAvl",
+        "Unexpected error fetching available quantity for Shop Floor Allotment",
         error,
         {
           endpoint: "/getShopFloorAllotmentPartFirstTableQtyAvl",
-          CustBOM_Id: id,
+          id,
         }
       );
       next(error);

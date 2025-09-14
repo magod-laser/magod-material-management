@@ -19,6 +19,7 @@ function ReturnNew() {
   let [custECC, setCustECCNo] = useState("");
   let [custGST, setCustGSTNo] = useState("");
 
+  // Fetch all customers
   async function fetchData() {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {

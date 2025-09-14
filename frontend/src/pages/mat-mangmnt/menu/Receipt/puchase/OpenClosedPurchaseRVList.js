@@ -37,6 +37,7 @@ function OpenClosedPurchaseRVList() {
   });
 
   async function fetchData() {
+    // Fetch material receipt register by RvID
     const url =
       endpoints.getByTypeMaterialReceiptRegisterByRvID +
       "?id=" +

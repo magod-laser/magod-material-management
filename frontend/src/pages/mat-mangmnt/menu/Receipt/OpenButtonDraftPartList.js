@@ -166,6 +166,7 @@ function OpenButtonDraftPartList() {
     },
   ];
 
+  // Handles part selection, updates input state and database
   const changePartID = (selected) => {
     setSelectedPart(selected);
 

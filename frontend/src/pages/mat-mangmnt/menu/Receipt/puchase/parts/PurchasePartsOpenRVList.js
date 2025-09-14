@@ -29,6 +29,7 @@ function PurchasePartsOpenRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch material receipt register by type
   const fetchData = () => {
     setLoading(true);
     getRequest(endpoints.getPartsOpenedPurchaseMaterial, (data) => {
@@ -55,6 +56,7 @@ function PurchasePartsOpenRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Navigates to the Closed Part List page with the selected receipt ID
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenClosedPartList", {
       state: { id: data.RvID },

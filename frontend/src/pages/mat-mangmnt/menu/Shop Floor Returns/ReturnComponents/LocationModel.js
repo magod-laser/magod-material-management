@@ -55,6 +55,7 @@ function LocationModel({ show, setShow, scrapModal }) {
   let [locationData, setLocationData] = useState([]);
 
   useEffect(() => {
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });

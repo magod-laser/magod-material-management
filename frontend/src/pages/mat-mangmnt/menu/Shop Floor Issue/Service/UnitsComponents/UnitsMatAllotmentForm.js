@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import YesNoModal from "../../../../components/YesNoModal";
 import { formatDate } from "../../../../../../utils";
 import OkModal from "../../../../components/OkModal";
+import { HashLoader } from "react-spinners";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -27,7 +28,8 @@ function UnitsMatAllotmentForm() {
   const [selectedRowsInSecondTable, setSelectedRowsInSecondTable] = useState(
     []
   );
-  const [loadingFirstTable, setLoadingFirstTable] = useState(true);
+
+  const [loading, setLoading] = useState(false);
 
   const [show, setShow] = useState(false);
   const [showok, setShowok] = useState(false);
@@ -36,6 +38,7 @@ function UnitsMatAllotmentForm() {
   let unitName = storedData.data[0]["UnitName"];
 
   const fetchData = async () => {
+    setLoading(true);
     //get formHeader data
     let url1 = endpoints.getRowByNCID + "?id=" + location.state.ncid;
 
@@ -52,8 +55,6 @@ function UnitsMatAllotmentForm() {
           customer: data1.Cust_name,
         });
       });
-
-      setLoadingFirstTable(true);
 
       //get first table data
       let url3 =
@@ -72,7 +73,7 @@ function UnitsMatAllotmentForm() {
         data.Para2;
       getRequest(url3, async (data2) => {
         setFirstTable(data2);
-        setLoadingFirstTable(false);
+        setLoading(false);
         if (data2.length == 0) {
           toast.warning(
             "There is no material to allot for this program. Check if you have added the material to customer stock?."
@@ -512,238 +513,279 @@ function UnitsMatAllotmentForm() {
       />
 
       <div>
-        <h4 className="title">Material Allotment Form</h4>
-
-        <div className="row">
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Task No
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              type="text"
-              value={formHeader.TaskNo}
-              disabled
-            />
+        {loading ? (
+          <div className="full-page-loader">
+            <HashLoader color="#3498db" loading={true} size={60} />
+            <p className="mt-2">Loading, please wait...</p>
           </div>
+        ) : (
+          <>
+            <h4 className="title">Material Allotment Form</h4>
 
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Customer
-            </label>
+            <div className="row">
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Task No
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              type="text"
-              value={formHeader.customer}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  type="text"
+                  value={formHeader.TaskNo}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              NC Program No
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Customer
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.NCProgramNo}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  type="text"
+                  value={formHeader.customer}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Material Code
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  NC Program No
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Mtrl_Code}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.NCProgramNo}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "12px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Priority
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Material Code
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Priority}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Mtrl_Code}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "25px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Para1
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "12px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Priority
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Para1}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Priority}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "50px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Machine
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "25px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Para1
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Machine}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Para1}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "40px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Quantity
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "50px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Machine
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Qty}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Machine}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "17px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Status
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "40px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Quantity
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.PStatus}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Qty}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "30px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Para2
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "17px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Status
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Para2}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.PStatus}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "55px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Process
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "30px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Para2
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.MProcess}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Para2}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "45px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Allotted
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "55px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Process
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.QtyAllotted}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.MProcess}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-3" style={{ gap: "15px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Source
-            </label>
+              <div className="d-flex col-md-3" style={{ gap: "45px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Allotted
+                </label>
 
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.CustMtrl}
-              disabled
-            />
-          </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.QtyAllotted}
+                  disabled
+                />
+              </div>
 
-          <div className="d-flex col-md-8 ">
-            <button className="button-style " onClick={allotMaterial}>
-              Allot Material
-            </button>
-            <button className="button-style " onClick={CancelAllotMaterial}>
-              Cancel Allot
-            </button>
+              <div className="d-flex col-md-3" style={{ gap: "15px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Source
+                </label>
 
-            <button className="button-style " onClick={issueToProduction}>
-              Issue to Production
-            </button>
-            <button
-              className="button-style "
-              id="btnclose"
-              type="submit"
-              onClick={() => nav("/MaterialManagement")}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.CustMtrl}
+                  disabled
+                />
+              </div>
 
-        <div className="row mt-4">
-          <div className="col-md-7">
-            <div
-              style={{
-                height: "400px",
-                overflowY: "scroll",
-                marginTop: "10px",
-              }}
-            >
-              <BootstrapTable
-                keyField="MtrlStockID"
-                columns={columns1}
-                data={firstTable}
-                striped
-                hover
-                condensed
-                selectRow={selectRow1}
-                headerClasses="header-class tableHeaderBGColor"
-                noDataIndication={() =>
-                  loadingFirstTable ? (
-                    <div className="text-center py-2">Loading...</div>
-                  ) : (
-                    "No material data available"
-                  )
-                }
-              />
+              <div className="d-flex col-md-8 ">
+                <button className="button-style " onClick={allotMaterial}>
+                  Allot Material
+                </button>
+                <button className="button-style " onClick={CancelAllotMaterial}>
+                  Cancel Allot
+                </button>
+
+                <button className="button-style " onClick={issueToProduction}>
+                  Issue to Production
+                </button>
+                <button
+                  className="button-style "
+                  id="btnclose"
+                  type="submit"
+                  onClick={() => nav("/MaterialManagement")}
+                >
+                  Close
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="col-md-5">
-            <div
-              style={{
-                height: "400px",
-                overflowY: "scroll",
-                marginTop: "10px",
-              }}
-            >
-              <BootstrapTable
-                keyField="MtrlStockID"
-                columns={columns2}
-                data={secondTable}
-                striped
-                hover
-                condensed
-                selectRow={selectRow2}
-                headerClasses="header-class tableHeaderBGColor"
-              ></BootstrapTable>
+
+            <div className="row mt-4">
+              <div className="col-md-7">
+                <div
+                  style={{
+                    height: "400px",
+                    overflowY: "scroll",
+                    marginTop: "10px",
+                  }}
+                >
+                  <BootstrapTable
+                    keyField="MtrlStockID"
+                    columns={columns1}
+                    data={firstTable}
+                    striped
+                    hover
+                    condensed
+                    selectRow={selectRow1}
+                    headerClasses="header-class tableHeaderBGColor"
+                  />
+                </div>
+              </div>
+              <div className="col-md-5">
+                <div
+                  style={{
+                    height: "400px",
+                    overflowY: "scroll",
+                    marginTop: "10px",
+                  }}
+                >
+                  <BootstrapTable
+                    keyField="MtrlStockID"
+                    columns={columns2}
+                    data={secondTable}
+                    striped
+                    hover
+                    condensed
+                    selectRow={selectRow2}
+                    headerClasses="header-class tableHeaderBGColor"
+                  ></BootstrapTable>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </>
   );

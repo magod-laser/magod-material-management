@@ -8,6 +8,7 @@ import { getRequest, postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
 
 export default function ResizeModal(props) {
+  // Close modal, reset states, and refresh customer data
   const handleClose = () => {
     props.changeCustomer(props.selectedCust);
     setTableData([]);
@@ -54,6 +55,7 @@ export default function ResizeModal(props) {
 
   const [showYesNo, setShowYesNo] = useState(false);
 
+  // Fetch all material location list
   const fetchData = () => {
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
@@ -63,6 +65,7 @@ export default function ResizeModal(props) {
     fetchData();
   }, []);
 
+  // Add a new blank row for resized material entry
   const addNew = () => {
     let newRow = {
       DynamicPara1: 100,
@@ -74,6 +77,7 @@ export default function ResizeModal(props) {
     setTableData([...tableData, newRow]);
   };
 
+  // Select a row from the table and update input form data
   const selectRow = (val, key) => {
     setSelectedTableRow([
       {
@@ -99,12 +103,15 @@ export default function ResizeModal(props) {
     });
   };
 
+  // Validate input values when leaving a field
   const focusOutEvent = (e) => {
     const { value, name } = e.target;
     if (value < 10) {
       toast.error("Value should be more than 10 mm");
     }
   };
+
+  // Handle input changes and recalculate weight dynamically
   const changeHandler = (e) => {
     const { value, name } = e.target;
 
@@ -144,6 +151,7 @@ export default function ResizeModal(props) {
     });
   };
 
+  // Validate split material entries before showing confirmation modal
   const splitMaterialButton = () => {
     let SheetArea =
       parseFloat(props?.selectedTableRows[0]?.DynamicPara1) *
@@ -187,6 +195,7 @@ export default function ResizeModal(props) {
     }
   };
 
+  // Handle Yes/No response for material split confirmation
   const modalYesNoResponse = (msg) => {
     if (msg == "yes") {
       //insert mtrl stock list
@@ -271,6 +280,7 @@ export default function ResizeModal(props) {
     }
   };
 
+  // Delete selected row from the table
   const deleteItem = () => {
     const newArray = [];
     for (let i = 0; i < tableData.length; i++) {
@@ -294,6 +304,7 @@ export default function ResizeModal(props) {
     });
   };
 
+  // Prevent invalid numeric inputs (arrows, e, +, -)
   const numbValidations = (e) => {
     if (
       e.which === 38 ||

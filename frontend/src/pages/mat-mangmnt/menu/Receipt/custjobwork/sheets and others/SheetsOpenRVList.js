@@ -32,6 +32,7 @@ function SheetsOpenRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch all customers
   const fetchData = () => {
     getRequest(endpoints.getCustomers, (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -40,6 +41,8 @@ function SheetsOpenRVList() {
       setCustdata(data);
     });
     setLoading(true);
+
+    // Fetch material receipt register by type
     getRequest(endpoints.getSheetsOpenedMaterial, (data) => {
       setTableData(data);
       setAllData(data);
@@ -70,6 +73,7 @@ function SheetsOpenRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Opens the Open Sheet Unit page if a customer (receipt ID) is selected
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenSheetUnit", {
       state: { id: data.RvID },

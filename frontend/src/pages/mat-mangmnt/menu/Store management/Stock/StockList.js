@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
 import PrintReportStockList from "../../../print/report/PrintReportStockList";
 import PrintReportFullStockList from "../../../print/report/PrintReportFullStockList";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
+import PrintReportStockListTable from "../../../print/report/PrintReportStockListTable";
+import PrintReportFullStockListTable from "../../../print/report/PrintReportFullStockListTable";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -20,6 +24,7 @@ function StockList(props) {
   const [thirdAllData, setThirdAllData] = useState([]);
   let [custdata, setCustdata] = useState([]);
   let [custCode, setCustCode] = useState("0");
+  const [PDFData, setPDFData] = useState({});
 
   let [customerDetails, setCustomerDetails] = useState({
     customerName: "",
@@ -30,7 +35,7 @@ function StockList(props) {
   const [printSelectedStockOpen, setprintSelectedStockOpen] = useState(false);
   const [printFullStockListOpen, setPrintFullStockListOpen] = useState(false);
   const fetchData = async () => {
-    //fetch customer
+    //fetch all customer
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].label = data[i].Cust_name;
@@ -305,10 +310,6 @@ function StockList(props) {
   });
   delay(300);
 
-  const selectedStock = async () => {
-    setprintSelectedStockOpen(true);
-  };
-
   let fullStockTable = [];
   let fullStockScrapTable = [];
   for (let i = 0; i < firstTable.length; i++) {
@@ -359,10 +360,6 @@ function StockList(props) {
 
   delay(500);
 
-  const fullStock = async () => {
-    setPrintFullStockListOpen(true);
-  };
-
   const [sort1, setSort1] = React.useState({
     dataField: "id",
     order: "asc",
@@ -389,6 +386,100 @@ function StockList(props) {
   const onSortChange3 = (dataField, order) => {
     setSort3({ dataField, order });
   };
+
+  function fetchPDFData() {
+    postRequest(endpoints.getPDFData, {}, (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer1 = async () => {
+    try {
+      const adjustment = "SelectedStock";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintReportStockListTable
+          totQty1={tq1}
+          totWeight1={tw1}
+          totQty2={tq2}
+          totWeight2={tw2}
+          tableData={tblDataTbl}
+          scrapData={scrapDataTbl}
+          scrapFlag={scrapDataTbl.length}
+          customerDetails={customerDetails}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  const savePdfToServer2 = async () => {
+    try {
+      const adjustment = "FullStock";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintReportFullStockListTable
+          customerDetails={customerDetails}
+          fullStockTable={fullStockTable}
+          fullStockScrapTable={fullStockScrapTable}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  const selectedStock = async () => {
+    savePdfToServer1();
+    setprintSelectedStockOpen(true);
+  };
+
+  const fullStock = async () => {
+    savePdfToServer2();
+    setPrintFullStockListOpen(true);
+  };
+
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
   return (
     <>
       <div>

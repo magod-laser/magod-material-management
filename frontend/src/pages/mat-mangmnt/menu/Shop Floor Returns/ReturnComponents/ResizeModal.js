@@ -26,6 +26,7 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
   }, [row]);
 
   useEffect(() => {
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });

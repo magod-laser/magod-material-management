@@ -30,6 +30,7 @@ function ReturnListing(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(100);
 
+  // Fetch all customers
   async function fetchData() {
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -260,9 +261,6 @@ function ReturnListing(props) {
               condensed
               selectRow={selectRow}
               headerClasses="header-class tableHeaderBGColor"
-              noDataIndication={() =>
-                loading ? "Fetching data..." : "No data available"
-              }
             />
           </div>
           {pageCount > 1 && (
