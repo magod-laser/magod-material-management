@@ -19,7 +19,7 @@ shopFloorReturnRouter.get("/getFirstMainTable", async (req, res, next) => {
               magodmis.ncprograms n,
               magodmis.cust_data c
          WHERE n.NcId = s.NcId 
-           AND s.QtyReturned <= s.QtyIssued
+           AND s.QtyReturned < s.QtyIssued
            AND s.Status not like 'Closed' 
            AND n.Machine is not null 
            AND c.cust_code = n.Cust_code

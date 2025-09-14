@@ -205,6 +205,7 @@ function OpenButtonDraftSheetUnit(props) {
       formHeader.calcWeight = data.TotalCalculatedWeight;
       formHeader.type = data.Type;
 
+      // Fetch all customers
       getRequest(endpoints.getCustomers, (data1) => {
         const found = data1.find((obj) => obj.Cust_Code === data.Cust_Code);
         formHeader.address = found.Address;
@@ -319,9 +320,12 @@ function OpenButtonDraftSheetUnit(props) {
       });
     });
 
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });
+
+    // Fetch all material data
     getRequest(endpoints.getMtrlData, (data) => {
       setMtrlDetails(data);
     });
@@ -331,6 +335,7 @@ function OpenButtonDraftSheetUnit(props) {
     fetchData();
   }, []);
 
+  // Updates selected material, sets related shape/parameters, and updates database & table
   const changeMtrl = async (name, value) => {
     const newSelectedMtrl = value ? [{ Mtrl_Code: value }] : [];
     setSelectedMtrl(newSelectedMtrl);
@@ -498,6 +503,7 @@ function OpenButtonDraftSheetUnit(props) {
     });
   };
 
+  // Updates the header record and shows success/error message
   const updateHeaderFunction = () => {
     postRequest(
       endpoints.updateHeaderMaterialReceiptRegister,

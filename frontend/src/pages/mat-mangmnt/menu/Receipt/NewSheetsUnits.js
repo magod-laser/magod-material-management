@@ -194,6 +194,7 @@ function NewSheetsUnits(props) {
     },
   ];
 
+  // Fetch all customers
   async function fetchData() {
     getRequest(endpoints.getCustomers, (data) => {
       if (props.type2 === "purchase") {
@@ -205,9 +206,11 @@ function NewSheetsUnits(props) {
       }
       setCustdata(data);
     });
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });
+    // Fetch all material data
     getRequest(endpoints.getMtrlData, (data) => {
       setMtrlDetails(data);
     });
@@ -217,6 +220,7 @@ function NewSheetsUnits(props) {
     fetchData();
   }, []);
 
+  // Updates form header when a customer is selected
   let changeCustomer = async (e) => {
     const found = custdata.find((obj) => obj.Cust_Code === e[0].Cust_Code);
 
@@ -230,6 +234,7 @@ function NewSheetsUnits(props) {
     });
   };
 
+  // Updates form header when customer selection changes
   let changeCustomer1 = async (e) => {
     e.preventDefault();
     const { value, name } = e.target;
@@ -245,6 +250,7 @@ function NewSheetsUnits(props) {
     });
   };
 
+  // Handles material selection and updates part details, shape, and UI labels
   let changeMtrl = async (name, value) => {
     const newSelectedMtrl = value ? [{ Mtrl_Code: value }] : [];
     setSelectedMtrl(newSelectedMtrl);
@@ -410,6 +416,7 @@ function NewSheetsUnits(props) {
     });
   };
 
+  // Inserts header data into the database and updates state
   const insertHeaderFunction = () => {
     //to save data
     postRequest(
@@ -433,6 +440,8 @@ function NewSheetsUnits(props) {
       }
     );
   };
+
+  // Updates header data in the database and updates state
   const updateHeaderFunction = () => {
     postRequest(
       endpoints.updateHeaderMaterialReceiptRegister,
@@ -448,6 +457,8 @@ function NewSheetsUnits(props) {
       }
     );
   };
+
+  // Validates form and saves or updates header and material data
   const saveButtonState = async (e) => {
     e.preventDefault();
     if (formHeader.customer.length == 0) {
@@ -506,6 +517,7 @@ function NewSheetsUnits(props) {
     }
   };
 
+  // Insert a running number row
   const getRVNo = async () => {
     const requestData = {
       unit: userData.UnitName,
@@ -518,6 +530,7 @@ function NewSheetsUnits(props) {
     postRequest(endpoints.insertRunNoRow, requestData, async (data) => {});
   };
 
+  // Validates material data and opens RV allotment modal if all checks pass
   const allotRVButtonState = (e) => {
     e.preventDefault();
     getRVNo();
@@ -616,6 +629,7 @@ function NewSheetsUnits(props) {
     setDeleteRvModalOpen(true);
   };
 
+  // Deletes RV record and redirects based on type
   const deleteRVButtonState = () => {
     postRequest(
       endpoints.deleteHeaderMaterialReceiptRegisterAndDetails,
@@ -643,6 +657,7 @@ function NewSheetsUnits(props) {
     );
   };
 
+  // Adds a new blank material row to the table
   const addNewMaterial = (e) => {
     setBoolVal3(false);
 
@@ -712,6 +727,7 @@ function NewSheetsUnits(props) {
     });
   };
 
+  // Updates material row values and recalculates weights
   const changeMaterialHandle = async (e, id) => {
     const { value, name } = e.target;
 
@@ -1009,6 +1025,7 @@ function NewSheetsUnits(props) {
     },
   };
 
+  // Adds selected material to stock and updates related data
   const addToStock = async () => {
     if (Object.keys(mtrlStock).length === 0) {
       toast.error("Please Select Material");
@@ -1083,6 +1100,7 @@ function NewSheetsUnits(props) {
     }
   };
 
+  // Removes selected material from stock after validation
   const removeStock = async () => {
     if (Object.keys(mtrlStock).length === 0) {
       toast.error("Please Select Material");
@@ -1147,6 +1165,7 @@ function NewSheetsUnits(props) {
     }
   };
 
+  // Updates stock register after stock removal
   const updateStockRegister = async () => {
     try {
       const requestData = {
@@ -1163,6 +1182,7 @@ function NewSheetsUnits(props) {
     }
   };
 
+  // Deletes selected material and updates header weights
   const handleYes = () => {
     if (inputPart.id.length === 0) {
       toast.error("Select Material");

@@ -3,6 +3,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../../../utils";
 import { toast } from "react-toastify";
+import { HashLoader } from "react-spinners";
+import ReactPaginate from "react-paginate";
 
 const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -14,6 +16,9 @@ function ShopIssueIVList(props) {
   const [issueIDVal, setIssueIDVal] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const [perPage] = useState(100);
+
   const fetchData = () => {
     setLoading(true);
     let url =
@@ -23,6 +28,7 @@ function ShopIssueIVList(props) {
     getRequest(url, (data) => {
       setTableData(data);
       setLoading(false);
+      setCurrentPage(0);
     });
   };
   useEffect(() => {
@@ -118,174 +124,204 @@ function ShopIssueIVList(props) {
       );
     }
   };
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected);
+  };
+
+  const pageCount = Math.ceil(tableData.length / perPage);
+  const startIndex = currentPage * perPage;
+  const currentPageData = tableData.slice(startIndex, startIndex + perPage);
+
   return (
     <div>
-      <>
-        <h4 className="title">Parts Issue Vouchers List </h4>
-        <div className="row">
-          <div className="col-md-7 col-sm-12">
-            <div style={{ height: "420px", overflowY: "scroll" }}>
-              <BootstrapTable
-                keyField="IssueID"
-                columns={columns}
-                data={tableData}
-                striped
-                hover
-                condensed
-                selectRow={selectRow}
-                headerClasses="header-class tableHeaderBGColor"
-                noDataIndication={() =>
-                  loading ? (
-                    <div className="text-center py-2">Loading...</div>
-                  ) : (
-                    "No issue vouchers found."
-                  )
-                }
-              ></BootstrapTable>
-            </div>
-          </div>
-
-          <div className="col-md-5 col-sm-12">
-            <div className="ip-box form-bg" style={{ height: "420px" }}>
-              <div className="row justify-content-center mt-2">
-                <button
-                  onClick={openButton}
-                  className="col-md-6 button-style"
-                  style={{ width: "55px" }}
-                >
-                  Open
-                </button>
-                <button
-                  className="col-md-6 button-style "
-                  id="btnclose"
-                  type="submit"
-                  onClick={() => nav("/MaterialManagement")}
-                  style={{ width: "55px" }}
-                >
-                  Close
-                </button>
-              </div>
-              <div className="row">
-                <div className="col-md-4 mt-3">
-                  <label className="form-label">Customer</label>
-                </div>
-                <div className="col-md-8">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.Cust_Name}
-                  />
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Issue Vr No</label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.IV_No}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Vr Date</label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.Issue_date}
-                  />
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Program No</label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.NC_ProgramNo}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label
-                    className="form-label"
-                    style={{ whiteSpace: "nowrap" }}
-                  >
-                    Assembly Name
-                  </label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.AssyName}
-                  />
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Operation</label>
-                </div>
-
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.Operation}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Material</label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.Mtrl_Code}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Allotted</label>
-                </div>
-                <div className="col-md-8 ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.QtyIssued}
-                  />
-                </div>
-              </div>
-              <div className="row mb-4 ">
-                <div className="col-md-4 mt-2">
-                  <label className="form-label">Returned</label>
-                </div>
-                <div className="col-md-8  ">
-                  <input
-                    className="input-disabled mt-3"
-                    disabled
-                    value={rowData.QtyReturned}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+      {loading ? (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
         </div>
-      </>
+      ) : (
+        <>
+          <h4 className="title">Parts Issue Vouchers List </h4>
+          <div className="row">
+            <div className="col-md-7 col-sm-12">
+              <div style={{ height: "420px", overflowY: "scroll" }}>
+                <BootstrapTable
+                  keyField="IssueID"
+                  columns={columns}
+                  data={currentPageData}
+                  striped
+                  hover
+                  condensed
+                  selectRow={selectRow}
+                  headerClasses="header-class tableHeaderBGColor"
+                ></BootstrapTable>
+              </div>
+              {pageCount > 1 && (
+                <ReactPaginate
+                  previousLabel={"Previous"}
+                  nextLabel={"Next"}
+                  breakLabel={"..."}
+                  pageCount={pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={handlePageChange}
+                  containerClassName={"pagination"}
+                  activeClassName={"active"}
+                  previousClassName={
+                    currentPage === 0 ? "pagination__link--disabled" : ""
+                  }
+                  nextClassName={
+                    currentPage === pageCount - 1
+                      ? "pagination__link--disabled"
+                      : ""
+                  }
+                />
+              )}
+            </div>
+
+            <div className="col-md-5 col-sm-12">
+              <div className="ip-box form-bg" style={{ height: "420px" }}>
+                <div className="row justify-content-center mt-2">
+                  <button
+                    onClick={openButton}
+                    className="col-md-6 button-style"
+                    style={{ width: "55px" }}
+                  >
+                    Open
+                  </button>
+                  <button
+                    className="col-md-6 button-style "
+                    id="btnclose"
+                    type="submit"
+                    onClick={() => nav("/MaterialManagement")}
+                    style={{ width: "55px" }}
+                  >
+                    Close
+                  </button>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mt-3">
+                    <label className="form-label">Customer</label>
+                  </div>
+                  <div className="col-md-8">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.Cust_Name}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Issue Vr No</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.IV_No}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Vr Date</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.Issue_date}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Program No</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.NC_ProgramNo}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label
+                      className="form-label"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      Assembly Name
+                    </label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.AssyName}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Operation</label>
+                  </div>
+
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.Operation}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Material</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.Mtrl_Code}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Allotted</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.QtyIssued}
+                    />
+                  </div>
+                </div>
+                <div className="row mb-4 ">
+                  <div className="col-md-4 mt-2">
+                    <label className="form-label">Returned</label>
+                  </div>
+                  <div className="col-md-8  ">
+                    <input
+                      className="input-disabled mt-3"
+                      disabled
+                      value={rowData.QtyReturned}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

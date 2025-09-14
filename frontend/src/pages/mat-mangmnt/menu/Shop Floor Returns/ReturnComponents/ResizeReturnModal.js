@@ -65,6 +65,7 @@ function ResizeReturnModal({
   const [quantityEnabled, setQuantityEnabled] = useState(false);
 
   const fetchData = () => {
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });

@@ -316,7 +316,7 @@ export default function PrintPartsDCTable(props) {
                       <View
                         style={{
                           display: "flex",
-                          marginTop: "80px",
+                          marginTop: "40px",
                           flexDirection: "column",
                           alignItems: "flex-end",
                         }}
@@ -347,7 +347,7 @@ export default function PrintPartsDCTable(props) {
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "center",
-                            marginTop: "80px",
+                            marginTop: "40px",
                           }}
                         >
                           <Text>Authorised Signatory</Text>

@@ -31,7 +31,7 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
 
       let update3 = {
         Id: formHeader.NcId,
-        Qty: formHeader.QtyReturned,
+        Qty: tableData[i].QtyReturned,
       };
       postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
     }

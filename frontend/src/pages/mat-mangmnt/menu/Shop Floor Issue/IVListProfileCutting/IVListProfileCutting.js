@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../../../utils";
 import { toast } from "react-toastify";
 import ReactPaginate from "react-paginate";
+import { HashLoader } from "react-spinners";
 
 const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -135,6 +136,12 @@ function IVListProfileCutting(props) {
   return (
     <div>
       <>
+        {loading && (
+          <div className="full-page-loader">
+            <HashLoader color="#3498db" loading={true} size={60} />
+            <p className="mt-2">Loading, please wait...</p>
+          </div>
+        )}
         <h4 className="title">Material Issue Vouchers List</h4>
         <div className="row">
           <div className="col-md-7 col-sm-12">
@@ -148,13 +155,6 @@ function IVListProfileCutting(props) {
                 condensed
                 selectRow={selectRow}
                 headerClasses="header-class tableHeaderBGColor"
-                noDataIndication={() =>
-                  loading ? (
-                    <div className="text-center py-2">Loading...</div>
-                  ) : (
-                    "No issue vouchers found."
-                  )
-                }
               ></BootstrapTable>
             </div>
 

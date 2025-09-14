@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   title1: {
     width: "100%",
     marginTop: "6px",
-    marginLeft: "160px",
+    marginLeft: "140px",
     fontSize: "13px",
     fontWeight: "bolder",
     textDecoration: "underline",
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
   title2: {
     width: "100%",
-    marginLeft: "140px",
+    marginLeft: "135px",
     fontSize: "11px",
     fontWeight: "bold",
     fontFamily: "Helvetica-Bold",
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
 
   line1: {
-    marginTop: "10px",
+    marginTop: "5px",
     fontWeight: "bold",
     width: "100%",
   },
@@ -61,27 +61,27 @@ const styles = StyleSheet.create({
   },
   line3: {
     width: "100%",
-    marginTop: "-7px",
+    marginTop: "-5px",
   },
 
   blockRightAlign: {
-    width: "8%",
-    textAlign: "left",
-    marginLeft: "10px",
+    width: "10%",
+    textAlign: "right",
+    marginLeft: "20px",
     marginTop: "10px",
     fontSize: "9px",
     fontFamily: "Helvetica-Bold",
   },
   blockLeftAlign: {
-    width: "30%",
-    marginLeft: "10px",
+    width: "35%",
+    marginLeft: "40px",
     marginTop: "10px",
     fontSize: "9px",
   },
 
   blockRightAlign2: {
     width: "10%",
-    textAlign: "left",
+    textAlign: "right",
     marginLeft: "10px",
     marginTop: "10px",
     fontSize: "9px",
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   blockLeftAlign2: {
     width: "18%",
-    marginLeft: "10px",
+    marginLeft: "20px",
     marginTop: "10px",
     fontSize: "9px",
   },
@@ -236,19 +236,19 @@ const PrintIVListProfileCuttingTable1 = ({
               <Text style={styles.title2}>{PDFData.RegisteredName}</Text>
             </View>
             <View style={{ justifyContent: "center" }}>
-              <Text style={{ ...styles.companyInfo, marginLeft: "100px" }}>
+              <Text style={{ ...styles.companyInfo, marginLeft: "120px" }}>
                 GSTIN: {PDFData.GST_No}, CIN: {PDFData.CIN_No}
               </Text>
             </View>
 
             <View style={{ justifyContent: "center" }}>
-              <Text style={{ ...styles.companyInfo, marginLeft: "70px" }}>
+              <Text style={{ ...styles.companyInfo, marginLeft: "90px" }}>
                 {PDFData.RegistredOfficeAddress}
               </Text>
             </View>
 
             <View style={{ justifyContent: "center" }}>
-              <Text style={{ ...styles.companyInfo }}>
+              <Text style={{ ...styles.companyInfo, marginLeft: "50px" }}>
                 {PDFData.PhonePrimary} {PDFData.PhoneSecondary}, {""}
                 {PDFData.Email}, {PDFData.URL}
               </Text>
@@ -258,31 +258,32 @@ const PrintIVListProfileCuttingTable1 = ({
         <Text style={styles.line1}>
           ___________________________________________________________________________________________________________________
         </Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={[styles.blockRightAlign]}>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>IV No</Text>
+            <Text style={styles.linegap}>Task No</Text>
+            <Text style={styles.linegap}>Customer</Text>
+          </View>
 
-        <View style={styles.blockRightAlign}>
-          <Text style={{ fontFamily: "Helvetica-Bold" }}>IV No</Text>
-          <Text style={styles.linegap}>Task No</Text>
-          <Text style={styles.linegap}>Customer</Text>
-        </View>
+          <View style={styles.blockLeftAlign}>
+            <Text>{formHeader.IV_No}</Text>
+            <Text style={styles.linegap}>{formHeader.TaskNo}</Text>
+            <Text style={styles.linegap}>{formHeader.Cust_name}</Text>
+          </View>
 
-        <View style={styles.blockLeftAlign}>
-          <Text>{formHeader.IV_No}</Text>
-          <Text style={styles.linegap}>{formHeader.TaskNo}</Text>
-          <Text style={styles.linegap}>{formHeader.Cust_name}</Text>
-        </View>
+          <View style={[styles.blockRightAlign, { marginLeft: 200 }]}>
+            <Text>Date</Text>
+            <Text style={styles.linegap}>Program No</Text>
+          </View>
 
-        <View style={styles.blockRightAlign}>
-          <Text>Date</Text>
-          <Text style={styles.linegap}>Program No</Text>
-        </View>
-
-        <View style={styles.blockLeftAlign}>
-          <Text>
-            {formHeader.Isssue_date
-              ? new Date(formHeader.Isssue_date).toLocaleDateString("en-GB")
-              : ""}
-          </Text>
-          <Text style={styles.linegap}>{formHeader.NC_ProgramNo}</Text>
+          <View style={styles.blockLeftAlign}>
+            <Text>
+              {formHeader.Isssue_date
+                ? new Date(formHeader.Isssue_date).toLocaleDateString("en-GB")
+                : ""}
+            </Text>
+            <Text style={styles.linegap}>{formHeader.NC_ProgramNo}</Text>
+          </View>
         </View>
 
         <Text style={styles.line1}>

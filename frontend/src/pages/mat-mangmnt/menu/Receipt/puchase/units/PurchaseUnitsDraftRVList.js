@@ -29,6 +29,7 @@ export default function PurchaseUnitsDraftRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch material receipt register by type
   const fetchData = () => {
     setLoading(true);
     getRequest(endpoints.getUnitsCreatedPurchaseMaterial, (data) => {
@@ -55,6 +56,7 @@ export default function PurchaseUnitsDraftRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Navigates to the Draft Sheet Unit page with the selected receipt ID
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
       state: { id: data.RvID, type: "units" },

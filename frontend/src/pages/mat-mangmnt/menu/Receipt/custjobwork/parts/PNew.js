@@ -67,6 +67,7 @@ function PNew() {
     address: "",
   });
 
+  // Fetch all customers
   async function fetchCustData() {
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -84,6 +85,7 @@ function PNew() {
     fetchCustData();
   }, []);
 
+  // Updates form header and material details when a customer is selected
   const changeCustomer = async (e) => {
     const found = custdata.find((obj) => obj.Cust_Code === e[0].Cust_Code);
 
@@ -96,6 +98,7 @@ function PNew() {
       };
     });
 
+    // Fetch all customer BOM list
     getRequest(endpoints.getCustBomList, (data) => {
       const foundPart = data.filter((obj) => obj.Cust_code === e[0].Cust_Code);
       setMtrlDetails(foundPart);
@@ -140,10 +143,10 @@ function PNew() {
     },
   ];
 
+  // Handles part selection, updates related state, and syncs with backend
   const changePartID = (selected) => {
     setSelectedPart(selected);
 
-    // Update partId in inputPart state
     setInputPart((prevInputPart) => ({
       ...prevInputPart,
       partId: selected.length > 0 ? selected[0].PartId : "",
@@ -153,6 +156,7 @@ function PNew() {
       const partId = selected[0].PartId;
       const cust_Code = formHeader.customer;
 
+      // Fetch customer BOM entry by PartId and Cust_code
       postRequest(endpoints.getCustBomId, { partId, cust_Code }, (data) => {
         if (data) {
           setInputPart((prevInputPart) => ({
@@ -168,6 +172,7 @@ function PNew() {
             )
           );
 
+          // Update material part receipt details
           postRequest(
             endpoints.updatePartReceiptDetails,
             {
@@ -199,6 +204,7 @@ function PNew() {
     setPartArray(newArray);
   };
 
+  // Handles input changes for part details, updates state, and syncs with backend
   const changePartHandle = (e) => {
     const { value, name } = e.target;
     if (name === "unitWeight" && parseFloat(value) < 0) {
@@ -266,6 +272,7 @@ function PNew() {
   let { partId, unitWeight, custBomId, qtyReceived, qtyAccepted, qtyRejected } =
     inputPart;
 
+  // Adds a new blank part row after validating existing entries and inserts it into backend
   const addNewPart = (e) => {
     const isAnyPartIDEmpty = partArray.some((item) => item.partId === "");
 
@@ -334,6 +341,7 @@ function PNew() {
     setModalOpen(true);
   };
 
+  // Deletes a part record from backend and updates state, totals, and form header
   const handleDelete = () => {
     postRequest(endpoints.deletePartReceiptDetails, inputPart, (data) => {
       if (data.affectedRows !== 0) {
@@ -393,6 +401,7 @@ function PNew() {
     },
   };
 
+  // Handles input changes in header form fields and updates formHeader state
   const InputHeaderEvent = (e) => {
     const { value, name } = e.target;
 
@@ -406,6 +415,7 @@ function PNew() {
     }));
   };
 
+  // Inserts a new material receipt header record and updates form state on success
   const insertHeaderFunction = () => {
     postRequest(
       endpoints.insertHeaderMaterialReceiptRegister,
@@ -428,6 +438,7 @@ function PNew() {
     );
   };
 
+  // Updates an existing material receipt header record and refreshes state on success
   const updateHeaderFunction = () => {
     postRequest(
       endpoints.updateHeaderMaterialReceiptRegister,
@@ -444,6 +455,7 @@ function PNew() {
     );
   };
 
+  // Validates form and part data before saving or updating the material receipt header
   const saveButtonState = async (e) => {
     e.preventDefault();
     if (formHeader.customer.length === 0) {
@@ -500,6 +512,7 @@ function PNew() {
     }
   };
 
+  // Insert a running number row
   const getRVNo = async () => {
     const requestData = {
       unit: userData.UnitName,
@@ -512,6 +525,7 @@ function PNew() {
     postRequest(endpoints.insertRunNoRow, requestData, async (data) => {});
   };
 
+  // Validates part details and weight before allotting an RV number, then opens confirmation modal
   const allotRVButtonState = (e) => {
     e.preventDefault();
     getRVNo();
@@ -583,6 +597,7 @@ function PNew() {
     setDeleteRvModalOpen(true);
   };
 
+  // Deletes the current receipt record along with its details and resets the page
   const deleteRVButtonState = () => {
     postRequest(
       endpoints.deleteHeaderMaterialReceiptRegisterAndDetails,
@@ -598,10 +613,12 @@ function PNew() {
       }
     );
   };
+
   const handleYes = () => {
     handleDelete();
     setModalOpen(false);
   };
+
   const handleRVYes = () => {
     deleteRVButtonState();
     setDeleteRvModalOpen(false);

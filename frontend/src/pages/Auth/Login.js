@@ -14,6 +14,8 @@ function Login() {
 
   // Set userData into localStorage
   localStorage.setItem("userData", JSON.stringify(userData));
+
+  // Fetch menu URLs and module IDs for a user based on role and username
   useEffect(() => {
     if (userData) {
       const fetchMenuUrls = async () => {

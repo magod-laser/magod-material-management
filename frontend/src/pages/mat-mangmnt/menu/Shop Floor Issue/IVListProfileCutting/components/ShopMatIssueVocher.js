@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import PrintIVListProfileCuttingTable1 from "../../../../print/shopfloorissue/PrintIVListProfileCuttingTable1";
 import PrintIVListProfileCuttingTable2 from "../../../../print/shopfloorissue/PrintIVListProfileCuttingTable2";
+import { HashLoader } from "react-spinners";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -19,6 +20,7 @@ function ShopMatIssueVocher() {
   const [combineSheets, setCombineSheets] = useState("");
   const [tableData, setTableData] = useState([]);
   const [PDFData, setPDFData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
@@ -47,6 +49,7 @@ function ShopMatIssueVocher() {
   });
 
   const fetchData = async () => {
+    setLoading(true);
     let url =
       endpoints.getShopMaterialIssueVoucher +
       "?id=" +
@@ -83,6 +86,7 @@ function ShopMatIssueVocher() {
       location.state.issueIDVal;
     getRequest(url2, (data) => {
       setTableData(data);
+      setLoading(false);
     });
   };
   useEffect(() => {
@@ -208,6 +212,10 @@ function ShopMatIssueVocher() {
     }
   };
 
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
   const printButton = () => {
     if (noDetails === 1 && combineSheets.length > 0) {
       setIsPrintModalOpen(true);
@@ -232,6 +240,14 @@ function ShopMatIssueVocher() {
         setIsPrintModalOpen={setIsPrintModalOpen}
         combineSheets={combineSheets}
       />
+
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
+
       <h4 className="title">Shop Material Issue Voucher</h4>
       <div className="row">
         <div className="d-flex col-md-3" style={{ gap: "35px" }}>

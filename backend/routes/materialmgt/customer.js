@@ -2,7 +2,7 @@ const customerRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
 const { infoLogger, errorLogger } = require("../../helpers/logger");
 
-// Fetch all customers from magodmis.cust_data ordered by name
+// Fetch all customers ordered by name
 customerRouter.get("/allcustomers", async (req, res, next) => {
   infoLogger.info("Requested for all customers list", {
     endpoint: "/allcustomers",
@@ -36,7 +36,7 @@ customerRouter.get("/allcustomers", async (req, res, next) => {
   }
 });
 
-// Fetch customer details from magodmis.cust_data by Cust_Code
+// Fetch customer details by Cust_Code
 customerRouter.get("/getCustomerByCustCode", async (req, res, next) => {
   const endpoint = "/getCustomerByCustCode";
   const code = req.query.code;

@@ -47,6 +47,7 @@ export default function PurOtherDraftRVList(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch material receipt register by type
   const fetchData = () => {
     setLoading(true);
     getRequest(endpoints.getSheetsCreatedPurchaseMaterial, (data) => {
@@ -56,6 +57,7 @@ export default function PurOtherDraftRVList(props) {
     });
   };
 
+  // Fetch all customers
   async function fetchData2() {
     getRequest(endpoints.getCustomers, (data) => {
       if (props.type2 === "purchase") {
@@ -66,9 +68,12 @@ export default function PurOtherDraftRVList(props) {
       }
       setCustdata(data);
     });
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });
+
+    // Fetch all material data
     getRequest(endpoints.getMtrlData, (data) => {
       setMtrlDetails(data);
     });
@@ -104,6 +109,7 @@ export default function PurOtherDraftRVList(props) {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Navigates to the Draft Sheet Unit page with the selected receipt ID and type "sheets"
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
       state: { id: data.RvID, type: "sheets" },

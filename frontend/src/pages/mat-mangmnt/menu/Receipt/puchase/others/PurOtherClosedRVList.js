@@ -30,6 +30,7 @@ function PurOtherClosedRVList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(500);
 
+  // Fetch material receipt register by type
   const fetchData = () => {
     setLoading(true);
     getRequest(endpoints.getSheetsClosedPurchaseMaterial, (data) => {
@@ -56,6 +57,7 @@ function PurOtherClosedRVList() {
   const offset = currentPage * perPage;
   const currentPageData = tabledata.slice(offset, offset + perPage);
 
+  // Opens the Closed Sheet Unit page if a customer (receipt ID) is selected
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonClosedSheetUnit", {

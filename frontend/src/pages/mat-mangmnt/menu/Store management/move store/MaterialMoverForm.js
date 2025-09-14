@@ -4,6 +4,8 @@ import BootstrapTable from "react-bootstrap-table-next";
 import YesNoModal from "../../../components/YesNoModal";
 import { useNavigate } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
+import ReactPaginate from "react-paginate";
+import { HashLoader } from "react-spinners";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -26,7 +28,15 @@ function MaterialMoverForm(props) {
 
   const [allData, setAllData] = useState([]);
   const [CustDataForLocation, setCustDataForLocation] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [perPage] = useState(500);
 
+  const pageCount = Math.ceil(firstTable.length / perPage);
+  const offset = currentPage * perPage;
+  const currentPageData = firstTable.slice(offset, offset + perPage);
+
+  // Fetch all customers
   const fetchData = async () => {
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -36,6 +46,7 @@ function MaterialMoverForm(props) {
       setCustdata(data);
     });
 
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].label = data[i].LocationNo;
@@ -49,9 +60,12 @@ function MaterialMoverForm(props) {
     fetchData();
   }, []);
 
+  // Handle customer selection (for customer type mode)
   const changeCustomer = async (e) => {
     setSelectedCustomer(e[0].Cust_Code);
   };
+
+  // Handle "To Location" selection
   const changeLocation = async (e) => {
     setSelectedLocation(e[0].LocationNo);
     setMsg(
@@ -59,11 +73,14 @@ function MaterialMoverForm(props) {
     );
   };
 
+  // Handle "From Location" selection
   const fromLocationEvent = async (e) => {
     setFromLocation(e[0].LocationNo);
   };
 
+  // Load material data based on selected customer/location/type
   const loadData = async () => {
+    setLoading(true);
     if (props.type === "customer") {
       if (selectedCustomer === "") {
         toast.error("Please select Customer");
@@ -77,11 +94,13 @@ function MaterialMoverForm(props) {
             toast.warning("No data found for selected customer");
           }
           setFirstTable(data);
+          setLoading(false);
         });
       }
     } else if (props.type === "location") {
       if (fromLocation === "") {
         toast.error("Please select From Location");
+        setLoading(false);
       } else {
         let url1 =
           endpoints.getMoveStoreMtrlStockByLocation +
@@ -90,6 +109,7 @@ function MaterialMoverForm(props) {
         getRequest(url1, async (data) => {
           setAllData(data);
           setFirstTable(data);
+          setLoading(false);
         });
         let url2 =
           endpoints.getMoveStoreCustomerMtrlStockByLocation +
@@ -106,10 +126,12 @@ function MaterialMoverForm(props) {
       let url1 = endpoints.getMoveStoreMtrlStockByAll;
       getRequest(url1, async (data) => {
         setFirstTable(data);
+        setLoading(false);
       });
     }
   };
 
+  // Move selected rows from first table to second table
   const selectButton = () => {
     if (selectedRows.length <= 0) {
       toast.warning("No row is selected in first table");
@@ -117,6 +139,7 @@ function MaterialMoverForm(props) {
     setSecondTable(selectedRows);
   };
 
+  // Validate selections and open confirmation modal for location change
   const changeLocationButton = () => {
     if (secondTable.length === 0) {
       toast.error("Please select Material");
@@ -126,6 +149,8 @@ function MaterialMoverForm(props) {
       setShow(true);
     }
   };
+
+  // Handle modal response and update material locations
   const modalResponse = (msg) => {
     if (msg === "yes") {
       for (let i = 0; i < secondTable.length; i++) {
@@ -298,6 +323,7 @@ function MaterialMoverForm(props) {
     },
   };
 
+  // Handle customer filter inside location mode
   const changeCustomerForLocation = async (e) => {
     setSecondTable([]);
     setSelectedIndex([]);
@@ -317,9 +343,15 @@ function MaterialMoverForm(props) {
     order: "asc",
   });
 
+  // Handle sorting of table columns
   const onSortChange = (dataField, order) => {
     setSort({ dataField, order });
   };
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
   return (
     <div>
       <YesNoModal
@@ -328,6 +360,12 @@ function MaterialMoverForm(props) {
         message={msg}
         modalResponse={modalResponse}
       />
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
       <h4 className="title"> Material Mover</h4>
 
       <div className="row">
@@ -431,7 +469,7 @@ function MaterialMoverForm(props) {
             <BootstrapTable
               keyField="MtrlStockID"
               columns={columns1}
-              data={firstTable}
+              data={currentPageData}
               striped
               hover
               condensed
@@ -440,6 +478,31 @@ function MaterialMoverForm(props) {
               sort={sort}
               onSortChange={onSortChange}
             ></BootstrapTable>
+          </div>
+          <div>
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              previousLinkClassName={"pagination__link"}
+              nextLinkClassName={"pagination__link"}
+              disabledClassName={"pagination__link--disabled"}
+              subContainerClassName={"pages pagination"}
+              activeClassName={"active"}
+              previousClassName={
+                currentPage === 0 ? "pagination__link--disabled" : ""
+              }
+              nextClassName={
+                currentPage === pageCount - 1
+                  ? "pagination__link--disabled"
+                  : ""
+              }
+            />
           </div>
         </div>
         <div className="col-md-6">

@@ -8,6 +8,9 @@ import CreateDCYesNoModal from "../../../components/CreateDCYesNoModal";
 import { useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import PrintMaterialDC from "../../../print/return/PrintMaterialDC";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
+import PrintMaterialDCTable from "../../../print/return/PrintMaterialDCTable";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -55,6 +58,7 @@ function OutwordMaterialIssueVocher(props) {
 
   const [formData, setFormData] = useState({ unitName: userData.UnitName });
   const [runningNoData, setRunningNoData] = useState([]);
+  const [PDFData, setPDFData] = useState({});
 
   async function fetchData() {
     let url =
@@ -219,7 +223,59 @@ function OutwordMaterialIssueVocher(props) {
     }
   };
 
+  function fetchPDFData() {
+    postRequest(endpoints.getPDFData, {}, (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer = async (totalQTYVar) => {
+    try {
+      const adjustment = "OutwardMaterialIssueVoucher";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintMaterialDCTable
+          formHeader={formHeader}
+          outData={outData}
+          custdata={custdata}
+          dcRegister={dcRegister}
+          totalQTYVar={totalQTYVar}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
   let printDC = () => {
+    let totalQTYVar = 0;
+    for (let i = 0; i < outData?.length; i++) {
+      const element = outData[i];
+      totalQTYVar = totalQTYVar + parseInt(element.Qty);
+    }
+    savePdfToServer(totalQTYVar);
     setPrintOpen(true);
   };
 

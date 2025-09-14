@@ -36,6 +36,7 @@ function LocationStockReport() {
     Scrap: 0,
   });
 
+  // Fetch all customers
   async function fetchCustData() {
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -43,6 +44,7 @@ function LocationStockReport() {
       }
       setCustdata(data);
     });
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, async (data) => {
       for (let i = 0; i < data.length; i++) {
         data[i].id = i + 1;

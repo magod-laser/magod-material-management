@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatDate } from "../../../../../../../utils";
+import { HashLoader } from "react-spinners";
 
 const {
   getRequest,
@@ -32,12 +33,13 @@ function MaterialAllotmentMain() {
   const [btnVisibility, setBtnVisibility] = useState(false);
   const [selectedFirstTableRow, setSelectedFirstTableRow] = useState(null);
   const [selectedSecondTableRows, setSelectedSecondTableRows] = useState([]);
-  const [loadingFirstTable, setLoadingFirstTable] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const storedData = JSON.parse(localStorage.getItem("LazerUser"));
   let unitName = storedData.data[0]["UnitName"];
 
   const fetchData = async () => {
+    setLoading(true);
     let url1 = endpoints.getRowByNCID + "?id=" + location.state?.ncid;
     getRequest(url1, async (data) => {
       setFormHeader(data);
@@ -84,7 +86,7 @@ function MaterialAllotmentMain() {
 
       await delay(2000);
       setFirstTable(data);
-      setLoadingFirstTable(false);
+      setLoading(false);
 
       if (data.length === 0) {
         toast.warning("There is no material data available.");
@@ -449,465 +451,535 @@ function MaterialAllotmentMain() {
 
   return (
     <div>
-      <div>
-        <h4 className="title">Material Allotment Form</h4>
-        <div className="row">
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Task No
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              type="text"
-              value={formHeader.TaskNo}
-              disabled
-            />
-          </div>
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Customer
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              type="text"
-              value={formHeader.customer}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              NC Program No
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.NCProgramNo}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "10px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Material Code
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Mtrl_Code}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "12px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Priority
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Priority}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "15px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Machine
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Machine}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "50px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Quantity
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Qty}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "52px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Status
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.PStatus}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "12px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Process
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.Operation}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "16px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Allotted
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              value={formHeader.QtyAllotted}
-              disabled
-            />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "60px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Source
-            </label>
-
-            <input className="input-disabled mt-1" value="Customer" disabled />
-          </div>
-
-          <div className="d-flex col-md-3" style={{ gap: "30px" }}>
-            <label className="form-label mt-1" style={{ whiteSpace: "nowrap" }}>
-              Issue Now
-            </label>
-
-            <input
-              className="input-disabled mt-1"
-              type="number"
-              min="0"
-              onChange={issuenowchange}
-              value={issuenowval}
-              onBlur={issuenowonblur}
-              onKeyDown={blockInvalidQtyChar}
-              disabled={isAnyQtyAvailableZero() || firstTable.length === 0}
-            />
-          </div>
+      {loading ? (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
         </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-11"></div>
-
-        <div className="col-md-1">
-          <button
-            className="button-style "
-            id="btnclose"
-            type="submit"
-            onClick={() => nav("/MaterialManagement")}
-          >
-            Close
-          </button>
-        </div>
-      </div>
-
-      <div style={{ height: "220px", overflowY: "scroll" }}>
-        <Table className="table custom-table " striped bordered hover>
-          <thead className="header-class">
-            <tr>
-              <th>Part Id</th>
-              <th>Qty / Assembly</th>
-              <th>Required</th>
-              <th>Already Used</th>
-              <th>Total Used</th>
-              <th>Rejected</th>
-              <th>Available</th>
-              <th>Issue Now</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {loadingFirstTable ? (
-              <tr>
-                <td colSpan={8} style={{ textAlign: "center" }}>
-                  Loading...
-                </td>
-              </tr>
-            ) : firstTable.length === 0 ? (
-              <tr>
-                <td colSpan={8} style={{ textAlign: "center" }}>
-                  No material data available.
-                </td>
-              </tr>
-            ) : (
-              firstTable.map((row) => (
-                <tr
-                  key={row.Id}
-                  style={rowStyle1(row)}
-                  onClick={() => selectRow1.onSelect(row, true)}
+      ) : (
+        <>
+          <div>
+            <h4 className="title">Material Allotment Form</h4>
+            <div className="row">
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
                 >
-                  <td>{row.PartId}</td>
-                  <td>{row.QtyPerAssy}</td>
-                  <td>{row.QtyRequired}</td>
-                  <td>{row.AlreadyUsed}</td>
-                  <td>{row.TotalUsed}</td>
-                  <td>{row.QtyRejected}</td>
-                  <td>{row.QtyAvailable}</td>
-                  <td>{row.issueNow}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
-      </div>
+                  Task No
+                </label>
 
-      <div className="row mt-2">
-        <div className="col-md-8 justify-content-center mb-3">
-          <button
-            className="button-style"
-            style={{ width: "150px" }}
-            disabled={btnVisibility}
-            onClick={releaseProduction}
-          >
-            Release To Production
-          </button>
-        </div>
+                <input
+                  className="input-disabled mt-1"
+                  type="text"
+                  value={formHeader.TaskNo}
+                  disabled
+                />
+              </div>
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Customer
+                </label>
 
-        <div className="col-md-7">
-          <div style={{ height: "480px", overflowY: "scroll" }}>
-            <Table className="table custom-table" striped bordered hover>
+                <input
+                  className="input-disabled mt-1"
+                  type="text"
+                  value={formHeader.customer}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  NC Program No
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.NCProgramNo}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "10px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Material Code
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Mtrl_Code}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "12px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Priority
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Priority}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "15px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Machine
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Machine}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "50px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Quantity
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Qty}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "52px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Status
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.PStatus}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "12px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Process
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.Operation}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "16px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Allotted
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value={formHeader.QtyAllotted}
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "60px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Source
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  value="Customer"
+                  disabled
+                />
+              </div>
+
+              <div className="d-flex col-md-3" style={{ gap: "30px" }}>
+                <label
+                  className="form-label mt-1"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  Issue Now
+                </label>
+
+                <input
+                  className="input-disabled mt-1"
+                  type="number"
+                  min="0"
+                  onChange={issuenowchange}
+                  value={issuenowval}
+                  onBlur={issuenowonblur}
+                  onKeyDown={blockInvalidQtyChar}
+                  disabled={isAnyQtyAvailableZero() || firstTable.length === 0}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-md-11"></div>
+
+            <div className="col-md-1">
+              <button
+                className="button-style "
+                id="btnclose"
+                type="submit"
+                onClick={() => nav("/MaterialManagement")}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+
+          <div style={{ height: "220px", overflowY: "scroll" }}>
+            <Table className="table custom-table " striped bordered hover>
               <thead className="header-class">
                 <tr>
-                  <th>RV No</th>
-                  <th>RV Date</th>
-                  <th>Received</th>
-                  <th>Accepted</th>
-                  <th>Issued</th>
+                  <th>Part Id</th>
+                  <th>Qty / Assembly</th>
+                  <th>Required</th>
+                  <th>Already Used</th>
+                  <th>Total Used</th>
+                  <th>Rejected</th>
+                  <th>Available</th>
                   <th>Issue Now</th>
                 </tr>
               </thead>
+
               <tbody>
-                {secondTable.map((row, index) => (
-                  <tr
-                    key={row.Id}
-                    style={rowStyle2(row)}
-                    onClick={() => {
-                      selectRow2.onSelect(row, true);
-                    }}
-                  >
-                    <td
-                      onClick={() => {
-                        setSelectedCell({ rowId: row.Id, colId: "RV_No" });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "RV_No") ? "selected-row" : ""
-                      }
-                    >
-                      {row.RV_No}
-                    </td>
-
-                    <td
-                      onClick={() => {
-                        setSelectedCell({ rowId: row.Id, colId: "RV_Date" });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "RV_Date") ? "selected-row" : ""
-                      }
-                    >
-                      {formatDate(new Date(row.RV_Date), 3)}
-                    </td>
-
-                    <td
-                      onClick={() => {
-                        setSelectedCell({
-                          rowId: row.Id,
-                          colId: "QtyReceived",
-                        });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "QtyReceived")
-                          ? "selected-row"
-                          : ""
-                      }
-                    >
-                      {row.QtyReceived}
-                    </td>
-
-                    <td
-                      onClick={() => {
-                        setSelectedCell({
-                          rowId: row.Id,
-                          colId: "QtyAccepted",
-                        });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "QtyAccepted")
-                          ? "selected-row"
-                          : ""
-                      }
-                    >
-                      {row.QtyAccepted}
-                    </td>
-
-                    <td
-                      onClick={() => {
-                        setSelectedCell({ rowId: row.Id, colId: "QtyIssued" });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "QtyIssued")
-                          ? "selected-row"
-                          : ""
-                      }
-                    >
-                      {row.QtyIssued}
-                    </td>
-
-                    <td
-                      onClick={() => {
-                        setSelectedCell({ rowId: row.Id, colId: "issueNow" });
-                        setRow2(row);
-                        setSelectedRow(null);
-                      }}
-                      className={
-                        isSelectedCell(row.Id, "issueNow") ? "selected-row" : ""
-                      }
-                    >
-                      <input
-                        type="number"
-                        min="0"
-                        value={row.issueNow}
-                        onChange={(e) => handleIssueNowChange(e, row)}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          backgroundColor: "transparent",
-                          border: "none",
-                        }}
-                      />
+                {firstTable.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} style={{ textAlign: "center" }}>
+                      No material data available.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  firstTable.map((row) => (
+                    <tr
+                      key={row.Id}
+                      style={rowStyle1(row)}
+                      onClick={() => selectRow1.onSelect(row, true)}
+                    >
+                      <td>{row.PartId}</td>
+                      <td>{row.QtyPerAssy}</td>
+                      <td>{row.QtyRequired}</td>
+                      <td>{row.AlreadyUsed}</td>
+                      <td>{row.TotalUsed}</td>
+                      <td>{row.QtyRejected}</td>
+                      <td>{row.QtyAvailable}</td>
+                      <td>{row.issueNow}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
           </div>
-        </div>
 
-        <div className="col-md-5">
-          <div className="form-bg mb-4">
-            <div className="row">
-              <div className="col-md-4 mt-2 ">
-                <label className="form-label">RV No</label>
-              </div>
-              <div className="col-md-8 ">
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  value={row2.RV_No}
-                  disabled
-                />
+          <div className="row mt-2">
+            <div className="col-md-8 justify-content-center mb-3">
+              <button
+                className="button-style"
+                style={{ width: "150px" }}
+                disabled={btnVisibility}
+                onClick={releaseProduction}
+              >
+                Release To Production
+              </button>
+            </div>
+
+            <div className="col-md-7">
+              <div style={{ height: "480px", overflowY: "scroll" }}>
+                <Table className="table custom-table" striped bordered hover>
+                  <thead className="header-class">
+                    <tr>
+                      <th>RV No</th>
+                      <th>RV Date</th>
+                      <th>Received</th>
+                      <th>Accepted</th>
+                      <th>Issued</th>
+                      <th>Issue Now</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {secondTable.map((row, index) => (
+                      <tr
+                        key={row.Id}
+                        style={rowStyle2(row)}
+                        onClick={() => {
+                          selectRow2.onSelect(row, true);
+                        }}
+                      >
+                        <td
+                          onClick={() => {
+                            setSelectedCell({ rowId: row.Id, colId: "RV_No" });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "RV_No")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          {row.RV_No}
+                        </td>
+
+                        <td
+                          onClick={() => {
+                            setSelectedCell({
+                              rowId: row.Id,
+                              colId: "RV_Date",
+                            });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "RV_Date")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          {formatDate(new Date(row.RV_Date), 3)}
+                        </td>
+
+                        <td
+                          onClick={() => {
+                            setSelectedCell({
+                              rowId: row.Id,
+                              colId: "QtyReceived",
+                            });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "QtyReceived")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          {row.QtyReceived}
+                        </td>
+
+                        <td
+                          onClick={() => {
+                            setSelectedCell({
+                              rowId: row.Id,
+                              colId: "QtyAccepted",
+                            });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "QtyAccepted")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          {row.QtyAccepted}
+                        </td>
+
+                        <td
+                          onClick={() => {
+                            setSelectedCell({
+                              rowId: row.Id,
+                              colId: "QtyIssued",
+                            });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "QtyIssued")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          {row.QtyIssued}
+                        </td>
+
+                        <td
+                          onClick={() => {
+                            setSelectedCell({
+                              rowId: row.Id,
+                              colId: "issueNow",
+                            });
+                            setRow2(row);
+                            setSelectedRow(null);
+                          }}
+                          className={
+                            isSelectedCell(row.Id, "issueNow")
+                              ? "selected-row"
+                              : ""
+                          }
+                        >
+                          <input
+                            type="number"
+                            min="0"
+                            value={row.issueNow}
+                            onChange={(e) => handleIssueNowChange(e, row)}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
               </div>
             </div>
 
-            <div className="row">
-              <div className="col-md-4 mt-2 ">
-                <label className="form-label">Part ID</label>
-              </div>
+            <div className="col-md-5">
+              <div className="form-bg mb-4">
+                <div className="row">
+                  <div className="col-md-4 mt-2 ">
+                    <label className="form-label">RV No</label>
+                  </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      value={row2.RV_No}
+                      disabled
+                    />
+                  </div>
+                </div>
 
-              <div className="col-md-8" style={{ marginTop: "8px" }}>
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  value={row2.PartId}
-                  disabled
-                />
-              </div>
-            </div>
+                <div className="row">
+                  <div className="col-md-4 mt-2 ">
+                    <label className="form-label">Part ID</label>
+                  </div>
 
-            <div className="row">
-              <div className="col-md-4 mt-1">
-                <label className="form-label" style={{ whiteSpace: "nowrap" }}>
-                  Qty Received
-                </label>
-              </div>
+                  <div className="col-md-8" style={{ marginTop: "8px" }}>
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      value={row2.PartId}
+                      disabled
+                    />
+                  </div>
+                </div>
 
-              <div className="col-md-8 ">
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  name="qtyReceived"
-                  value={row2.QtyReceived}
-                  disabled
-                />
-              </div>
-            </div>
+                <div className="row">
+                  <div className="col-md-4 mt-1">
+                    <label
+                      className="form-label"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      Qty Received
+                    </label>
+                  </div>
 
-            <div className="row">
-              <div className="col-md-4 mt-1 ">
-                <label className="form-label" style={{ whiteSpace: "nowrap" }}>
-                  Qty Accepted
-                </label>
-              </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      name="qtyReceived"
+                      value={row2.QtyReceived}
+                      disabled
+                    />
+                  </div>
+                </div>
 
-              <div className="col-md-8 ">
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  value={row2.QtyAccepted}
-                  disabled
-                />
-              </div>
-            </div>
+                <div className="row">
+                  <div className="col-md-4 mt-1 ">
+                    <label
+                      className="form-label"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      Qty Accepted
+                    </label>
+                  </div>
 
-            <div className="row">
-              <div className="col-md-4 mt-1 ">
-                <label className="form-label" style={{ whiteSpace: "nowrap" }}>
-                  Qty Issued
-                </label>
-              </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      value={row2.QtyAccepted}
+                      disabled
+                    />
+                  </div>
+                </div>
 
-              <div className="col-md-8 ">
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  value={row2.QtyIssued}
-                  disabled
-                />
-              </div>
-            </div>
+                <div className="row">
+                  <div className="col-md-4 mt-1 ">
+                    <label
+                      className="form-label"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      Qty Issued
+                    </label>
+                  </div>
 
-            <div className="row mb-4">
-              <div className="col-md-4 mt-1 ">
-                <label className="form-label" style={{ whiteSpace: "nowrap" }}>
-                  Issue Now
-                </label>
-              </div>
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      value={row2.QtyIssued}
+                      disabled
+                    />
+                  </div>
+                </div>
 
-              <div className="col-md-8 ">
-                <input
-                  className="input-disabled mt-2"
-                  type="text"
-                  value={row2.issueNow}
-                  disabled
-                />
+                <div className="row mb-4">
+                  <div className="col-md-4 mt-1 ">
+                    <label
+                      className="form-label"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      Issue Now
+                    </label>
+                  </div>
+
+                  <div className="col-md-8 ">
+                    <input
+                      className="input-disabled mt-2"
+                      type="text"
+                      value={row2.issueNow}
+                      disabled
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

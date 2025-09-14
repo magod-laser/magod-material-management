@@ -113,6 +113,77 @@ function Parts(props) {
     setCustRefVal(rowData.CustDocuNo);
   };
 
+  // const selectRowSecondFunc = (rowData) => {
+  //   const found = thirdTableData.some(
+  //     (el) =>
+  //       el.CustBOM_Id === rowData.CustBOM_Id &&
+  //       el.RV_No === rowData.RV_No &&
+  //       el.CustDocuNo === rowData.CustDocuNo &&
+  //       el.Id === rowData.Id &&
+  //       el.PartId === rowData.PartId &&
+  //       el.RVId === rowData.RVId
+  //   );
+
+  //   if (found) {
+  //     // deleting the element if found
+  //     const newThirdTableData = thirdTableData.filter(
+  //       (el) =>
+  //         el.CustBOM_Id != rowData.CustBOM_Id ||
+  //         el.RV_No != rowData.RV_No ||
+  //         el.CustDocuNo != rowData.CustDocuNo ||
+  //         el.Id != rowData.Id ||
+  //         el.PartId != rowData.PartId ||
+  //         el.RVId != rowData.RVId
+  //     );
+
+  //     let newArray = thirdTableRVIDs.filter((obj) => obj != rowData.RV_No);
+  //     setThirdTableRVIDs(newArray);
+  //     setThirdTableData(newThirdTableData);
+  //   } else {
+  //     let returnNew =
+  //       rowData.QtyReceived - rowData.QtyUsed - rowData.QtyReturned;
+
+  //     if (
+  //       rowData.QtyReturned + returnNew + rowData.QtyUsed >
+  //       rowData.QtyReceived
+  //     ) {
+  //       toast.error(
+  //         "Greater then the quantity received, plus already returned/used."
+  //       );
+  //     } else if (returnNew <= 0) {
+  //       toast.error("Stock is already returned");
+  //     } else {
+  //       rowData.PartIdNew = rowData.PartId + "/**Ref: " + rowData.CustDocuNo;
+  //       if (rowData.QtyRejected > 0) {
+  //         if (
+  //           rowData.QtyReceived - rowData.QtyReturned - rowData.QtyUsed >
+  //           rowData.QtyRejected
+  //         ) {
+  //           rowData.QtyReturnedNew = rowData.QtyRejected;
+  //         } else {
+  //           rowData.QtyReturnedNew =
+  //             rowData.QtyReceived -
+  //             rowData.QtyRejected -
+  //             rowData.QtyReturned -
+  //             rowData.QtyUsed;
+  //         }
+  //         rowData.Remarks = "Rejected";
+  //       } else {
+  //         rowData.QtyReturnedNew =
+  //           rowData.QtyReceived -
+  //           rowData.QtyRejected -
+  //           rowData.QtyReturned -
+  //           rowData.QtyUsed;
+  //         rowData.Remarks = "Return Unused";
+  //       }
+
+  //       thirdTableRVIDs.push(rowData.RV_No);
+  //       setThirdTableRVIDs(thirdTableRVIDs);
+  //       setThirdTableData([...thirdTableData, rowData]);
+  //     }
+  //   }
+  // };
+
   const selectRowSecondFunc = (rowData) => {
     const found = thirdTableData.some(
       (el) =>
@@ -125,22 +196,22 @@ function Parts(props) {
     );
 
     if (found) {
-      // deleting the element if found
+      // Remove the element if already present
       const newThirdTableData = thirdTableData.filter(
         (el) =>
-          el.CustBOM_Id != rowData.CustBOM_Id ||
-          el.RV_No != rowData.RV_No ||
-          el.CustDocuNo != rowData.CustDocuNo ||
-          el.Id != rowData.Id ||
-          el.PartId != rowData.PartId ||
-          el.RVId != rowData.RVId
+          el.CustBOM_Id !== rowData.CustBOM_Id ||
+          el.RV_No !== rowData.RV_No ||
+          el.CustDocuNo !== rowData.CustDocuNo ||
+          el.Id !== rowData.Id ||
+          el.PartId !== rowData.PartId ||
+          el.RVId !== rowData.RVId
       );
 
-      let newArray = thirdTableRVIDs.filter((obj) => obj != rowData.RV_No);
+      const newArray = thirdTableRVIDs.filter((obj) => obj !== rowData.RV_No);
       setThirdTableRVIDs(newArray);
       setThirdTableData(newThirdTableData);
     } else {
-      let returnNew =
+      const returnNew =
         rowData.QtyReceived - rowData.QtyUsed - rowData.QtyReturned;
 
       if (
@@ -148,39 +219,69 @@ function Parts(props) {
         rowData.QtyReceived
       ) {
         toast.error(
-          "Greater then the quantity received, plus already returned/used."
+          "Greater than the quantity received, plus already returned/used."
         );
-      } else if (returnNew <= 0) {
+        return;
+      }
+
+      if (returnNew <= 0) {
         toast.error("Stock is already returned");
-      } else {
-        rowData.PartIdNew = rowData.PartId + "/**Ref: " + rowData.CustDocuNo;
-        if (rowData.QtyRejected > 0) {
-          if (
-            rowData.QtyReceived - rowData.QtyReturned - rowData.QtyUsed >
-            rowData.QtyRejected
-          ) {
-            rowData.QtyReturnedNew = rowData.QtyRejected;
-          } else {
-            rowData.QtyReturnedNew =
-              rowData.QtyReceived -
-              rowData.QtyRejected -
-              rowData.QtyReturned -
-              rowData.QtyUsed;
-          }
-          rowData.Remarks = "Rejected";
+        return;
+      }
+
+      const rowsToAdd = [];
+
+      // Handle Rejected row
+      if (rowData.QtyRejected > 0) {
+        const rejectedRow = { ...rowData };
+        rejectedRow.PartIdNew =
+          rejectedRow.PartId + "/**Ref: " + rejectedRow.CustDocuNo;
+
+        if (
+          rejectedRow.QtyReceived -
+            rejectedRow.QtyReturned -
+            rejectedRow.QtyUsed >
+          rejectedRow.QtyRejected
+        ) {
+          rejectedRow.QtyReturnedNew = rejectedRow.QtyRejected;
         } else {
-          rowData.QtyReturnedNew =
-            rowData.QtyReceived -
-            rowData.QtyRejected -
-            rowData.QtyReturned -
-            rowData.QtyUsed;
-          rowData.Remarks = "Return Unused";
+          rejectedRow.QtyReturnedNew =
+            rejectedRow.QtyReceived -
+            rejectedRow.QtyRejected -
+            rejectedRow.QtyReturned -
+            rejectedRow.QtyUsed;
         }
 
-        thirdTableRVIDs.push(rowData.RV_No);
-        setThirdTableRVIDs(thirdTableRVIDs);
-        setThirdTableData([...thirdTableData, rowData]);
+        rejectedRow.Remarks = "Rejected";
+        rowsToAdd.push(rejectedRow);
+
+        // Handle Return Unused row
+        const remainingQty = returnNew - rejectedRow.QtyReturnedNew;
+        if (remainingQty > 0) {
+          const unusedRow = { ...rowData };
+          unusedRow.PartIdNew =
+            unusedRow.PartId + "/**Ref: " + unusedRow.CustDocuNo;
+          unusedRow.QtyReturnedNew = remainingQty;
+          unusedRow.Remarks = "Return Unused";
+          rowsToAdd.push(unusedRow);
+        }
+      } else {
+        // Only Return Unused row
+        const unusedRow = { ...rowData };
+        unusedRow.PartIdNew =
+          unusedRow.PartId + "/**Ref: " + unusedRow.CustDocuNo;
+        unusedRow.QtyReturnedNew =
+          unusedRow.QtyReceived -
+          unusedRow.QtyRejected -
+          unusedRow.QtyReturned -
+          unusedRow.QtyUsed;
+        unusedRow.Remarks = "Return Unused";
+        rowsToAdd.push(unusedRow);
       }
+
+      // Update state safely
+      setThirdTableRVIDs((prev) => [...prev, rowData.RV_No]);
+      setThirdTableData((prev) => [...prev, ...rowsToAdd]);
     }
   };
 

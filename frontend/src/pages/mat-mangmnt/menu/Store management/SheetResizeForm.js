@@ -21,6 +21,7 @@ function SheetResizeForm() {
   let [selectedTableRows, setSelectedTableRows] = useState([]);
   const [selectedCust, setSelectedCust] = useState();
 
+  // Fetch all customers
   async function fetchData() {
     getRequest(endpoints.getCustomers, async (data) => {
       for (let i = 0; i < data.length; i++) {
@@ -35,6 +36,7 @@ function SheetResizeForm() {
     fetchData();
   }, []);
 
+  // Fetch and update material stock list for the selected customer
   const changeCustomer = (custCode) => {
     let url1 = endpoints.getResizeMtrlStockList + "?code=" + custCode;
 
@@ -50,6 +52,7 @@ function SheetResizeForm() {
     });
   };
 
+  // Toggle table row selection (add/remove row from selected rows)
   const selectTableRow = (row) => {
     const found = selectedTableRows.some((obj) => {
       return obj.MtrlStockID === row.MtrlStockID;
@@ -66,6 +69,7 @@ function SheetResizeForm() {
     }
   };
 
+  // Validate selected rows for resizing before opening dialog
   const resizeButton = () => {
     if (selectedTableRows.length === 0) {
       toast.error("Please select the row first");
@@ -101,6 +105,7 @@ function SheetResizeForm() {
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
+  // Return sorted table data based on current sort config
   const sortedData = () => {
     let dataCopy = [...tabledata];
 
@@ -129,6 +134,7 @@ function SheetResizeForm() {
     return dataCopy;
   };
 
+  // Update sort configuration (toggle between ascending/descending)
   const requestSort = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {

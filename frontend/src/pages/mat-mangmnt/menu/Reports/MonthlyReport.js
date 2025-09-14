@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import BootstrapTable from "react-bootstrap-table-next";
 import { formatDate } from "../../../../utils";
 import { useNavigate } from "react-router-dom";
 import PrintMonthlyReport from "../../print/report/PrintMonthlyReport";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
+import PrintMonthlyTable from "../../print/report/PrintMonthlyTable";
+import { toast } from "react-toastify";
 
-const { getRequest } = require("../../../api/apiinstance");
+const { getRequest, postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
 
 function MonthlyReport() {
@@ -20,6 +24,7 @@ function MonthlyReport() {
   const [thirdTab, setThirdTab] = useState([]);
   const [fourthTab, setFourthTab] = useState([]);
   const [fifthTab, setFifthTab] = useState([]);
+  const [PDFData, setPDFData] = useState({});
 
   const [dateVal, setDateVal] = useState(yearrr + "-" + (monthhh + 1));
   const [monthval, setMonthVal] = useState(0);
@@ -289,7 +294,55 @@ function MonthlyReport() {
     fullStockTable2.push(obj);
   }
 
+  function fetchPDFData() {
+    postRequest(endpoints.getPDFData, {}, (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer = async () => {
+    try {
+      const adjustment = "MonthlyReport";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintMonthlyTable
+          date={formatDate(new Date(dateVal), 9)}
+          thirdTab={thirdTab}
+          fourthTab={fourthTab}
+          totalobj={totalobj}
+          purchaseDetails={fullStockTable1}
+          saleDetails={fullStockTable2}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
   const printReport = async () => {
+    savePdfToServer();
     setPrintReportOpen(true);
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { toast } from "react-toastify";
@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import PrintDailyReportReceipt from "../../print/report/PrintDailyReportReceipt";
 import PrintDailyReportInvoice from "../../print/report/PrintDailyReportInvoice";
+import axios from "axios";
+import { pdf } from "@react-pdf/renderer";
+import PrintDailyReportReceiptTable from "../../print/report/PrintDailyReportReceiptTable";
+import PrintDailyReportInvoiceTable from "../../print/report/PrintDailyReportInvoiceTable";
 
 const { getRequest, postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
@@ -23,6 +27,7 @@ function DailyReport() {
   const [secondTab, setSecondTab] = useState([]);
   const [thirdTab, setThirdTab] = useState([]);
   const [fourthTab, setFourthTab] = useState([]);
+  const [PDFData, setPDFData] = useState({});
 
   const [receiptReportPrint, setReceiptReportPrint] = useState(false);
   const [invoiceDispatchPrint, setInvoiceDispatchPrint] = useState(false);
@@ -31,6 +36,7 @@ function DailyReport() {
   );
   const [totqty, settotqty] = useState(0);
   const [totalweight, settotalweight] = useState(0);
+
   const InputEvent = (e) => {
     const { name, value } = e.target;
     setDateVal(value);
@@ -245,9 +251,6 @@ function DailyReport() {
       dataField: "qty",
     },
   ];
-  const printReceipt = async () => {
-    setReceiptReportPrint(true);
-  };
 
   let invType = [...new Set(secondTab.map((item) => item.DC_InvType))];
   invType = invType.sort();
@@ -271,7 +274,91 @@ function DailyReport() {
     fullTable.push(obj);
   }
 
+  function fetchPDFData() {
+    postRequest(endpoints.getPDFData, {}, (res) => {
+      setPDFData(res[0]);
+    });
+  }
+
+  const savePdfToServer1 = async () => {
+    try {
+      const adjustment = "DailyReceiptReport";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintDailyReportReceiptTable
+          tableData={firstTab}
+          date={dateVal}
+          totqty={totqty}
+          totalweight={totalweight}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  const savePdfToServer2 = async () => {
+    try {
+      const adjustment = "DailyReportInvoice";
+      await axios.post(endpoints.pdfServer, { adjustment });
+
+      const blob = await pdf(
+        <PrintDailyReportInvoiceTable
+          tableData={fullTable}
+          date={dateVal}
+          PDFData={PDFData}
+        />
+      ).toBlob();
+
+      const file = new File([blob], "GeneratedPDF.pdf", {
+        type: "application/pdf",
+      });
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await axios.post(endpoints.savePdf, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.status === 200) {
+        toast.success("PDF saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving PDF to server:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
+  const printReceipt = async () => {
+    savePdfToServer1();
+    setReceiptReportPrint(true);
+  };
+
   const printInvoice = async () => {
+    savePdfToServer2();
     setInvoiceDispatchPrint(true);
   };
 

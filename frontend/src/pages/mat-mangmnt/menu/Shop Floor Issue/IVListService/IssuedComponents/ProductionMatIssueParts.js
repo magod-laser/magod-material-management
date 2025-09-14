@@ -248,6 +248,10 @@ function ProductionMatIssueParts() {
     }
   };
 
+  useEffect(() => {
+    fetchPDFData();
+  }, []);
+
   const printButton = () => {
     setIsPrintModalOpen(true);
     savePdfToServer();

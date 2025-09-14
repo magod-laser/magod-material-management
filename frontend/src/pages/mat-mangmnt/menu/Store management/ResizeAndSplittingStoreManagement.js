@@ -44,6 +44,7 @@ export default function ResizeAndSplittingStoreManagement() {
   const [showYesNo, setShowYesNo] = useState(false);
 
   const fetchData = () => {
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });

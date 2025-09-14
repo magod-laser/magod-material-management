@@ -107,6 +107,7 @@ function OpenButtonOpenSheetUnit() {
         setFormHeader(formHeader);
       });
 
+      // Check if stock is available by RV_No
       let url3 = endpoints.checkStockAvailable + "?rvno=" + formHeader.rvNo;
 
       getRequest(url3, (data4) => {
@@ -150,6 +151,7 @@ function OpenButtonOpenSheetUnit() {
         });
         setMtrlArray(data2);
 
+        // Fetch a single material data row by Mtrl_Code
         const url2 =
           endpoints.getRowByMtrlCode + "?code=" + data2[0]?.Mtrl_Code;
         getRequest(url2, (data3) => {

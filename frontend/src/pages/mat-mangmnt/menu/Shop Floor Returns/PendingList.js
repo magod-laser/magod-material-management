@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import YesNoModal from "../../components/YesNoModal";
 import TreeView from "react-treeview";
 import ResizeReturnModal from "./ReturnComponents/ResizeReturnModal";
+import { HashLoader } from "react-spinners";
 
 const { getRequest, postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
@@ -19,6 +20,7 @@ function PendingList(props) {
 
   const [showYesNo, setShowYesNo] = useState(false);
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -46,6 +48,7 @@ function PendingList(props) {
   const [isFirstRowSelected, setIsFirstRowSelected] = useState(false);
 
   const fetchData = () => {
+    setLoading(true);
     getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
       setFirstTable(data);
       setFirstTableAll(data);
@@ -71,6 +74,7 @@ function PendingList(props) {
       ];
 
       setTreeData(uniqueData);
+      setLoading(false);
     });
   };
 
@@ -222,7 +226,7 @@ function PendingList(props) {
       setSecondTable([]);
 
       let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
-      // console.log("row.IssueID", row.IssueID);
+
       setIsSecondTableLoading(true);
       getRequest(url1, (data) => {
         data.forEach((sheet) => {
@@ -297,7 +301,51 @@ function PendingList(props) {
     }
   };
 
+  // function tableRefresh() {
+  //   setLoading(true);
+  //   if (filteredMachine) {
+  //     getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
+  //       const filteredData = data.filter(
+  //         (obj) => obj.Machine === filteredMachine
+  //       );
+  //       setFirstTable(filteredData);
+  //       setFirstTableAll(data);
+  //     });
+  //   } else {
+  //     // If no machine is selected, set the first table to the entire data
+  //     getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
+  //       setFirstTable(data);
+  //       setFirstTableAll(data);
+  //     });
+  //   }
+
+  //   //reset second table data
+  //   let row = firstRowSelected;
+  //   setSelectedSecondTableRows([]);
+  //   let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
+  //   getRequest(url1, (data) => {
+  //     data.forEach((sheet) => {
+  //       if (sheet.NCPara1 <= sheet.Para1 && sheet.NCPara2 <= sheet.Para2) {
+  //         sheet.RemPara1 = sheet.Para1 - sheet.NCPara1;
+  //         sheet.RemPara2 = sheet.Para2 - sheet.NCPara2;
+  //       } else if (
+  //         sheet.NCPara2 <= sheet.Para1 &&
+  //         sheet.NCPara1 <= sheet.Para2
+  //       ) {
+  //         sheet.RemPara1 = sheet.Para1 - sheet.NCPara2;
+  //         sheet.RemPara2 = sheet.Para2 - sheet.NCPara1;
+  //       }
+  //     });
+
+  //     setSecondTable(data);
+  //     setLoading(false);
+  //   });
+  // }
+
   function tableRefresh() {
+    setLoading(true);
+
+    // ---- First Table ----
     if (filteredMachine) {
       getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
         const filteredData = data.filter(
@@ -314,26 +362,33 @@ function PendingList(props) {
       });
     }
 
-    //reset second table data
+    // ---- Second Table ----
     let row = firstRowSelected;
     setSelectedSecondTableRows([]);
-    let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
-    getRequest(url1, (data) => {
-      data.forEach((sheet) => {
-        if (sheet.NCPara1 <= sheet.Para1 && sheet.NCPara2 <= sheet.Para2) {
-          sheet.RemPara1 = sheet.Para1 - sheet.NCPara1;
-          sheet.RemPara2 = sheet.Para2 - sheet.NCPara2;
-        } else if (
-          sheet.NCPara2 <= sheet.Para1 &&
-          sheet.NCPara1 <= sheet.Para2
-        ) {
-          sheet.RemPara1 = sheet.Para1 - sheet.NCPara2;
-          sheet.RemPara2 = sheet.Para2 - sheet.NCPara1;
-        }
-      });
 
-      setSecondTable(data);
-    });
+    if (row && row.IssueID) {
+      let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
+      getRequest(url1, (data) => {
+        data.forEach((sheet) => {
+          if (sheet.NCPara1 <= sheet.Para1 && sheet.NCPara2 <= sheet.Para2) {
+            sheet.RemPara1 = sheet.Para1 - sheet.NCPara1;
+            sheet.RemPara2 = sheet.Para2 - sheet.NCPara2;
+          } else if (
+            sheet.NCPara2 <= sheet.Para1 &&
+            sheet.NCPara1 <= sheet.Para2
+          ) {
+            sheet.RemPara1 = sheet.Para1 - sheet.NCPara2;
+            sheet.RemPara2 = sheet.Para2 - sheet.NCPara1;
+          }
+        });
+
+        setSecondTable(data);
+        setLoading(false);
+      });
+    } else {
+      setSecondTable([]);
+      setLoading(false);
+    }
   }
 
   const returnToStock = () => {
@@ -350,8 +405,6 @@ function PendingList(props) {
       setRowValResize(row);
     }
   };
-
-  // console.log("secondTableRow", secondTableRow);
 
   // Return To Stock
   const modalYesNoResponse = (msg) => {
@@ -412,10 +465,12 @@ function PendingList(props) {
             let paraData3 = {
               DynamicPara1: secondTableRow.Para1,
               DynamicPara2: secondTableRow.Para2,
-              LocationNo: secondTableRow.location,
+              // LocationNo: secondTableRow.location,
+              LocationNo: rowValResize.location,
               Weight: totwt,
               MtrlStockID: selectedSecondTableRows[i].ShapeMtrlID,
             };
+
             postRequest(
               endpoints.updateMtrlStockLock1,
               paraData3,
@@ -513,6 +568,7 @@ function PendingList(props) {
           LocationNo: data.location,
           MtrlStockID: selectedSecondTableRows[i].ShapeMtrlID,
         };
+
         postRequest(endpoints.updateMtrlStockLock2, paraData3, (data) => {});
 
         //updatencprogrammtrlallotmentlistReturnStock
@@ -571,6 +627,12 @@ function PendingList(props) {
         row={secondTableRow}
         resizeModal={resizeModal}
       />
+      {loading && (
+        <div className="full-page-loader">
+          <HashLoader color="#3498db" loading={true} size={60} />
+          <p className="mt-2">Loading, please wait...</p>
+        </div>
+      )}
 
       <h4 className="title">Shop Floor Material Issue List</h4>
       <div className="row">

@@ -41,6 +41,7 @@ export default function ResizeAndSplittingForm() {
   const [isPara2Validation, setPara2Validation] = useState(false);
 
   const fetchData = () => {
+    // Fetch all material location list
     getRequest(endpoints.getMaterialLocationList, (data) => {
       setLocationData(data);
     });
