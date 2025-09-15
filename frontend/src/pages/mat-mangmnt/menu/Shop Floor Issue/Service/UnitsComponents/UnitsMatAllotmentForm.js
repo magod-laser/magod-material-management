@@ -466,7 +466,7 @@ function UnitsMatAllotmentForm() {
                   "Issue Voucher number is created: " + series
                 );
                 localStorage.issuevoucer =
-                  "Issue Voucner number is created : " + series;
+                  "Issue Voucher number is created : " + series;
                 setShowok(true);
               }
             } else {

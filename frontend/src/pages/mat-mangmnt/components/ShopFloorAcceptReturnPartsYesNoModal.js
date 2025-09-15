@@ -29,12 +29,18 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
 
       //update ncprogram qtyalloated
 
-      let update3 = {
-        Id: formHeader.NcId,
-        Qty: tableData[i].QtyReturned,
-      };
-      postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
+      // let update3 = {
+      //   Id: formHeader.NcId,
+      //   Qty: tableData[i].QtyReturned,
+      // };
+      // postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
     }
+
+    let update3 = {
+      Id: formHeader.NcId,
+      Qty: tableData[0].QtyReturned,
+    };
+    postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
 
     //update shopfloorpartissueregiser stats closed
 
