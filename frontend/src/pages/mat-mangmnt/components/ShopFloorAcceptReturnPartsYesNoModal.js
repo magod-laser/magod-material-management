@@ -38,8 +38,10 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
 
     let update3 = {
       Id: formHeader.NcId,
-      Qty: tableData[0].QtyReturned,
+      Qty: formHeader.QtyReturned,
     };
+
+    console;
     postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
 
     //update shopfloorpartissueregiser stats closed
