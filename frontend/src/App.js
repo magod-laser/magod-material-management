@@ -73,8 +73,6 @@ import UnitsIssueToProduction from "./pages/mat-mangmnt/menu/Shop Floor Issue/Se
 import ReturnAsScrap from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/ReturnAsScrap";
 import ReturnToStock from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/ReturnToStock";
 import ResizeAndReturn from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/ResizeAndReturn";
-import LocationModel from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/LocationModel";
-import ModalComp from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/ModalComp";
 import ResizeAndSplittingForm from "./pages/mat-mangmnt/menu/Shop Floor Returns/ReturnComponents/ResizeAndSplittingForm";
 import StockReport from "./pages/mat-mangmnt/menu/Reports/Customer/StockReport";
 import PartsReport from "./pages/mat-mangmnt/menu/Reports/Customer/PartsReport";
@@ -96,7 +94,6 @@ import PrintIVListServicePartTable from "./pages/mat-mangmnt/print/shopfloorissu
 import PrintIVListProfileCutting from "./pages/mat-mangmnt/print/shopfloorissue/PrintIVListProfileCutting";
 import PrintDailyReportReceipt from "./pages/mat-mangmnt/print/report/PrintDailyReportReceipt";
 import PrintReportStockList from "./pages/mat-mangmnt/print/report/PrintReportStockList";
-import PrintReportFullStockListTable from "./pages/mat-mangmnt/print/report/PrintReportFullStockListTable";
 import PrintReportFullStockList from "./pages/mat-mangmnt/print/report/PrintReportFullStockList";
 import PrintMonthlyReport from "./pages/mat-mangmnt/print/report/PrintMonthlyReport";
 import PrintDailyReportInvoice from "./pages/mat-mangmnt/print/report/PrintDailyReportInvoice";

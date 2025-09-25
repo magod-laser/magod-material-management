@@ -8,7 +8,6 @@ const Sidebar = ({ children }) => {
   const [isSubmenuOpen, setSubMenuOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const openSubMenu = () => setSubMenuOpen(!isSubmenuOpen);
 
   return (
     <div className="main-container">
