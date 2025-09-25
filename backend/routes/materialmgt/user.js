@@ -1,15 +1,15 @@
 /** @format */
 
 const userRouter = require("express").Router();
-var createError = require("http-errors");
+let createError = require("http-errors");
 const CryptoJS = require("crypto-js");
-var bodyParser = require("body-parser");
+let bodyParser = require("body-parser");
 const { infoLogger, errorLogger } = require("../../helpers/logger");
 
 const { setupQueryMod } = require("../../helpers/dbconn");
 const { signAccessToken } = require("../../helpers/jwt_helper");
 
-var jsonParser = bodyParser.json();
+let jsonParser = bodyParser.json();
 
 // User login: validate credentials, fetch menus and generate access token
 userRouter.post(`/login`, jsonParser, async (req, res, next) => {
@@ -113,9 +113,6 @@ userRouter.post(`/login`, jsonParser, async (req, res, next) => {
 
 // Save or update menu-role mapping for users
 userRouter.post(`/savemenurolemapping`, async (req, res, next) => {
-  let sucs = false;
-  let updt = false;
-  let nomenu = false;
   let inRole = null;
 
   try {
@@ -461,8 +458,6 @@ userRouter.get("/user", async (req, res, next) => {
 // Fetch all modules from magod_setup.modules
 userRouter.post(`/getusermodules`, async (req, res, next) => {
   try {
-    const { Module: strmodule } = req.body;
-
     infoLogger.info("Requested all modules", {
       endpoint: "/getusermodules",
       method: req.method,

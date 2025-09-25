@@ -49,14 +49,14 @@ customerRouter.get("/getCustomerByCustCode", async (req, res, next) => {
 
   try {
     misQueryMod(
-      `SELECT * FROM magodmis.cust_data WHERE Cust_Code = ${code}`,
+      "SELECT * FROM magodmis.cust_data WHERE Cust_Code = ?",
+      [code],
       (err, data) => {
         if (err) {
-          errorLogger.error(
-            `Error fetching customer details for Cust_Code = ${code}`,
-            err,
-            { endpoint }
-          );
+          errorLogger.error("Error fetching customer details", err, {
+            endpoint,
+            Cust_Code: code,
+          });
           return res
             .status(500)
             .json({ Status: "Error", Message: "Database error" });
