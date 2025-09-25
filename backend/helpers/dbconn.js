@@ -1,4 +1,4 @@
-var mysql = require("mysql2");
+let mysql = require("mysql2");
 
 require("dotenv").config();
 
@@ -10,7 +10,7 @@ const dbDatabase1 = process.env.DB_DATABASE_1; //magodmis
 const dbDatabase2 = process.env.DB_DATABASE_2; //magod_setup
 const dbDatabase6 = process.env.DB_DATABASE_6; //magod_mtrl
 
-var misConn = mysql.createConnection({
+let misConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
   port: dbPort,
@@ -18,7 +18,7 @@ var misConn = mysql.createConnection({
   database: dbDatabase1,
 });
 
-var setupConn = mysql.createConnection({
+let setupConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
   port: dbPort,
@@ -26,7 +26,7 @@ var setupConn = mysql.createConnection({
   database: dbDatabase2,
 });
 
-var mtrlConn = mysql.createConnection({
+let mtrlConn = mysql.createConnection({
   host: dbHost,
   user: dbUser,
   port: dbPort,
@@ -34,11 +34,11 @@ var mtrlConn = mysql.createConnection({
   database: dbDatabase6,
 });
 
-let misQuery = async (q, callback) => {
+let misQuery = async (q, values, callback) => {
   misConn.connect();
-  misConn.query(q, (err, res, fields) => {
-    if (err) throw err;
-    callback(res);
+  misConn.query(q, values, (err, res, fields) => {
+    if (err) callback(err, null);
+    else callback(null, res);
   });
 };
 
@@ -50,7 +50,7 @@ let misQueryMod = async (q, values, callback) => {
   });
 };
 
-let mtrlQueryMod = (q, values, callback) => {
+let mtrlQueryMod = async (q, values, callback) => {
   mtrlConn.connect();
   mtrlConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);
@@ -58,7 +58,7 @@ let mtrlQueryMod = (q, values, callback) => {
   });
 };
 
-let setupQuery = (q, values, callback) => {
+let setupQuery = async (q, values, callback) => {
   setupConn.connect();
   setupConn.query(q, values, (err, res, fields) => {
     if (err) callback(err, null);

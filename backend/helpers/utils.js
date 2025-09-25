@@ -1,5 +1,5 @@
 const formatDate = (dateObj, format) => {
-  var monthNames = [
+  let monthNames = [
     "January",
     "February",
     "March",
@@ -13,13 +13,13 @@ const formatDate = (dateObj, format) => {
     "November",
     "December",
   ];
-  var curr_date = dateObj.getDate();
-  var curr_month = dateObj.getMonth();
+  let curr_date = dateObj.getDate();
+  let curr_month = dateObj.getMonth();
   curr_month = curr_month + 1;
-  var curr_year = dateObj.getFullYear();
-  var curr_min = dateObj.getMinutes();
-  var curr_hr = dateObj.getHours();
-  var curr_sc = dateObj.getSeconds();
+  let curr_year = dateObj.getFullYear();
+  let curr_min = dateObj.getMinutes();
+  let curr_hr = dateObj.getHours();
+  let curr_sc = dateObj.getSeconds();
   if (curr_month.toString().length == 1) curr_month = "0" + curr_month;
   if (curr_date.toString().length == 1) curr_date = "0" + curr_date;
   if (curr_hr.toString().length == 1) curr_hr = "0" + curr_hr;

@@ -139,11 +139,8 @@ mtrlPartReceiptDetailsRouter.post(
       unitWeight,
       qtyReceived,
       qtyRejected,
-      qtyUsed,
-      qtyReturned,
       partId,
       qtyAccepted,
-      qtyIssued,
     } = req.body;
 
     infoLogger.info("Requested update for material part receipt details", {

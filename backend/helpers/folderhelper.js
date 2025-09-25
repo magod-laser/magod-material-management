@@ -5,9 +5,7 @@ let folderBase = "C:/Magod/Jigani";
 
 let checkdrawings = async (qtnNo, callback) => {
   qtnNo = qtnNo.replaceAll("/", "_");
-  // await fs.exists(folderBase + `/QtnDwg/`+qtnNo, async (exists) => {
-  //     callback(exists);
-  // })
+
   let month = qtnNo.split("_")[1];
   let monthName = [
     "January",
@@ -29,9 +27,9 @@ let checkdrawings = async (qtnNo, callback) => {
     callback(false);
   }
 
-  var files = fs.readdirSync(startPath);
-  for (var i = 0; i < files.length; i++) {
-    var filename = path.join(startPath, files[i]);
+  let files = fs.readdirSync(startPath);
+  for (let i = 0; i < files.length; i++) {
+    let filename = path.join(startPath, files[i]);
     if (filename.endsWith(filter)) {
       callback(true);
     }
@@ -71,7 +69,6 @@ let createFolder = async (SrlType, qno, month, callback) => {
             if (!ex) {
               await fs.mkdirSync(folderBase + `/Wo/${qno}`);
             }
-            //   await fs.mkdirSync(folderBase + `/Wo/${qno}`)
           });
         });
         break;
@@ -110,9 +107,9 @@ let createFolder = async (SrlType, qno, month, callback) => {
 
 const copyfiles = async (source, destination, callback) => {
   try {
-    var files = fs.readdirSync(source);
-    for (var i = 0; i < files.length; i++) {
-      var filename = path.join(startPath, files[i]);
+    let files = fs.readdirSync(source);
+    for (let i = 0; i < files.length; i++) {
+      let filename = path.join(startPath, files[i]);
       if (filename.endsWith(".dxf")) {
         fs.copyFile(filename, destination);
       }
@@ -145,11 +142,11 @@ const copyallfiles = async (DocType, source, destination) => {
         for (let p = 0; p < subfolders.length; p++) {
           await fs.exists(fromsource + "/" + subfolders[p], async (exists) => {
             if (exists) {
-              var srcfldr = fromsource + "/" + subfolders[p] + "/";
-              var dstfldr = todestination + "/" + subfolders[p] + "/";
-              var files = fs.readdirSync(srcfldr);
-              for (var i = 0; i < files.length; i++) {
-                var filename = path.join(srcfldr, files[i]);
+              let srcfldr = fromsource + "/" + subfolders[p] + "/";
+              let dstfldr = todestination + "/" + subfolders[p] + "/";
+              let files = fs.readdirSync(srcfldr);
+              for (let i = 0; i < files.length; i++) {
+                let filename = path.join(srcfldr, files[i]);
                 if (filename) {
                   fs.copyFile(filename, dstfldr);
                 }
@@ -164,29 +161,14 @@ const copyallfiles = async (DocType, source, destination) => {
         });
         break;
       }
-      // case "Quotation": {
-      // }
-      // case "Order": {
-      // }
+
       default:
         break;
     }
-    // callback(null, true);
   } catch (error) {
     console.error(error);
-    //  callback(error, null);
   }
 };
-
-// const removefiles = async (source, callback) => {
-//     try {
-//         var files = fs.readdirSync(source);
-//         for (var i = 0; i < files.length; i++) {
-//             var filename = path.join(startPath, files[i]);
-//             if (filename.endsWith(".dxf")) {
-//                 fs.rename()    .rmdir(filename);
-
-//             };
 
 const writetofile = async (qtnNo, filename, content, callback) => {
   fs.appendFile(folderBase + `/QtnDwg/${month}/${qtnNo}/${filename}`, content)

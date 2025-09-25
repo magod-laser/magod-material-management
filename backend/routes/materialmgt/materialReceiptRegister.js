@@ -223,7 +223,6 @@ materialReceiptRegisterRouter.post(
         reference,
         weight,
         calcWeight,
-        type,
       } = req.body;
 
       receiptDate = formatDate(new Date(), 5);
