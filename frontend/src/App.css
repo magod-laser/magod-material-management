@@ -51,7 +51,7 @@ a {
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
   align-items: center;
   justify-content: space-around;
-  border: 10x solid black;
+  border: 10px solid black;
 }
 
 .link:hover {

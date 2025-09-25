@@ -3,13 +3,12 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { formatDate } from "../../../utils";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const { getRequest, postRequest } = require("../../api/apiinstance");
 const { endpoints } = require("../../api/constants");
 
 function CreateDCSaveClearCancelModal(props) {
-  const { show, setShow, handleShow } = props;
+  const { show, setShow } = props;
   const [pnno, setpnno] = useState("");
   const handleClose = () => setShow(false);
 

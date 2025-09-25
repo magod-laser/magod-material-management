@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import SubMenuComp from "./SubNavComp";
 import { customerSidebar, adminSidebar } from "../components/SidebarData";
-import { FaAngleRight, FaAngleLeft, FaAngleDown } from "react-icons/fa";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 
 const SidebarWrap = styled.div`
   width: 100%;

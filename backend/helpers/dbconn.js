@@ -34,14 +34,6 @@ let mtrlConn = mysql.createConnection({
   database: dbDatabase6,
 });
 
-let misQuery = async (q, values, callback) => {
-  misConn.connect();
-  misConn.query(q, values, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
 let misQueryMod = async (q, values, callback) => {
   misConn.connect();
   misConn.query(q, values, (err, res, fields) => {
@@ -58,14 +50,6 @@ let mtrlQueryMod = async (q, values, callback) => {
   });
 };
 
-let setupQuery = async (q, values, callback) => {
-  setupConn.connect();
-  setupConn.query(q, values, (err, res, fields) => {
-    if (err) callback(err, null);
-    else callback(null, res);
-  });
-};
-
 let setupQueryMod = async (q, values, callback) => {
   setupConn.connect();
   setupConn.query(q, values, (err, res, fields) => {
@@ -75,8 +59,6 @@ let setupQueryMod = async (q, values, callback) => {
 };
 
 module.exports = {
-  misQuery,
-  setupQuery,
   misQueryMod,
   mtrlQueryMod,
   setupQueryMod,

@@ -703,18 +703,7 @@ runningNoRouter.post("/insertAndGetRunningNo", async (req, res, next) => {
     Period,
   });
 
-  const todayDate = new Date();
   let Running_No = 0;
-
-  const finYear = `${
-    todayDate.getMonth() + 1 < 4
-      ? (todayDate.getFullYear() - 1).toString().slice(-2)
-      : todayDate.getFullYear().toString().slice(-2)
-  }/${
-    todayDate.getMonth() + 1 < 4
-      ? todayDate.getFullYear().toString().slice(-2)
-      : (todayDate.getFullYear() + 1).toString().slice(-2)
-  }`;
 
   try {
     const selectQuery = `

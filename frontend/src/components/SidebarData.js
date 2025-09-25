@@ -11,17 +11,18 @@ import { HiUsers } from "react-icons/hi";
 
 import { AiOutlineDeploymentUnit } from "react-icons/ai";
 import { FiSlack } from "react-icons/fi";
-import { TbReport } from "react-icons/tb";
+import { TbReport, TbReportSearch, TbTransferIn } from "react-icons/tb";
 import { BiStore } from "react-icons/bi";
-import { TbReportSearch } from "react-icons/tb";
-import { MdPendingActions } from "react-icons/md";
+
+import {
+  MdPendingActions,
+  MdOutlinePlace,
+  MdAutoAwesomeMotion,
+  MdOutlineSettingsAccessibility,
+  MdOutlineWebhook,
+} from "react-icons/md";
 import { GiResize } from "react-icons/gi";
-import { TbTransferIn } from "react-icons/tb";
 import { SiMaterialdesignicons } from "react-icons/si";
-import { MdOutlinePlace } from "react-icons/md";
-import { MdAutoAwesomeMotion } from "react-icons/md";
-import { MdOutlineSettingsAccessibility } from "react-icons/md";
-import { MdOutlineWebhook } from "react-icons/md";
 import { FaBusinessTime } from "react-icons/fa";
 import { CgUserList } from "react-icons/cg";
 import { IoCartOutline } from "react-icons/io5";
