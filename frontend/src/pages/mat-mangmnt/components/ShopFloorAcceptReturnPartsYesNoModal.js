@@ -41,7 +41,7 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
       Qty: formHeader.QtyReturned,
     };
 
-    console;
+    
     postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
 
     //update shopfloorpartissueregiser stats closed
