@@ -6,11 +6,13 @@
 /.pnp
 .pnp.js
 .env
+/loggers
+/uploads
 
 
 
 iisnode
-loggers
+
 
 index.exe
 
