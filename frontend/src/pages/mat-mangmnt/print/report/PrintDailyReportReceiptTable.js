@@ -162,7 +162,9 @@ const PrintDailyReportReceiptTable = (props) => (
           </View>
           <View style={styles.insideBox}>
             <View style={{ display: "flex", flexDirection: "column" }}>
-              {props.tableData.map((item, index) => {
+              {props.tableData
+              .filter((item) => item.RV_No !== "Draft")
+              .map((item, index) => {
                 return (
                   <>
                     <View
