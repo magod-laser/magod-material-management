@@ -21,19 +21,11 @@ function OkModal(props) {
         <Modal.Body style={{ fontSize: "12px" }}>{modalMessage}</Modal.Body>
         <Modal.Footer>
           <button
-            className="button-style "
+            className="button-style"
             style={{ width: "50px" }}
             onClick={handleOk}
           >
-            Yes
-          </button>
-
-          <button
-            className="button-style"
-            style={{ width: "50px" }}
-            onClick={handleClose}
-          >
-            No
+            OK
           </button>
         </Modal.Footer>
       </Modal>

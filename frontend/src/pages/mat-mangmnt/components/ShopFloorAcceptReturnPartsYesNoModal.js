@@ -28,12 +28,6 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
       );
 
       //update ncprogram qtyalloated
-
-      // let update3 = {
-      //   Id: formHeader.NcId,
-      //   Qty: tableData[i].QtyReturned,
-      // };
-      // postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
     }
 
     let update3 = {
@@ -41,7 +35,6 @@ function ShopFloorAcceptReturnPartsYesNoModal(props) {
       Qty: formHeader.QtyReturned,
     };
 
-    console;
     postRequest(endpoints.updateQtyAllotedncprograms, update3, (data) => {});
 
     //update shopfloorpartissueregiser stats closed
