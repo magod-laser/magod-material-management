@@ -103,7 +103,7 @@ import ResizeAndSplittingStoreManagement from "./pages/mat-mangmnt/menu/Store ma
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/materialmanagement">
       <ToastContainer position="top-center" autoClose={2000} />
 
       <Routes>
