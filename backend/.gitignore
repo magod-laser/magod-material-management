@@ -7,10 +7,11 @@
 .pnp.js
 .env
 /routes/savePDFServer/uploads
+/loggers
 
 
 iisnode
-loggers
+
 
 index.exe
 
