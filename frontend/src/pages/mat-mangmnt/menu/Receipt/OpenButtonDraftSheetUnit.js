@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { formatDate, getWeight } from "../../../../utils";
+import {
+  formatDate,
+  getWeight,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../utils";
 import { toast } from "react-toastify";
 import CreateYesNoModal from "../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../components/DeleteSerialYesNoModal";
@@ -1389,7 +1394,10 @@ function OpenButtonDraftSheetUnit(props) {
             <input
               className="input-disabled mt-1"
               type="number"
-              onKeyDown={blockInvalidChar}
+              onKeyDown={(e) => {
+                blockInvalidChar(e);
+                preventArrowIncrement(e);
+              }}
               min="0"
               autoComplete="off"
               name="weight"
@@ -1400,6 +1408,7 @@ function OpenButtonDraftSheetUnit(props) {
               }
               onChange={InputHeaderEvent}
               disabled={boolVal4}
+              onWheel={preventNumScroll}
             />
           </div>
         </div>
@@ -1663,10 +1672,14 @@ function OpenButtonDraftSheetUnit(props) {
                                 : inputPart.dynamicPara1
                             }
                             disabled={boolVal5 || materialArray.length === 0}
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1688,11 +1701,15 @@ function OpenButtonDraftSheetUnit(props) {
                                 ? ""
                                 : inputPart.dynamicPara2
                             }
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1721,10 +1738,14 @@ function OpenButtonDraftSheetUnit(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1747,11 +1768,15 @@ function OpenButtonDraftSheetUnit(props) {
                                 : inputPart.dynamicPara2
                             }
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1780,10 +1805,14 @@ function OpenButtonDraftSheetUnit(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1816,10 +1845,14 @@ function OpenButtonDraftSheetUnit(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1842,11 +1875,15 @@ function OpenButtonDraftSheetUnit(props) {
                                 : inputPart.dynamicPara2
                             }
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1870,11 +1907,15 @@ function OpenButtonDraftSheetUnit(props) {
                                 : inputPart.dynamicPara3
                             }
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1903,10 +1944,14 @@ function OpenButtonDraftSheetUnit(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1935,10 +1980,14 @@ function OpenButtonDraftSheetUnit(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidChar}
+                            onKeyDown={(e) => {
+                              blockInvalidChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1967,11 +2016,15 @@ function OpenButtonDraftSheetUnit(props) {
                             : inputPart.qty
                         }
                         disabled={boolVal4 || materialArray.length === 0}
-                        onKeyDown={blockInvalidQtyChar}
+                        onKeyDown={(e) => {
+                          blockInvalidQtyChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         min="0"
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
                         }}
+                        onWheel={preventNumScroll}
                       />
                     </div>
 
@@ -1999,7 +2052,10 @@ function OpenButtonDraftSheetUnit(props) {
                         className="input-disabled mt-2"
                         type="number"
                         name="accepted"
-                        onKeyDown={blockInvalidQtyChar}
+                        onKeyDown={(e) => {
+                          blockInvalidQtyChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         value={
                           inputPart.accepted === "0" || inputPart.accepted === 0
                             ? ""
@@ -2010,6 +2066,7 @@ function OpenButtonDraftSheetUnit(props) {
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
                         }}
+                        onWheel={preventNumScroll}
                       />
                     </div>
 
@@ -2069,8 +2126,12 @@ function OpenButtonDraftSheetUnit(props) {
                             : inputPart.totalWeight
                         }
                         onChange={changeMaterialHandle}
-                        onKeyDown={blockInvalidChar}
+                        onKeyDown={(e) => {
+                          blockInvalidChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         disabled={boolVal4 || materialArray.length === 0}
+                        onWheel={preventNumScroll}
                       />
                     </div>
                   </div>

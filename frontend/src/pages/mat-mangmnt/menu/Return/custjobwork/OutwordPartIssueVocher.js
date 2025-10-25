@@ -10,6 +10,7 @@ import { FaArrowUp } from "react-icons/fa";
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
 import PrintPartsDCTable from "../../../print/return/PrintPartsDCTable";
+import { preventNumScroll, preventArrowIncrement } from "../../../../../utils";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -489,7 +490,11 @@ function OutwordPartIssueVocher(props) {
                   // min="0"
                   name="TotalWeight"
                   value={formHeader.TotalWeight}
-                  onKeyDown={numbValidations}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    numbValidations(e);
+                    preventArrowIncrement(e);
+                  }}
                   onChange={(e) => {
                     if (
                       e.target.value === "" ||
@@ -719,7 +724,11 @@ function OutwordPartIssueVocher(props) {
                         <input
                           type="number"
                           value={val.UnitWt}
-                          onKeyDown={numbValidations}
+                          onWheel={preventNumScroll}
+                          onKeyDown={(e) => {
+                            numbValidations(e);
+                            preventArrowIncrement(e);
+                          }}
                           onChange={(e) => {
                             if (
                               e.target.value === "" ||
