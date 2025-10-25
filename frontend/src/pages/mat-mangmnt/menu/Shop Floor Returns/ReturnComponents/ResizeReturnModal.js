@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import { getWeight } from "../../../../../utils";
+import {
+  getWeight,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../../utils";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -395,6 +399,9 @@ function ResizeReturnModal({
     }
   };
 
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
+
   return (
     <>
       <Modal show={isOpen} onHide={handleClose} fullscreen>
@@ -586,6 +593,11 @@ function ResizeReturnModal({
                         onChange={changeHandler}
                         value={inputData.DynamicPara1}
                         onBlur={focusOutEvent}
+                        onWheel={preventNumScroll}
+                        onKeyDown={(e) => {
+                          blockInvalidChar(e);
+                          preventArrowIncrement(e);
+                        }}
                       />
                     </div>
                   </div>
@@ -605,6 +617,11 @@ function ResizeReturnModal({
                         value={inputData.DynamicPara2}
                         onBlur={focusOutEvent}
                         disabled={!isPara2Enabled}
+                        onWheel={preventNumScroll}
+                        onKeyDown={(e) => {
+                          blockInvalidChar(e);
+                          preventArrowIncrement(e);
+                        }}
                       />
                     </div>
                   </div>
@@ -623,6 +640,11 @@ function ResizeReturnModal({
                         onChange={changeHandler}
                         value={inputData.InStock}
                         disabled={!quantityEnabled}
+                        onWheel={preventNumScroll}
+                        onKeyDown={(e) => {
+                          blockInvalidChar(e);
+                          preventArrowIncrement(e);
+                        }}
                       />
                     </div>
                   </div>

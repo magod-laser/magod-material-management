@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { getRequest, postRequest } from "../../../../api/apiinstance";
 import { endpoints } from "../../../../api/constants";
 import SplitMaterialYesNoModal from "../../../components/SplitMaterialYesNoModal";
+import { preventNumScroll, preventArrowIncrement } from "../../../../../utils";
 
 export default function ResizeAndSplittingForm() {
   const nav = useNavigate();
@@ -273,6 +274,9 @@ export default function ResizeAndSplittingForm() {
     }
   };
 
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
+
   return (
     <>
       <h4 className="title">Material Resize and Splitting Form</h4>
@@ -441,6 +445,11 @@ export default function ResizeAndSplittingForm() {
                     onChange={changeHandler}
                     value={inputData.DynamicPara1}
                     onBlur={focusOutEvent}
+                    onWheel={preventNumScroll}
+                    onKeyDown={(e) => {
+                      blockInvalidChar(e);
+                      preventArrowIncrement(e);
+                    }}
                   />
                 </div>
               </div>
@@ -460,6 +469,11 @@ export default function ResizeAndSplittingForm() {
                     value={inputData.DynamicPara2}
                     onBlur={focusOutEvent}
                     disabled={!isPara2Enabled}
+                    onWheel={preventNumScroll}
+                    onKeyDown={(e) => {
+                      blockInvalidChar(e);
+                      preventArrowIncrement(e);
+                    }}
                   />
                 </div>
               </div>
@@ -479,6 +493,11 @@ export default function ResizeAndSplittingForm() {
                     value={inputData.InStock}
                     onBlur={focusOutEvent}
                     disabled={!isPara2Enabled}
+                    onWheel={preventNumScroll}
+                    onKeyDown={(e) => {
+                      blockInvalidChar(e);
+                      preventArrowIncrement(e);
+                    }}
                   />
                 </div>
               </div>

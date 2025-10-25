@@ -5,6 +5,10 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatDate } from "../../../../../../../utils";
 import { HashLoader } from "react-spinners";
+import {
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../../../../utils";
 
 const {
   getRequest,
@@ -642,7 +646,11 @@ function MaterialAllotmentMain() {
                   onChange={issuenowchange}
                   value={issuenowval}
                   onBlur={issuenowonblur}
-                  onKeyDown={blockInvalidQtyChar}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   disabled={isAnyQtyAvailableZero() || firstTable.length === 0}
                 />
               </div>
@@ -854,6 +862,11 @@ function MaterialAllotmentMain() {
                               height: "100%",
                               backgroundColor: "transparent",
                               border: "none",
+                            }}
+                            onWheel={preventNumScroll}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
                             }}
                           />
                         </td>

@@ -11,6 +11,7 @@ import PrintMaterialDC from "../../../print/return/PrintMaterialDC";
 import axios from "axios";
 import { pdf } from "@react-pdf/renderer";
 import PrintMaterialDCTable from "../../../print/return/PrintMaterialDCTable";
+import { preventNumScroll, preventArrowIncrement } from "../../../../../utils";
 
 const { getRequest, postRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -469,7 +470,11 @@ function OutwordMaterialIssueVocher(props) {
                   style={{ fontSize: "12px" }}
                   name="TotalWeight"
                   value={formHeader.TotalWeight}
-                  onKeyDown={numbValidations}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    numbValidations(e);
+                    preventArrowIncrement(e);
+                  }}
                   onChange={(e) => {
                     if (
                       e.target.value === "" ||
@@ -711,7 +716,11 @@ function OutwordMaterialIssueVocher(props) {
                       <input
                         type="number"
                         value={val.TotalWeight || ""}
-                        onKeyDown={numbValidations}
+                        onWheel={preventNumScroll}
+                        onKeyDown={(e) => {
+                          numbValidations(e);
+                          preventArrowIncrement(e);
+                        }}
                         onChange={(e) => {
                           if (
                             e.target.value === "" ||

@@ -5,7 +5,11 @@ import BootstrapTable from "react-bootstrap-table-next";
 import CreateYesNoModal from "../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../components/DeleteSerialYesNoModal";
 import DeleteRVModal from "../../components/DeleteRVModal";
-import { formatDate } from "../../../../utils";
+import {
+  formatDate,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../utils";
 import { useLocation } from "react-router-dom";
 import { Typeahead } from "react-bootstrap-typeahead";
 
@@ -708,12 +712,16 @@ function OpenButtonDraftPartList() {
             <input
               className="input-disabled mt-1"
               type="number"
-              onKeyDown={blockInvalidChar}
+              onKeyDown={(e) => {
+                blockInvalidChar(e);
+                preventArrowIncrement(e);
+              }}
               min="0"
               name="weight"
               value={formHeader.weight}
               onChange={InputHeaderEvent}
               disabled={boolVal4}
+              onWheel={preventNumScroll}
             />
           </div>
         </div>
@@ -886,9 +894,13 @@ function OpenButtonDraftPartList() {
                       : inputPart.unitWeight
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidChar}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   disabled={boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>
@@ -908,8 +920,12 @@ function OpenButtonDraftPartList() {
                       : inputPart.qtyReceived
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   disabled={boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
               <div className="col-md-8 "></div>
@@ -929,9 +945,13 @@ function OpenButtonDraftPartList() {
                       : inputPart.qtyAccepted
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   disabled={boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>

@@ -3,6 +3,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import YesNoModal from "../../components/YesNoModal";
+import { preventNumScroll, preventArrowIncrement } from "../../../../utils";
 
 const { getRequest, postRequest } = require("../../../api/apiinstance");
 const { endpoints } = require("../../../api/constants");
@@ -236,7 +237,7 @@ export default function LocationList() {
     if (
       e.which === 38 ||
       e.which === 40 ||
-      ["e", "E", "+", "-"].includes(e.key)
+      ["e", "E", "+", "-", "."].includes(e.key)
     ) {
       e.preventDefault();
     }
@@ -323,7 +324,11 @@ export default function LocationList() {
                   name="capacity"
                   type="number"
                   value={inputData.capacity}
-                  onKeyDown={numbValidations}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    numbValidations(e);
+                    preventArrowIncrement(e);
+                  }}
                   onChange={(e) => {
                     if (
                       e.target.value === "" ||

@@ -5,7 +5,11 @@ import CreateYesNoModal from "../../../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../../../components/DeleteSerialYesNoModal";
 import DeleteRVModal from "../../../../components/DeleteRVModal";
 import BootstrapTable from "react-bootstrap-table-next";
-import { formatDate } from "../../../../../../utils";
+import {
+  formatDate,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../../../utils";
 import { Typeahead } from "react-bootstrap-typeahead";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
@@ -722,8 +726,12 @@ function PNew() {
               name="weight"
               value={formHeader.weight === "0" ? "" : formHeader.weight}
               onChange={InputHeaderEvent}
-              onKeyDown={blockInvalidChar}
+              onKeyDown={(e) => {
+                blockInvalidChar(e);
+                preventArrowIncrement(e);
+              }}
               disabled={boolVal4}
+              onWheel={preventNumScroll}
             />
           </div>
         </div>
@@ -895,9 +903,13 @@ function PNew() {
                       : inputPart.unitWeight
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidChar}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   disabled={boolVal3 || boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>
@@ -910,7 +922,10 @@ function PNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="qtyReceived"
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   value={
                     inputPart.qtyReceived === "0" || inputPart.qtyReceived === 0
@@ -919,6 +934,7 @@ function PNew() {
                   }
                   onChange={changePartHandle}
                   disabled={boolVal3 || boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>
@@ -937,9 +953,13 @@ function PNew() {
                       : inputPart.qtyAccepted
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   disabled={boolVal3 || boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>

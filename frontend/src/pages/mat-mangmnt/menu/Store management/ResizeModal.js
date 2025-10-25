@@ -6,6 +6,7 @@ import SplitMaterialYesNoModal from "../../components/SplitMaterialYesNoModal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getRequest, postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
+import { preventArrowIncrement, preventNumScroll } from "../../../../utils";
 
 export default function ResizeModal(props) {
   // Close modal, reset states, and refresh customer data
@@ -507,7 +508,11 @@ export default function ResizeModal(props) {
                           className="in-field rounded-0"
                           name="DynamicPara1"
                           value={inputData.DynamicPara1}
-                          onKeyDown={numbValidations}
+                          onWheel={preventNumScroll}
+                          onKeyDown={(e) => {
+                            numbValidations(e);
+                            preventArrowIncrement(e);
+                          }}
                           onChange={(e) => {
                             if (
                               e.target.value === "" ||
@@ -547,7 +552,11 @@ export default function ResizeModal(props) {
                           className="in-field rounded-0"
                           name="DynamicPara2"
                           value={inputData.DynamicPara2}
-                          onKeyDown={numbValidations}
+                          onWheel={preventNumScroll}
+                          onKeyDown={(e) => {
+                            numbValidations(e);
+                            preventArrowIncrement(e);
+                          }}
                           onChange={(e) => {
                             if (
                               e.target.value === "" ||
@@ -587,7 +596,11 @@ export default function ResizeModal(props) {
                           className="in-field rounded-0"
                           name="InStock"
                           value={inputData.InStock}
-                          onKeyDown={numbValidations}
+                          onWheel={preventNumScroll}
+                          onKeyDown={(e) => {
+                            numbValidations(e);
+                            preventArrowIncrement(e);
+                          }}
                           onChange={(e) => {
                             if (
                               e.target.value === "" ||

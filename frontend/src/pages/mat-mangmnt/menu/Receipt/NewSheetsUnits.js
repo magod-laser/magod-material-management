@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { formatDate, getWeight } from "../../../../utils";
+import {
+  formatDate,
+  getWeight,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../utils";
 import { toast } from "react-toastify";
 import CreateYesNoModal from "../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../components/DeleteSerialYesNoModal";
@@ -1369,7 +1374,10 @@ function NewSheetsUnits(props) {
               type="number"
               name="weight"
               autoComplete="off"
-              onKeyDown={blockInvalidChar}
+              onKeyDown={(e) => {
+                blockInvalidChar(e);
+                preventArrowIncrement(e);
+              }}
               min="0"
               required
               // value={formHeader.weight}
@@ -1380,6 +1388,7 @@ function NewSheetsUnits(props) {
               }
               onChange={InputHeaderEvent}
               disabled={boolVal4}
+              onWheel={preventNumScroll}
             />
           </div>
         </div>
@@ -1696,10 +1705,14 @@ function NewSheetsUnits(props) {
                             }
                             disabled={boolVal5 || materialArray.length === 0}
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1722,11 +1735,15 @@ function NewSheetsUnits(props) {
                                 : inputPart.dynamicPara2
                             }
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1755,10 +1772,14 @@ function NewSheetsUnits(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1781,11 +1802,15 @@ function NewSheetsUnits(props) {
                                 : inputPart.dynamicPara2
                             }
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1814,10 +1839,14 @@ function NewSheetsUnits(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1850,10 +1879,14 @@ function NewSheetsUnits(props) {
                             }
                             disabled={boolVal5}
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1876,11 +1909,15 @@ function NewSheetsUnits(props) {
                                 : inputPart.dynamicPara2
                             }
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1904,11 +1941,15 @@ function NewSheetsUnits(props) {
                                 : inputPart.dynamicPara3
                             }
                             min="0"
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
                             disabled={boolVal5}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1936,11 +1977,15 @@ function NewSheetsUnits(props) {
                                 : inputPart.dynamicPara1
                             }
                             disabled={boolVal5}
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             min="0"
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -1967,12 +2012,16 @@ function NewSheetsUnits(props) {
                                 ? ""
                                 : inputPart.dynamicPara1
                             }
-                            onKeyDown={blockInvalidQtyChar}
+                            onKeyDown={(e) => {
+                              blockInvalidQtyChar(e);
+                              preventArrowIncrement(e);
+                            }}
                             disabled={boolVal5}
                             min="0"
                             onChange={(e) => {
                               changeMaterialHandle(e, inputPart.id);
                             }}
+                            onWheel={preventNumScroll}
                           />
                         </div>
                         <div className="col-md-2">
@@ -2001,13 +2050,17 @@ function NewSheetsUnits(props) {
                             ? ""
                             : inputPart.qty
                         }
-                        onKeyDown={blockInvalidQtyChar}
+                        onKeyDown={(e) => {
+                          blockInvalidQtyChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         disabled={
                           boolVal3 || boolVal4 || materialArray.length === 0
                         }
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
                         }}
+                        onWheel={preventNumScroll}
                       />
                     </div>
 
@@ -2043,10 +2096,14 @@ function NewSheetsUnits(props) {
                         }
                         disabled={boolVal3 || boolVal4 || !boolVal5}
                         min="0"
-                        onKeyDown={blockInvalidQtyChar}
+                        onKeyDown={(e) => {
+                          blockInvalidQtyChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
                         }}
+                        onWheel={preventNumScroll}
                       />
                     </div>
 
@@ -2110,7 +2167,10 @@ function NewSheetsUnits(props) {
                             ? ""
                             : inputPart.totalWeight
                         }
-                        onKeyDown={blockInvalidChar}
+                        onKeyDown={(e) => {
+                          blockInvalidChar(e);
+                          preventArrowIncrement(e);
+                        }}
                         min="0"
                         onChange={(e) => {
                           changeMaterialHandle(e, inputPart.id);
@@ -2118,6 +2178,7 @@ function NewSheetsUnits(props) {
                         disabled={
                           boolVal3 || boolVal4 || materialArray.length === 0
                         }
+                        onWheel={preventNumScroll}
                       />
                     </div>
                   </div>

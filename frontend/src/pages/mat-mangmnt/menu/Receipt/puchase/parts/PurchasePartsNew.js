@@ -5,7 +5,11 @@ import CreateYesNoModal from "../../../../components/CreateYesNoModal";
 import DeleteSerialYesNoModal from "../../../../components/DeleteSerialYesNoModal";
 import DeleteRVModal from "../../../../components/DeleteRVModal";
 import BootstrapTable from "react-bootstrap-table-next";
-import { formatDate } from "../../../../../../utils";
+import {
+  formatDate,
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../../../utils";
 
 const { getRequest, postRequest } = require("../../../../../api/apiinstance");
 const { endpoints } = require("../../../../../api/constants");
@@ -763,9 +767,13 @@ function PurchasePartsNew() {
                       : inputPart.unitWeight
                   }
                   onChange={changePartHandle}
-                  onKeyDown={blockInvalidChar}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   min="0"
                   disabled={boolVal3 | boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>
@@ -783,9 +791,13 @@ function PurchasePartsNew() {
                       ? ""
                       : inputPart.qtyReceived
                   }
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   onChange={changePartHandle}
                   disabled={boolVal3 | boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
               <div className="col-md-4">
@@ -801,10 +813,14 @@ function PurchasePartsNew() {
                       ? ""
                       : inputPart.qtyAccepted
                   }
-                  onKeyDown={blockInvalidQtyChar}
+                  onKeyDown={(e) => {
+                    blockInvalidQtyChar(e);
+                    preventArrowIncrement(e);
+                  }}
                   onChange={changePartHandle}
                   min="0"
                   disabled={boolVal3 | boolVal4}
+                  onWheel={preventNumScroll}
                 />
               </div>
             </div>

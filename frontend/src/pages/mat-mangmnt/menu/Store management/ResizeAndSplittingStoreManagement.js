@@ -5,6 +5,7 @@ import SplitMaterialYesNoModal from "../../components/SplitMaterialYesNoModal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getRequest, postRequest } from "../../../api/apiinstance";
 import { endpoints } from "../../../api/constants";
+import { preventNumScroll } from "../../../../utils";
 
 export default function ResizeAndSplittingStoreManagement() {
   const nav = useNavigate();
@@ -450,6 +451,7 @@ export default function ResizeAndSplittingStoreManagement() {
                     value={inputData.DynamicPara1}
                     onBlur={focusOutEvent}
                     disabled={selectedTableRow.length === 0}
+                    onWheel={preventNumScroll}
                   />
                 </div>
               </div>
@@ -469,6 +471,7 @@ export default function ResizeAndSplittingStoreManagement() {
                     value={inputData.DynamicPara2}
                     onBlur={focusOutEvent}
                     disabled={selectedTableRow.length === 0}
+                    onWheel={preventNumScroll}
                   />
                 </div>
               </div>
@@ -487,6 +490,7 @@ export default function ResizeAndSplittingStoreManagement() {
                     onChange={changeHandler}
                     value={inputData.InStock}
                     disabled={selectedTableRow.length === 0}
+                    onWheel={preventNumScroll}
                   />
                 </div>
               </div>

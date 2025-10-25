@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
+import { preventNumScroll, preventArrowIncrement } from "../../../../../utils";
+
 const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
@@ -60,6 +62,9 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
     setLocalRow((prev) => ({ ...prev, [name]: value }));
   };
 
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
+
   return (
     <>
       <Modal show={open1} onHide={handleCancel}>
@@ -89,10 +94,16 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
                   <b>Resize To</b>
                 </label>
                 <input
+                  type="number"
                   className="in-field"
                   name="ReminderPara1"
                   value={localRow.ReminderPara1}
                   onChange={InputHeaderEvent}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                 />
               </div>
             </div>
@@ -110,10 +121,16 @@ function ResizeModal({ open1, setOpen1, row, resizeModal }) {
               </div>
               <div className="col-md-3 ">
                 <input
+                  type="number"
                   className="in-field"
                   name="ReminderPara2"
                   value={localRow.ReminderPara2}
                   onChange={InputHeaderEvent}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                 />
               </div>
             </div>

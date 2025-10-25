@@ -314,3 +314,13 @@ export function get_Iv_DetailsEntry(
 
   return "Returning balance material " + Shape + " " + Material + " " + Details;
 }
+
+export const preventNumScroll = (e) => {
+  e.currentTarget.blur();
+};
+
+export const preventArrowIncrement = (e) => {
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    e.preventDefault();
+  }
+};
