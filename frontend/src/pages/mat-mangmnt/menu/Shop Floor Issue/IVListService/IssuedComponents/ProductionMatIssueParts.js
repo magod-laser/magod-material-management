@@ -55,6 +55,7 @@ function ProductionMatIssueParts() {
   });
 
   const fromType = location.state?.type;
+  const formType = location.state?.formType;
 
   const fetchData = async () => {
     let url =
@@ -426,16 +427,21 @@ function ProductionMatIssueParts() {
               className="button-style "
               id="btnclose"
               type="submit"
-              // onClick={() =>
-              //   nav("/MaterialManagement/ShopFloorIssue/Service/Parts")
-              // }
-              onClick={() =>
-                nav(
-                  fromType === "closed"
-                    ? "/MaterialManagement/ShopFloorIssue/IVListService/Closed"
-                    : "/MaterialManagement/ShopFloorIssue/IVListService/Issued"
-                )
-              }
+              onClick={() => {
+                if (formType) {
+                  nav(
+                    formType === "Parts"
+                      ? "/MaterialManagement/ShopFloorIssue/Service/Parts"
+                      : "/MaterialManagement"
+                  );
+                } else if (fromType) {
+                  nav(
+                    fromType === "closed"
+                      ? "/MaterialManagement/ShopFloorIssue/IVListService/Closed"
+                      : "/MaterialManagement/ShopFloorIssue/IVListService/Issued"
+                  );
+                }
+              }}
             >
               Close
             </button>{" "}

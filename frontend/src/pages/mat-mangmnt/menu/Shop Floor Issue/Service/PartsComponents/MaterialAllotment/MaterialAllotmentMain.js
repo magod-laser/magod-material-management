@@ -415,6 +415,7 @@ function MaterialAllotmentMain() {
             {
               state: {
                 issueIDVal: data.insertId,
+                formType: location.state?.formType,
               },
             }
           );
@@ -454,6 +455,8 @@ function MaterialAllotmentMain() {
 
   const blockInvalidQtyChar = (e) =>
     ["e", "E", "+", "-", "."].includes(e.key) && e.preventDefault();
+
+  console.log("formType", formType);
 
   return (
     <div>
