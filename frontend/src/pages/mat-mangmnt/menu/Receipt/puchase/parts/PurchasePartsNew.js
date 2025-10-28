@@ -21,12 +21,7 @@ function PurchasePartsNew() {
   const [deleteRvModalOpen, setDeleteRvModalOpen] = useState(false);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  const currDate = new Date()
-    .toJSON()
-    .slice(0, 10)
-    .split("-")
-    .reverse()
-    .join("/");
+  const currDate = new Date().toJSON().slice(0, 10).reverse().join("/");
 
   const [boolVal1, setBoolVal1] = useState(true);
   const [boolVal2, setBoolVal2] = useState(false);

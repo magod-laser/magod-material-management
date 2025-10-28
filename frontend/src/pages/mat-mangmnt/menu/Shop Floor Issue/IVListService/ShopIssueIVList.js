@@ -119,7 +119,8 @@ function ShopIssueIVList(props) {
       nav(
         "/Materialmanagement/ShopFloorIssue/IVListService/Issued/ShopMatIssueVoucher", //ProductionMatIssueParts
         {
-          state: { issueIDVal },
+          // state: { issueIDVal },
+          state: { issueIDVal, type: props.type },
         }
       );
     }

@@ -217,14 +217,14 @@ function ShopFloorMaterialAllotment(props) {
               "/MaterialManagement/ShopFloorIssue/Service/Parts/ShopFloorAllotmentForm",
 
               {
-                state: { ncid, custCode },
+                state: { ncid, custCode, formType: props.formtype },
               }
             );
       } else if (props.formtype == "Units" || props.formtype == "Others") {
         nav(
           "/MaterialManagement/ShopFloorIssue/Service/Units/MaterialAllotmentForm",
           {
-            state: { ncid, custCode },
+            state: { ncid, custCode, formType: props.formtype },
           }
         );
       }

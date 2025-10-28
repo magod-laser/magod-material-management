@@ -128,7 +128,7 @@ function IVListProfileCutting(props) {
       nav(
         "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Closed/ShopMatIssueVoucher",
         {
-          state: { issueIDVal },
+          state: { issueIDVal, type: props.type },
         }
       );
     }

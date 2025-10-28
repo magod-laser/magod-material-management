@@ -54,6 +54,8 @@ function ProductionMatIssueParts() {
     TaskNo: "",
   });
 
+  const fromType = location.state?.type;
+
   const fetchData = async () => {
     let url =
       endpoints.getProductionMaterialIssueParts +
@@ -424,7 +426,16 @@ function ProductionMatIssueParts() {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              // onClick={() =>
+              //   nav("/MaterialManagement/ShopFloorIssue/Service/Parts")
+              // }
+              onClick={() =>
+                nav(
+                  fromType === "closed"
+                    ? "/MaterialManagement/ShopFloorIssue/IVListService/Closed"
+                    : "/MaterialManagement/ShopFloorIssue/IVListService/Issued"
+                )
+              }
             >
               Close
             </button>{" "}
