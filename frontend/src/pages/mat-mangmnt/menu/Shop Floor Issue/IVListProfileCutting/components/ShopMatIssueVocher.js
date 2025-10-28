@@ -48,6 +48,9 @@ function ShopMatIssueVocher() {
     TaskNo: "",
   });
 
+  const fromType = location.state?.type;
+  const formType = location.state?.formType;
+
   const fetchData = async () => {
     setLoading(true);
     let url =
@@ -473,7 +476,28 @@ function ShopMatIssueVocher() {
               id="btnclose"
               type="submit"
               style={{ width: "50px" }}
-              onClick={() => nav("/MaterialManagement")}
+              // onClick={() =>
+              //   nav(
+              //     fromType === "closed"
+              //       ? "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Closed"
+              //       : "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Current"
+              //   )
+              // }
+              onClick={() => {
+                if (formType) {
+                  nav(
+                    formType === "Units"
+                      ? "/MaterialManagement/ShopFloorIssue/Service/Units"
+                      : "/MaterialManagement/ShopFloorIssue/ProfileCutting"
+                  );
+                } else if (fromType) {
+                  nav(
+                    fromType === "closed"
+                      ? "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Closed"
+                      : "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Current"
+                  );
+                }
+              }}
             >
               Close
             </button>

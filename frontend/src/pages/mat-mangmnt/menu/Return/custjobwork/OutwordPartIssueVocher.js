@@ -57,6 +57,8 @@ function OutwordPartIssueVocher(props) {
     RV_Remarks: "",
   });
 
+  const formType = location.state?.type;
+
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const [formData, setFormData] = useState({ unitName: userData.UnitName });
@@ -631,7 +633,21 @@ function OutwordPartIssueVocher(props) {
             className="button-style me-3"
             id="btnclose"
             type="submit"
-            onClick={() => nav("/MaterialManagement")}
+            onClick={() => {
+              if (formType === "pendingDispatch") {
+                nav(
+                  "/MaterialManagement/Return/CustomerJobWork/PendingDispatchList"
+                );
+              } else if (formType === "customerIVList") {
+                nav(
+                  "/MaterialManagement/Return/CustomerJobWork/CustomerIVList"
+                );
+              } else if (formType === "returnCancelled") {
+                nav("/MaterialManagement/Return/CustomerJobWork/Cancelled");
+              } else {
+                nav("/MaterialManagement");
+              }
+            }}
           >
             Close
           </button>

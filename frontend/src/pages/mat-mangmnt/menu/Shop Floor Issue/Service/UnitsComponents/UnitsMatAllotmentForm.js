@@ -17,6 +17,8 @@ function UnitsMatAllotmentForm() {
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+  const formType = location.state?.formType;
+
   const [formHeader, setFormHeader] = useState({});
   const [firstTable, setFirstTable] = useState([]);
   const [secondTable, setSecondTable] = useState([]);
@@ -482,7 +484,7 @@ function UnitsMatAllotmentForm() {
       nav(
         "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Closed/ShopMatIssueVoucher",
         {
-          state: { issueIDVal: issueidval },
+          state: { issueIDVal: issueidval, formType: formType },
         }
       );
     } else {
@@ -735,7 +737,13 @@ function UnitsMatAllotmentForm() {
                   className="button-style "
                   id="btnclose"
                   type="submit"
-                  onClick={() => nav("/MaterialManagement")}
+                  onClick={() =>
+                    nav(
+                      formType === "Units"
+                        ? "/MaterialManagement/ShopFloorIssue/Service/Units"
+                        : "/MaterialManagement/ShopFloorIssue/ProfileCutting"
+                    )
+                  }
                 >
                   Close
                 </button>

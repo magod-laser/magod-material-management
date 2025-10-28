@@ -55,6 +55,8 @@ function OutwordMaterialIssueVocher(props) {
     RV_Remarks: "",
   });
 
+  const formType = location.state?.type;
+
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const [formData, setFormData] = useState({ unitName: userData.UnitName });
@@ -611,7 +613,13 @@ function OutwordMaterialIssueVocher(props) {
             className="button-style me-3"
             id="btnclose"
             type="submit"
-            onClick={() => nav("/MaterialManagement")}
+            onClick={() => {
+              if (formType) {
+                nav("/MaterialManagement/Return/CustomerJobWork/SalesIVList");
+              } else {
+                nav("/MaterialManagement");
+              }
+            }}
           >
             Close
           </button>

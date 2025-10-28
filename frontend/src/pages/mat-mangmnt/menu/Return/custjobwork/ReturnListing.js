@@ -140,14 +140,14 @@ function ReturnListing(props) {
       nav(
         "/MaterialManagement/Return/CustomerJobWork/OutwardMaterialIssueVoucher",
         {
-          state: { selectData, propsType },
+          state: { selectData, propsType, type: props.type },
         }
       );
     } else if (selectData && selectData.Type === "Parts") {
       nav(
         "/MaterialManagement/Return/CustomerJobWork/OutwardPartIssueVoucher",
         {
-          state: { selectData, propsType },
+          state: { selectData, propsType, type: props.type },
         }
       );
     } else {

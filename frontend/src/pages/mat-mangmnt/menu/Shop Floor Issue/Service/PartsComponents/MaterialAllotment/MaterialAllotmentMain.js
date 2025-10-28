@@ -21,6 +21,8 @@ function MaterialAllotmentMain() {
   const location = useLocation();
   const nav = useNavigate();
 
+  const formType = location.state?.formType;
+
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const [formHeader, setFormHeader] = useState({});
   const [firstTable, setFirstTable] = useState([]);
@@ -665,7 +667,9 @@ function MaterialAllotmentMain() {
                 className="button-style "
                 id="btnclose"
                 type="submit"
-                onClick={() => nav("/MaterialManagement")}
+                onClick={() =>
+                  nav("/MaterialManagement/ShopFloorIssue/Service/Parts")
+                }
               >
                 Close
               </button>
