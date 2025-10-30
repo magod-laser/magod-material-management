@@ -31,6 +31,8 @@ function OpenButtonDraftSheetUnit(props) {
     .reverse()
     .join("/");
 
+  const formType = location.state?.type;
+
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const [boolVal1, setBoolVal1] = useState(true);
@@ -554,7 +556,10 @@ function OpenButtonDraftSheetUnit(props) {
           if (
             materialArray[i].mtrlCode == "" ||
             materialArray[i].qty == "" ||
-            materialArray[i].accepted == ""
+            materialArray[i].accepted == "" ||
+            materialArray[i].accepted == 0 ||
+            materialArray[i].accepted == "0.00" ||
+            materialArray[i].accepted == 0.0
           ) {
             flag1 = 1;
           }
@@ -793,6 +798,7 @@ function OpenButtonDraftSheetUnit(props) {
         setInsCheck(true);
       } else {
         inputPart.inspected = false;
+        inputPart.accepted = 0;
         setBoolVal5(false);
         setInsCheck(false);
       }
@@ -890,6 +896,10 @@ function OpenButtonDraftSheetUnit(props) {
             [name]: formattedValue,
             qty: inputPart.qty,
             inspected: inputPart.inspected == true ? 1 : 0,
+            accepted:
+              name === "qty" || (name === "inspected" && !e.target.checked)
+                ? 0
+                : p.accepted,
           }
         : p
     );
@@ -1494,7 +1504,23 @@ function OpenButtonDraftSheetUnit(props) {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              onClick={() => {
+                if (formType === "jobworkUnits") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Units/DraftRVList"
+                  );
+                } else if (formType === "jobworksheets") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/SheetsAndOthers/DraftRVList"
+                  );
+                } else if (formType === "purchaseUnits") {
+                  nav("/MaterialManagement/Receipt/Purchase/Units/DraftRVList");
+                } else if (formType === "purchaseOthers") {
+                  nav(
+                    "/MaterialManagement/Receipt/Purchase/Others/DraftRVList"
+                  );
+                }
+              }}
             >
               Close
             </button>

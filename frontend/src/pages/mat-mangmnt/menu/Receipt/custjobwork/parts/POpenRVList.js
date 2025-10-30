@@ -78,7 +78,7 @@ function POpenRVList() {
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonOpenClosedPartList", {
-        state: { id: data.RvID },
+        state: { id: data.RvID, type: "jobworkOpenRV" },
       });
     } else {
       toast.error("Select Customer");

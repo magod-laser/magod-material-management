@@ -14,6 +14,8 @@ function OpenButtonOpenSheetUnit() {
   const location = useLocation();
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
+  const formType = location.state?.type;
+
   const [boolVal, setBoolVal] = useState(true);
   const [boolVal2, setBoolVal2] = useState(false);
   const [boolVal3, setBoolVal3] = useState(false);
@@ -748,7 +750,21 @@ function OpenButtonOpenSheetUnit() {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              onClick={() => {
+                if (formType === "jobworkUnitsOpenRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Units/OpenRVList"
+                  );
+                } else if (formType === "jobworksheetsOpenRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/SheetsAndOthers/OpenRVList"
+                  );
+                } else if (formType === "purchaseUnitsOpenRV") {
+                  nav("/MaterialManagement/Receipt/Purchase/Units/OpenRVList");
+                } else if (formType === "purchaseOthersOpenRV") {
+                  nav("/MaterialManagement/Receipt/Purchase/Others/OpenRVList");
+                }
+              }}
             >
               Close
             </button>

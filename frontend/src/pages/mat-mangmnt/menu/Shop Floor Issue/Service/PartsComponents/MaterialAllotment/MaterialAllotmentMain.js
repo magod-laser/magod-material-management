@@ -456,8 +456,6 @@ function MaterialAllotmentMain() {
   const blockInvalidQtyChar = (e) =>
     ["e", "E", "+", "-", "."].includes(e.key) && e.preventDefault();
 
-  console.log("formType", formType);
-
   return (
     <div>
       {loading ? (

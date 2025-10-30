@@ -493,7 +493,10 @@ function NewSheetsUnits(props) {
           if (
             materialArray[i].mtrlCode == "" ||
             materialArray[i].qty == "" ||
-            materialArray[i].accepted == ""
+            materialArray[i].accepted == "" ||
+            materialArray[i].accepted == 0 ||
+            materialArray[i].accepted == "0.00" ||
+            materialArray[i].accepted == 0.0
           ) {
             flag1 = 1;
           }
@@ -755,6 +758,7 @@ function NewSheetsUnits(props) {
         setInsCheck(true);
       } else {
         inputPart.inspected = false;
+        inputPart.accepted = 0;
         setBoolVal5(false);
         setInsCheck(false);
       }
@@ -863,6 +867,11 @@ function NewSheetsUnits(props) {
             [name]: formattedValue,
             qty: inputPart.qty,
             inspected: inputPart.inspected == true ? 1 : 0,
+            // accepted: name === "qty" ? 0 : p.accepted,
+            accepted:
+              name === "qty" || (name === "inspected" && !e.target.checked)
+                ? 0
+                : p.accepted,
           }
         : p
     );

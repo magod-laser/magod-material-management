@@ -11,6 +11,8 @@ function OpenButtonClosedSheetUnit() {
   const nav = useNavigate();
   const location = useLocation();
 
+  const formType = location.state?.type;
+
   const [boolVal, setBoolVal] = useState(true);
   const [mtrlArray, setMtrlArray] = useState([]);
   const [para1Label, setPara1Label] = useState("");
@@ -526,7 +528,25 @@ function OpenButtonClosedSheetUnit() {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              onClick={() => {
+                if (formType === "jobworkUnitsClosedRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Units/ClosedRVList"
+                  );
+                } else if (formType === "jobworksheetsClosedRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/SheetsAndOthers/ClosedRVList"
+                  );
+                } else if (formType === "purchaseUnitsClosedRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/Purchase/Units/ClosedRVList"
+                  );
+                } else if (formType === "purchaseOthersClosedRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/Purchase/Others/ClosedRVList"
+                  );
+                }
+              }}
             >
               Close
             </button>

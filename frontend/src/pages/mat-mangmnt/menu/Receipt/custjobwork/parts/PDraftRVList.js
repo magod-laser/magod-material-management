@@ -80,7 +80,7 @@ function PDraftRVList() {
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonDraftPartList", {
-        state: { id: data.RvID },
+        state: { id: data.RvID, type: "jobworkParts" },
       });
     } else {
       toast.error("Please select Table Row");

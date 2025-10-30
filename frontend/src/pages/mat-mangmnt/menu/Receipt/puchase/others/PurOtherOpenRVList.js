@@ -58,7 +58,7 @@ function PurOtherOpenRVList() {
   // Navigates to the Open Sheet Unit page with the selected receipt ID
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenSheetUnit", {
-      state: { id: data.RvID },
+      state: { id: data.RvID, type: "purchaseOthersOpenRV" },
     });
   };
 

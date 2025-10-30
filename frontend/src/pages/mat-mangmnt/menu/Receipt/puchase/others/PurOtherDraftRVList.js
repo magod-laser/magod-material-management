@@ -112,7 +112,7 @@ export default function PurOtherDraftRVList(props) {
   // Navigates to the Draft Sheet Unit page with the selected receipt ID and type "sheets"
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
-      state: { id: data.RvID, type: "sheets" },
+      state: { id: data.RvID, type: "purchaseOthers" },
     });
   };
 

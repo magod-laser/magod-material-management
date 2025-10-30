@@ -60,7 +60,7 @@ function PurchasePartsClosedRVList() {
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonOpenClosedPartList", {
-        state: { id: data.RvID },
+        state: { id: data.RvID, type: "purchaseClosedRV" },
       });
     } else {
       toast.error("Select Customer");

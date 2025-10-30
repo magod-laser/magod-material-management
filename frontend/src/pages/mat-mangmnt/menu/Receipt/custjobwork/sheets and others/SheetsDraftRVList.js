@@ -79,7 +79,7 @@ export default function SheetsDraftRVList() {
   // Opens the Draft Sheet Unit page if a customer (receipt ID) is selected
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
-      state: { id: data.RvID, type: "sheets" },
+      state: { id: data.RvID, type: "jobworksheets" },
     });
   };
 

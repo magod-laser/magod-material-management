@@ -76,7 +76,7 @@ function SheetsOpenRVList() {
   // Opens the Open Sheet Unit page if a customer (receipt ID) is selected
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenSheetUnit", {
-      state: { id: data.RvID },
+      state: { id: data.RvID, type: "jobworksheetsOpenRV" },
     });
   };
 
