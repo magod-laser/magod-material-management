@@ -13,6 +13,8 @@ function OpenButtonOpenClosedPartList() {
 
   const location = useLocation();
 
+  const formType = location.state?.type;
+
   const [boolVal, setBoolVal] = useState(true);
   const [partUniqueId, setPartUniqueId] = useState();
   const [partArray, setPartArray] = useState([]);
@@ -292,7 +294,23 @@ function OpenButtonOpenClosedPartList() {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              onClick={() => {
+                if (formType === "jobworkOpenRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Parts/OpenRVList"
+                  );
+                } else if (formType === "jobworkCloseRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Parts/ClosedRVList"
+                  );
+                } else if (formType === "purchaseOpenRV") {
+                  nav("/MaterialManagement/Receipt/Purchase/Parts/OpenRVList");
+                } else if (formType === "purchaseClosedRV") {
+                  nav(
+                    "/MaterialManagement/Receipt/Purchase/Parts/ClosedRVList"
+                  );
+                }
+              }}
             >
               Close
             </button>

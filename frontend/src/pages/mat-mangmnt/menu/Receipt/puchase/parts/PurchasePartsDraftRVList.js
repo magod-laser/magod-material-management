@@ -61,7 +61,7 @@ function PurchasePartsDraftRVList() {
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonDraftPartList", {
-        state: { id: data.RvID },
+        state: { id: data.RvID, type: "purchaseParts" },
       });
     } else {
       toast.error("Select Customer");

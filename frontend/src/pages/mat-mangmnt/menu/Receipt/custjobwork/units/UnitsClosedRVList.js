@@ -78,7 +78,7 @@ function UnitsClosedRVList() {
   const openButtonClick = () => {
     if (data && data.RvID !== "") {
       nav("/MaterialManagement/Receipt/OpenButtonClosedSheetUnit", {
-        state: { id: data.RvID },
+        state: { id: data.RvID, type: "jobworkUnitsClosedRV" },
       });
     } else {
       toast.error("Select Customer");

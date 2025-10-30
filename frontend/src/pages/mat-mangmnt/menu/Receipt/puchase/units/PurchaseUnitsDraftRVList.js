@@ -59,7 +59,7 @@ export default function PurchaseUnitsDraftRVList() {
   // Navigates to the Draft Sheet Unit page with the selected receipt ID
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonDraftSheetUnit", {
-      state: { id: data.RvID, type: "units" },
+      state: { id: data.RvID, type: "purchaseUnits" },
     });
   };
 

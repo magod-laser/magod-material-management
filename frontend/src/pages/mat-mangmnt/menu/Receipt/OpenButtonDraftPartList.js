@@ -19,6 +19,8 @@ const { endpoints } = require("../../../api/constants");
 function OpenButtonDraftPartList() {
   const location = useLocation();
 
+  const formType = location.state?.type;
+
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const nav = useNavigate();
@@ -57,7 +59,6 @@ function OpenButtonDraftPartList() {
 
   const [calcWeightVal, setCalcWeightVal] = useState(0);
 
-  let [custdata, setCustdata] = useState([]);
   let [mtrlDetails, setMtrlDetails] = useState([]);
   const [saveUpdateCount, setSaveUpdateCount] = useState(0);
   const [selectedPart, setSelectedPart] = useState([]);
@@ -812,7 +813,15 @@ function OpenButtonDraftPartList() {
               className="button-style "
               id="btnclose"
               type="submit"
-              onClick={() => nav("/MaterialManagement")}
+              onClick={() => {
+                if (formType === "jobworkParts") {
+                  nav(
+                    "/MaterialManagement/Receipt/CustomerJobWork/Parts/DraftRVList"
+                  );
+                } else if (formType === "purchaseParts") {
+                  nav("/MaterialManagement/Receipt/Purchase/Parts/DraftRVList");
+                }
+              }}
             >
               Close
             </button>

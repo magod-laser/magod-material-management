@@ -59,7 +59,7 @@ function PurchasePartsOpenRVList() {
   // Navigates to the Closed Part List page with the selected receipt ID
   const openButtonClick = () => {
     nav("/MaterialManagement/Receipt/OpenButtonOpenClosedPartList", {
-      state: { id: data.RvID },
+      state: { id: data.RvID, type: "purchaseOpenRV" },
     });
   };
 
