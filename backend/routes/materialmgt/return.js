@@ -28,31 +28,39 @@ returnRouter.get("/profileMaterialFirst", async (req, res, next) => {
         }
 
         const query = `
-          SELECT 
-            m1.Rv_date,
-            m.Mtrl_Rv_id,
-            m1.Cust_Code,
-            m1.RV_No,
-            m1.CustDocuNo AS Cust_Docu_No,
-            m.Mtrl_Code,
-            m.DynamicPara1,
-            m.DynamicPara2,
-            m.DynamicPara3,
-            m.Scrap,
-            SUM(m.Weight) AS Weight,
-            SUM(m.ScrapWeight) AS ScrapWeight,
-            COUNT(m.MtrlStockID) AS InStock
-          FROM magodmis.mtrlstocklist m
-          INNER JOIN magodmis.material_receipt_register m1 
-            ON m1.Rv_No = m.rv_No
-          WHERE
-            m.Issue = 0
-            AND m.Cust_Code = ?
-            AND m1.RVStatus = 'Received'
-          GROUP BY m.Mtrl_Rv_id, m.Mtrl_Code, m.DynamicPara1, m.DynamicPara2, m.Scrap
-          ORDER BY m.Mtrl_Rv_id DESC
-        `;
+        SELECT 
+    m1.Rv_date,
+    m.Mtrl_Rv_id,
+    m1.Cust_Code,
+    m1.RV_No,
+    m1.CustDocuNo AS Cust_Docu_No,
+    m.Mtrl_Code,
+    m.DynamicPara1,
+    m.DynamicPara2,
+    m.DynamicPara3,
+    m.Scrap,
+    SUM(m.Weight) AS Weight,
+    SUM(m.ScrapWeight) AS ScrapWeight,
+    COUNT(m.MtrlStockID) AS InStock
+FROM 
+    magodmis.mtrlstocklist AS m
+JOIN 
+    magodmis.material_receipt_register AS m1 
+    ON m1.Rv_No = m.Rv_No
+WHERE  
+    (m.Scrap = 1 OR m.Locked = 0)
+    AND m.IV_No IS NULL
+    AND m.Cust_Code = ?
+    AND m1.RVStatus = 'Received'
+GROUP BY 
+    m.Mtrl_Rv_id, 
+    m.Mtrl_Code, 
+    m.DynamicPara1, 
+    m.DynamicPara2, 
+    m.DynamicPara3,
+    m.Scrap;
 
+        `;
         const values = [Cust_Code];
 
         misQueryMod(query, values, (err, data) => {
