@@ -1,5 +1,8 @@
-import { toast } from "react-toastify";
 import Table from "react-bootstrap/Table";
+import {
+  preventNumScroll,
+  preventArrowIncrement,
+} from "../../../../../../../utils";
 
 import { FaArrowUp } from "react-icons/fa";
 
@@ -135,28 +138,12 @@ export default function ThirdTable(props) {
                 <input
                   type="number"
                   value={val.QtyReturnedNew}
-                  onKeyDown={numbValidations}
-                  onChange={(e) => {
-                    if (parseInt(e.target.value) < 0) {
-                      e.target.value = parseInt(e.target.value) * -1;
-                      toast.warning("Return Qty can't be negative");
-                      changeQTY(key, e.target.value);
-                    } else {
-                      if (
-                        val.QtyReceived >=
-                        val.QtyRejected +
-                          val.QtyUsed +
-                          val.QtyReturned +
-                          parseInt(e.target.value || 0)
-                      ) {
-                        changeQTY(key, e.target.value || 0);
-                      } else {
-                        toast.warning(
-                          "Greater then Quantity Received plus Returned/Used"
-                        );
-                      }
-                    }
+                  onKeyDown={(e) => {
+                    numbValidations(e);
+                    preventArrowIncrement(e);
                   }}
+                  onChange={(e) => changeQTY(key, e.target.value)}
+                  onWheel={preventNumScroll}
                   style={{
                     width: "100%",
                     background: "transparent",
