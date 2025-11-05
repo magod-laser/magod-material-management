@@ -73,13 +73,18 @@ function UnitsMatAllotmentForm() {
         data.Para1 +
         "&para2=" +
         data.Para2;
+
       getRequest(url3, async (data2) => {
-        setFirstTable(data2);
         setLoading(false);
-        if (data2.length == 0) {
-          toast.warning(
-            "There is no material to allot for this program. Check if you have added the material to customer stock?."
-          );
+        if (Array.isArray(data2)) {
+          setFirstTable(data2);
+          if (data2.length === 0) {
+            toast.warning(
+              "There is no material to allot for this program. Check if you have added the material to customer stock."
+            );
+          }
+        } else {
+          setFirstTable([]);
         }
       });
     });
