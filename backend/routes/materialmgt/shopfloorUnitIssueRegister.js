@@ -26,22 +26,45 @@ shopfloorUnitIssueRegisterRouter.get(
     });
 
     try {
-      let CustCode = CustMtrl === "Magod" ? "0000" : custCodeQuery;
+      // If customer material is "Magod", force customer code to "0000"
+      const CustCode = CustMtrl === "Magod" ? "0000" : custCodeQuery;
 
-      let query = `SELECT * FROM magodmis.mtrlstocklist m WHERE m.cust_Code = ? AND m.Mtrl_Code = ? AND m.Locked = 0 AND m.Scrap = 0 ORDER BY SUBSTRING(MtrlStockID, 1, 8) ASC, SUBSTRING(MtrlStockID, 9, 2) ASC, CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(MtrlStockID, '/', -1), '/', 1) AS SIGNED) ASC`;
+      // Base query
+      let query = `
+        SELECT *
+        FROM magodmis.mtrlstocklist m
+        WHERE m.cust_Code = ?
+          AND m.Mtrl_Code = ?
+          AND m.Locked = 0
+          AND m.Scrap = 0
+      `;
 
       let queryParams = [CustCode, MtrlCode];
 
+      // Apply filters based on shape
       if (shape === "Sheet") {
-        query += ` AND ((DynamicPara1 >= ? AND DynamicPara2 >= ?) OR (DynamicPara2 >= ? AND DynamicPara1 >= ?))`;
+        query += `
+          AND (
+            (m.DynamicPara1 >= ? AND m.DynamicPara2 >= ?)
+            OR (m.DynamicPara2 >= ? AND m.DynamicPara1 >= ?)
+          )
+        `;
         queryParams.push(para1, para2, para1, para2);
       } else if (
         ["Tube Rectangle", "Tube Square", "Tube Round"].includes(shape)
       ) {
-        query += ` AND (DynamicPara1 >= ?)`;
+        query += ` AND m.DynamicPara1 >= ?`;
         queryParams.push(para1);
       }
 
+      query += `
+        ORDER BY
+          SUBSTRING(m.MtrlStockID, 1, 8) ASC,
+          SUBSTRING(m.MtrlStockID, 9, 2) ASC,
+          CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.MtrlStockID, '/', -1), '/', 1) AS SIGNED) ASC
+      `;
+
+      // Execute query
       await misQueryMod(query, queryParams, (err, data) => {
         if (err) {
           errorLogger.error("Error fetching material allotment table", err, {

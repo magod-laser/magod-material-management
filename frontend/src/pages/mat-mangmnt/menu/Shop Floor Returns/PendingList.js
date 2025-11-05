@@ -449,6 +449,7 @@ function PendingList(props) {
               (data) => {}
             );
 
+            setSecondTable([]);
             tableRefresh();
           }
         });
@@ -543,6 +544,7 @@ function PendingList(props) {
           (data) => {}
         );
 
+        setSecondTable([]);
         tableRefresh();
       }
       toast.success("Return as Scrap Completed");
