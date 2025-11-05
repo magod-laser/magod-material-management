@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import ModalComp from "./ModalComp";
 import { toast } from "react-toastify";
+import { preventArrowIncrement, preventNumScroll } from "../../../../../utils";
 const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
 
@@ -15,9 +16,8 @@ function LocationModel({ show, setShow, scrapModal }) {
   });
 
   const handleOpen = () => {
-    let numberPattern = /^[0-9]+$/;
-    if (!row.scrapWeight.match(numberPattern)) {
-      toast.error("Enter Numeric Value");
+    if (!row.scrapWeight) {
+      toast.error("Enter Scrap Weight");
     } else if (row.location.length === 0) {
       toast.error("Select Location");
     } else {
@@ -35,21 +35,29 @@ function LocationModel({ show, setShow, scrapModal }) {
     setShow(false);
   };
 
+  // const InputHeaderEvent = (e) => {
+  //   const { value, name } = e.target;
+
+  //   if (name === "scrapWeight") {
+  //     const numericValue = value.replace(/[^0-9]/g, "");
+  //     setRow((prevState) => ({
+  //       ...prevState,
+  //       [name]: numericValue,
+  //     }));
+  //   } else {
+  //     setRow((prevState) => ({
+  //       ...prevState,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+
   const InputHeaderEvent = (e) => {
     const { value, name } = e.target;
-
-    if (name === "scrapWeight") {
-      const numericValue = value.replace(/[^0-9]/g, "");
-      setRow((prevState) => ({
-        ...prevState,
-        [name]: numericValue,
-      }));
-    } else {
-      setRow((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setRow((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   let [locationData, setLocationData] = useState([]);
@@ -60,6 +68,9 @@ function LocationModel({ show, setShow, scrapModal }) {
       setLocationData(data);
     });
   }, []);
+
+  const blockInvalidChar = (e) =>
+    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault();
 
   return (
     <>
@@ -82,10 +93,15 @@ function LocationModel({ show, setShow, scrapModal }) {
                 <input
                   autoComplete="off"
                   style={{ fontSize: "12px" }}
-                  type="text"
+                  type="number"
                   name="scrapWeight"
                   value={row.scrapWeight}
                   onChange={InputHeaderEvent}
+                  onWheel={preventNumScroll}
+                  onKeyDown={(e) => {
+                    blockInvalidChar(e);
+                    preventArrowIncrement(e);
+                  }}
                 />
                  
               </div>

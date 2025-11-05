@@ -20,10 +20,14 @@ function PurchasePartsNew() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteRvModalOpen, setDeleteRvModalOpen] = useState(false);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
-  // const currDate = new Date().toJSON().slice(0, 10).reverse().join("/");
-
-  const currDate = new Date().toJSON().slice(0, 10).split("-").join("/");
+  const currDate = new Date()
+    .toJSON()
+    .slice(0, 10)
+    .split("-")
+    .reverse()
+    .join("/");
 
   const [boolVal1, setBoolVal1] = useState(true);
   const [boolVal2, setBoolVal2] = useState(false);
@@ -393,16 +397,31 @@ function PurchasePartsNew() {
     }
   };
 
-  // Validates part details and customer weight before allowing the Material Receipt allotment modal to open
+  // Insert a running number row
+  const getRVNo = async () => {
+    const requestData = {
+      unit: userData.UnitName,
+      srlType: "MaterialReceiptVoucher",
+      ResetPeriod: "Year",
+      ResetValue: 0,
+      VoucherNoLength: 4,
+    };
+
+    postRequest(endpoints.insertRunNoRow, requestData, async (data) => {});
+  };
+
+  // Validates part details and weight before allotting an RV number, then opens confirmation modal
   const allotRVButtonState = (e) => {
     e.preventDefault();
+    getRVNo();
 
     if (partArray.length === 0) {
       toast.error("Add Details Before Saving");
     } else if (
       partArray.length !== 0 &&
-      (formHeader.weight == 0.0 ||
-        formHeader.weight == "0" ||
+      (formHeader.weight === 0.0 ||
+        formHeader.weight === "0" ||
+        formHeader.weight === "" ||
         formHeader.weight === null ||
         formHeader.weight === undefined)
     ) {
@@ -413,28 +432,48 @@ function PurchasePartsNew() {
       let flag1 = 0;
       for (let i = 0; i < partArray.length; i++) {
         if (
-          partArray[i].partId == "" ||
-          partArray[i].unitWeight == "" ||
-          partArray[i].qtyReceived == "" ||
-          partArray[i].qtyAccepted == ""
+          partArray[i].partId === "" ||
+          partArray[i].unitWeight === "" ||
+          partArray[i].qtyReceived === "" ||
+          partArray[i].qtyAccepted === ""
         ) {
           flag1 = 1;
         }
-        if (partArray[i].qtyAccepted > partArray[i].qtyReceived) {
+        if (
+          parseFloat(partArray[i].qtyAccepted) >
+          parseFloat(partArray[i].qtyReceived)
+        ) {
           flag1 = 2;
         }
+        if (
+          partArray[i].qtyReceived === "0" ||
+          partArray[i].qtyReceived === 0
+        ) {
+          flag1 = 3;
+        }
+        if (
+          partArray[i].qtyAccepted === "0" ||
+          partArray[i].qtyAccepted === 0
+        ) {
+          flag1 = 4;
+        }
       }
-      if (flag1 == 1) {
+      if (flag1 === 1) {
         toast.error("Please fill correct Part details");
       } else if (flag1 === 2) {
         toast.error("QtyAccepted should be less than or equal to QtyReceived");
+      } else if (flag1 === 3) {
+        toast.error("Receipt Qty Cannot be Zero");
+      } else if (flag1 === 4) {
+        toast.error("Enter Quantity Accepted");
       } else {
         setShow(true);
       }
     }
   };
 
-  const allotRVYesButton = (data) => {
+  const allotRVYesButton = async (data) => {
+    await delay(500);
     setFormHeader(data);
     setBoolVal4(true);
   };
@@ -758,11 +797,12 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  value={
-                    inputPart.unitWeight === "0" || inputPart.unitWeight === 0
-                      ? ""
-                      : inputPart.unitWeight
-                  }
+                  // value={
+                  //   inputPart.unitWeight === "0" || inputPart.unitWeight === 0
+                  //     ? ""
+                  //     : inputPart.unitWeight
+                  // }
+                  value={inputPart.unitWeight}
                   onChange={changePartHandle}
                   onKeyDown={(e) => {
                     blockInvalidChar(e);

@@ -22,7 +22,7 @@ function PendingList(props) {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
@@ -78,7 +78,7 @@ function PendingList(props) {
     });
   };
 
-  delay(1000);
+  // delay(1000);
 
   useEffect(() => {
     fetchData();
@@ -301,49 +301,11 @@ function PendingList(props) {
     }
   };
 
-  // function tableRefresh() {
-  //   setLoading(true);
-  //   if (filteredMachine) {
-  //     getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
-  //       const filteredData = data.filter(
-  //         (obj) => obj.Machine === filteredMachine
-  //       );
-  //       setFirstTable(filteredData);
-  //       setFirstTableAll(data);
-  //     });
-  //   } else {
-  //     // If no machine is selected, set the first table to the entire data
-  //     getRequest(endpoints.getFirstTableShopFloorReturn, (data) => {
-  //       setFirstTable(data);
-  //       setFirstTableAll(data);
-  //     });
-  //   }
-
-  //   //reset second table data
-  //   let row = firstRowSelected;
-  //   setSelectedSecondTableRows([]);
-  //   let url1 = endpoints.getSecondTableShopFloorReturn + "?id=" + row.IssueID;
-  //   getRequest(url1, (data) => {
-  //     data.forEach((sheet) => {
-  //       if (sheet.NCPara1 <= sheet.Para1 && sheet.NCPara2 <= sheet.Para2) {
-  //         sheet.RemPara1 = sheet.Para1 - sheet.NCPara1;
-  //         sheet.RemPara2 = sheet.Para2 - sheet.NCPara2;
-  //       } else if (
-  //         sheet.NCPara2 <= sheet.Para1 &&
-  //         sheet.NCPara1 <= sheet.Para2
-  //       ) {
-  //         sheet.RemPara1 = sheet.Para1 - sheet.NCPara2;
-  //         sheet.RemPara2 = sheet.Para2 - sheet.NCPara1;
-  //       }
-  //     });
-
-  //     setSecondTable(data);
-  //     setLoading(false);
-  //   });
-  // }
-
   function tableRefresh() {
     setLoading(true);
+
+    setSecondTable([]);
+    setSelectedSecondTableRows([]);
 
     // ---- First Table ----
     if (filteredMachine) {
