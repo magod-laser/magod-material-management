@@ -100,6 +100,7 @@ import PrintDailyReportInvoice from "./pages/mat-mangmnt/print/report/PrintDaily
 import PrintLocationStockDetailReport from "./pages/mat-mangmnt/print/store/PrintLocationStockDetailReport";
 import PrintLocationStockSummaryReport from "./pages/mat-mangmnt/print/store/PrintLocationStockSummaryReport";
 import ResizeAndSplittingStoreManagement from "./pages/mat-mangmnt/menu/Store management/ResizeAndSplittingStoreManagement";
+import ProfileCuttingMatAllotmentForm from "./pages/mat-mangmnt/menu/Shop Floor Issue/Service/UnitsComponents/ProfileCuttingMatAllotmentForm";
 
 function App() {
   return (
@@ -279,9 +280,15 @@ function App() {
                   />
                 </Route>
               </Route>
+
               <Route path="ProfileCutting">
                 <Route index={true} element={<ProfileCutting />} />
+                <Route
+                  path="MaterialAllotmentForm"
+                  element={<ProfileCuttingMatAllotmentForm />}
+                />
               </Route>
+
               <Route path="IVListService">
                 <Route index={true} />
                 <Route
