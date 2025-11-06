@@ -220,9 +220,16 @@ function ShopFloorMaterialAllotment(props) {
                 state: { ncid, custCode, formType: props.formtype },
               }
             );
-      } else if (props.formtype == "Units" || props.formtype == "Others") {
+      } else if (props.formtype == "Units") {
         nav(
           "/MaterialManagement/ShopFloorIssue/Service/Units/MaterialAllotmentForm",
+          {
+            state: { ncid, custCode, formType: props.formtype },
+          }
+        );
+      } else if (props.formtype == "Others") {
+        nav(
+          "/MaterialManagement/ShopFloorIssue/ProfileCutting/MaterialAllotmentForm",
           {
             state: { ncid, custCode, formType: props.formtype },
           }

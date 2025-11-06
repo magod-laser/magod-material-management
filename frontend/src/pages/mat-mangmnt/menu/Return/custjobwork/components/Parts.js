@@ -196,6 +196,7 @@ function Parts(props) {
 
         if (remainingQty > 0) {
           const unusedRow = { ...rowData };
+
           unusedRow.PartIdNew =
             unusedRow.PartId + "/**Ref: " + unusedRow.CustDocuNo;
           unusedRow.QtyReturnedNew = remainingQty;
@@ -209,8 +210,10 @@ function Parts(props) {
         unusedRow.PartIdNew =
           unusedRow.PartId + "/**Ref: " + unusedRow.CustDocuNo;
         unusedRow.QtyReturnedNew =
-          // unusedRow.QtyReceived -
-          unusedRow.QtyRejected - unusedRow.QtyReturned - unusedRow.QtyUsed;
+          unusedRow.QtyReceived -
+          unusedRow.QtyRejected -
+          unusedRow.QtyReturned -
+          unusedRow.QtyUsed;
         unusedRow.Remarks = "Return Unused";
         rowsToAdd.push(unusedRow);
       }

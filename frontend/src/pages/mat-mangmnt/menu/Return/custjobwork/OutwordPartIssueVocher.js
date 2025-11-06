@@ -189,7 +189,7 @@ function OutwordPartIssueVocher(props) {
       }
     }
 
-    if (flag) {
+    if (!flag) {
       getDCNo();
       setShowCreateDC(true);
     } else {
