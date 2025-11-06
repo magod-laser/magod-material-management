@@ -177,19 +177,14 @@ function OutwordPartIssueVocher(props) {
       if (
         element.TotalWeight === null ||
         element.TotalWeight === "null" ||
-        element.TotalWeight === "" ||
-        element.TotalWeight === 0 ||
-        element.TotalWeight === "0" ||
-        element.TotalWeight === "0.000" ||
-        element.TotalWeight === "0.00" ||
-        element.TotalWeight === 0.0
+        element.TotalWeight === ""
       ) {
         flag = false;
         break;
       }
     }
 
-    if (!flag) {
+    if (flag) {
       getDCNo();
       setShowCreateDC(true);
     } else {
