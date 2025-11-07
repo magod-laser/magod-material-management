@@ -35,7 +35,12 @@ function PendingList(props) {
   const [secondTable, setSecondTable] = useState([]);
   const [secondTableRow, setSecondTableRow] = useState({});
   const [selectSecondAll, setSelectSecondAll] = useState(false);
-  const [rowValResize, setRowValResize] = useState({});
+  // const [rowValResize, setRowValResize] = useState({});
+  const [rowValResize, setRowValResize] = useState({
+    ReminderPara1: 0,
+    ReminderPara2: 0,
+    location: "",
+  });
   const [treeData, setTreeData] = useState([]);
   let [selectedSecondTableRows, setSelectedSecondTableRows] = useState([]);
   const [secondTableSelectIndex, setSecondTableSelectIndex] = useState([]);
@@ -213,6 +218,16 @@ function PendingList(props) {
       sort: true,
     },
   ];
+
+  useEffect(() => {
+    if (secondTableRow) {
+      setRowValResize({
+        ReminderPara1: (secondTableRow.RemPara1 || 0) - 10,
+        ReminderPara2: (secondTableRow.RemPara2 || 0) - 10,
+        location: "",
+      });
+    }
+  }, [secondTableRow]);
 
   const selectRow1 = {
     mode: "radio",
@@ -405,6 +420,7 @@ function PendingList(props) {
                 Id: selectedSecondTableRows[i].NcID,
                 Qty: 1,
               };
+
               postRequest(
                 endpoints.updateQtyAllotedncprograms,
                 paraData2,
@@ -425,8 +441,8 @@ function PendingList(props) {
 
             //update stock list
             let paraData3 = {
-              DynamicPara1: secondTableRow.Para1,
-              DynamicPara2: secondTableRow.Para2,
+              DynamicPara1: rowValResize.ReminderPara1,
+              DynamicPara2: rowValResize.ReminderPara2,
               // LocationNo: secondTableRow.location,
               LocationNo: rowValResize.location,
               Weight: totwt,

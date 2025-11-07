@@ -41,6 +41,8 @@ shopfloorUnitIssueRegisterRouter.get(
 
       let queryParams = [CustCode, MtrlCode];
 
+      let shape = "Sheet";
+
       // Apply filters based on shape
       if (shape === "Sheet") {
         query += `
@@ -49,7 +51,7 @@ shopfloorUnitIssueRegisterRouter.get(
             OR (m.DynamicPara2 >= ? AND m.DynamicPara1 >= ?)
           )
         `;
-        queryParams.push(para1, para2, para1, para2);
+        queryParams.push(para1, para2, para2, para1);
       } else if (
         ["Tube Rectangle", "Tube Square", "Tube Round"].includes(shape)
       ) {
