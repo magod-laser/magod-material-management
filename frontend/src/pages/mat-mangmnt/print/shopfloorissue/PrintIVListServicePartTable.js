@@ -331,42 +331,6 @@ const PrintIVListServicePartTable = ({ formHeader, tableData, PDFData }) => {
             );
           })}
 
-          {/* {Object.values(groupedTableData).map((group, groupIndex) => {
-            return (
-              <React.Fragment key={groupIndex}>
-                {group.map((item, itemIndex) => {
-                  const renderPartId = itemIndex === 0;
-                  return (
-                    <View key={itemIndex} style={{ flexDirection: "row" }}>
-                      <Text style={styles.partIDVal}>
-                        {renderPartId && item.PartId}
-                      </Text>
-
-                     
-                      <Text
-                        style={{
-                          ...styles.rvNOVal,
-                          borderBottom: "1px solid black",
-                          paddingBottom: 2,
-                        }}
-                      >
-                        {item.RV_No} ({item.CustDocuNo})
-                      </Text>
-
-                      <Text style={styles.issuedVal}>{item.QtyIssued}</Text>
-                      <Text style={styles.usedVal}></Text>
-                      <Text style={styles.returnedVal}></Text>
-                    </View>
-                  );
-                })}
-
-                {groupIndex < Object.values(groupedTableData).length - 1 && (
-                  <Text style={styles.linegap}></Text>
-                )}
-              </React.Fragment>
-            );
-          })} */}
-
           <Text style={styles.line2}>
             ___________________________________________________________________________________________________________________
           </Text>

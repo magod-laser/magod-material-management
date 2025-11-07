@@ -2,6 +2,50 @@ const shopfloorUnitIssueRegisterRouter = require("express").Router();
 const { misQueryMod } = require("../../helpers/dbconn");
 const { infoLogger, errorLogger } = require("../../helpers/logger");
 
+// Fetch shape based on Mtrl_Code
+shopfloorUnitIssueRegisterRouter.get(
+  "/getShapeByMaterial",
+  async (req, res, next) => {
+    const { material } = req.query;
+
+    infoLogger.info("Request received for getShapeByMaterial", {
+      endpoint: "/getShapeByMaterial",
+      method: req.method,
+      Mtrl_Code: material,
+    });
+
+    try {
+      const query = `SELECT Shape FROM magodmis.mtrl_data WHERE Mtrl_Code = ?`;
+
+      misQueryMod(query, [material], (err, data) => {
+        if (err) {
+          errorLogger.error("Database error fetching shape by material", err, {
+            endpoint: "/getShapeByMaterial",
+            Mtrl_Code: material,
+          });
+          return res
+            .status(500)
+            .json({ Status: "Error", Message: "Database error" });
+        }
+
+        infoLogger.info("Successfully fetched Shape", {
+          endpoint: "/getShapeByMaterial",
+          Mtrl_Code: material,
+          recordsFetched: data?.length || 0,
+        });
+
+        res.send(data[0] || null);
+      });
+    } catch (error) {
+      errorLogger.error("Unexpected error in getShapeByMaterial route", error, {
+        endpoint: "/getShapeByMaterial",
+        Mtrl_Code: material,
+      });
+      next(error);
+    }
+  }
+);
+
 // Fetch material allotment table by MtrlCode and CustCode
 shopfloorUnitIssueRegisterRouter.get(
   "/getMaterialAllotmentTable1",
@@ -40,8 +84,6 @@ shopfloorUnitIssueRegisterRouter.get(
       `;
 
       let queryParams = [CustCode, MtrlCode];
-
-      let shape = "Sheet";
 
       // Apply filters based on shape
       if (shape === "Sheet") {

@@ -797,11 +797,6 @@ function PurchasePartsNew() {
                   className="input-disabled mt-1"
                   type="number"
                   name="unitWeight"
-                  // value={
-                  //   inputPart.unitWeight === "0" || inputPart.unitWeight === 0
-                  //     ? ""
-                  //     : inputPart.unitWeight
-                  // }
                   value={inputPart.unitWeight}
                   onChange={changePartHandle}
                   onKeyDown={(e) => {

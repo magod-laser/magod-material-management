@@ -35,23 +35,6 @@ function LocationModel({ show, setShow, scrapModal }) {
     setShow(false);
   };
 
-  // const InputHeaderEvent = (e) => {
-  //   const { value, name } = e.target;
-
-  //   if (name === "scrapWeight") {
-  //     const numericValue = value.replace(/[^0-9]/g, "");
-  //     setRow((prevState) => ({
-  //       ...prevState,
-  //       [name]: numericValue,
-  //     }));
-  //   } else {
-  //     setRow((prevState) => ({
-  //       ...prevState,
-  //       [name]: value,
-  //     }));
-  //   }
-  // };
-
   const InputHeaderEvent = (e) => {
     const { value, name } = e.target;
     setRow((prevState) => ({
