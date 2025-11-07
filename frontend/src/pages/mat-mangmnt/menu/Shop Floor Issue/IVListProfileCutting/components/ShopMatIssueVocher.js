@@ -476,13 +476,6 @@ function ShopMatIssueVocher() {
               id="btnclose"
               type="submit"
               style={{ width: "50px" }}
-              // onClick={() =>
-              //   nav(
-              //     fromType === "closed"
-              //       ? "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Closed"
-              //       : "/MaterialManagement/ShopFloorIssue/IVListProfileCutting/Current"
-              //   )
-              // }
               onClick={() => {
                 if (formType) {
                   nav(

@@ -200,6 +200,7 @@ export const endpoints = {
 
   //shopfloorUnitIssueRegister
   getMaterialAllotmentTable1: `${API}/shopfloorUnitIssueRegister/getMaterialAllotmentTable1`,
+  getShapeByMaterial: `${API}/shopfloorUnitIssueRegister/getShapeByMaterial`,
 
   //shopfloorMaterialIssueRegister
   insertShopfloorMaterialIssueRegister: `${API}/shopfloorMaterialIssueRegister/insertShopfloorMaterialIssueRegister`,
