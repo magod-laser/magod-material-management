@@ -39,57 +39,6 @@ function UnitsMatAllotmentForm() {
   const storedData = JSON.parse(localStorage.getItem("LazerUser"));
   let unitName = storedData.data[0]["UnitName"];
 
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   //get formHeader data
-  //   let url1 = endpoints.getRowByNCID + "?id=" + location.state.ncid;
-
-  //   getRequest(url1, async (data) => {
-  //     data["QtyAllottedTemp"] = data.QtyAllotted;
-
-  //     setFormHeader(data);
-
-  //     let url2 = endpoints.getCustomerByCustCode + "?code=" + data.Cust_Code;
-
-  //     getRequest(url2, async (data1) => {
-  //       setFormHeader({
-  //         ...data,
-  //         customer: data1.Cust_name,
-  //       });
-  //     });
-
-  //     //get first table data
-  //     let url3 =
-  //       endpoints.getMaterialAllotmentTable1 +
-  //       "?MtrlCode=" +
-  //       data.Mtrl_Code +
-  //       "&CustCode=" +
-  //       data.Cust_Code +
-  //       "&CustMtrl=" +
-  //       data.CustMtrl +
-  //       "&shape=" +
-  //       data.Shape +
-  //       "&para1=" +
-  //       data.Para1 +
-  //       "&para2=" +
-  //       data.Para2;
-
-  //     getRequest(url3, async (data2) => {
-  //       setLoading(false);
-  //       if (Array.isArray(data2)) {
-  //         setFirstTable(data2);
-  //         if (data2.length === 0) {
-  //           toast.warning(
-  //             "There is no material to allot for this program. Check if you have added the material to customer stock."
-  //           );
-  //         }
-  //       } else {
-  //         setFirstTable([]);
-  //       }
-  //     });
-  //   });
-  // };
-
   const fetchData = async () => {
     setLoading(true);
 
@@ -119,7 +68,6 @@ function UnitsMatAllotmentForm() {
           });
         });
 
-        // ✅ now that we have shapeData, we can safely build url4
         let url4 =
           endpoints.getMaterialAllotmentTable1 +
           "?MtrlCode=" +

@@ -93,7 +93,7 @@ shopfloorUnitIssueRegisterRouter.get(
             OR (m.DynamicPara2 >= ? AND m.DynamicPara1 >= ?)
           )
         `;
-        queryParams.push(para1, para2, para2, para1);
+        queryParams.push(para1, para2, para1, para2);
       } else if (
         ["Tube Rectangle", "Tube Square", "Tube Round"].includes(shape)
       ) {
