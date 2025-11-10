@@ -4,8 +4,13 @@ function Header() {
   // Function to get user data from cookies
 
   const userData = JSON.parse(Cookies.get("userData"));
-  const versionUrl = process.env.REACT_APP_VERSION;
-  const logoutUrl = process.env.REACT_APP_LOGOUT_URL;
+  // const versionUrl = process.env.REACT_APP_VERSION;
+  // const logoutUrl = process.env.REACT_APP_LOGOUT_URL;
+
+  const appurlss = JSON.parse(localStorage.getItem("appUrls"))
+
+const previousUrl = appurlss[0];
+const logoutUrl = previousUrl.HOST + previousUrl.PORT;
   const logout = () => {
     Cookies.remove("userData");
     window.location.replace(logoutUrl);
@@ -21,7 +26,7 @@ function Header() {
         <div
           style={{ marginRight: "30px", fontSize: "12px", fontWeight: "600" }}
         >
-          {versionUrl} {"  "}
+   
           {userData.Name} - {userData.UnitName} | {""}
           <button
             style={{

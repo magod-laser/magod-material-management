@@ -29,7 +29,12 @@ import { IoCartOutline } from "react-icons/io5";
 import { ImCancelCircle } from "react-icons/im";
 import { RiScissorsCutFill } from "react-icons/ri";
 
-const previousMenuUrl = process.env.REACT_APP_PREVIOUS_MENU_URL;
+// const previousMenuUrl = process.env.REACT_APP_PREVIOUS_MENU_URL;
+
+const appurlss = JSON.parse(localStorage.getItem("appUrls"))
+
+const previousUrl = appurlss[0];
+const previousMenuUrl = previousUrl.HOST + previousUrl.PORT +"/main/home";
 export const customerSidebar = [
   {
     title: "Receipt",
