@@ -80,7 +80,7 @@ reportRouter.get("/getDailyReportMaterialReceipt1", async (req, res, next) => {
   }
 });
 
-// Fetch daily material receipt report (Sheets, Units, Parts)
+// Fetch daily material receipt report (Sheets + Parts)
 reportRouter.get("/getDailyReportMaterialReceipt2", async (req, res, next) => {
   const { date } = req.query;
 
@@ -94,30 +94,60 @@ reportRouter.get("/getDailyReportMaterialReceipt2", async (req, res, next) => {
     const query = `
       SELECT B.*
       FROM
-        (SELECT 
-            A.*, s.Shape, m.Mtrl_Rv_id, m.mtrl_code, m.material, m.qty, m.totalWeight, m.totalweightcalculated
-         FROM
-            (SELECT m.Type, m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, m.CustDocuNo, m.RvID
+        (
+         
+          SELECT 
+              A.*, 
+              s.Shape, 
+              m.Mtrl_Rv_id, 
+              m.mtrl_code, 
+              m.material, 
+              m.qty, 
+              m.totalWeight, 
+              m.totalweightcalculated
+          FROM
+            (SELECT 
+                m.Type, 
+                m.RV_No, 
+                m.RV_Date, 
+                m.Cust_Code, 
+                m.Customer, 
+                m.CustDocuNo, 
+                m.RvID
              FROM magodmis.material_receipt_register m
-             WHERE m.RV_Date = ? AND (m.Type = 'Sheets' OR m.Type = 'Units')
+             WHERE m.RV_Date = ? AND m.Type = 'Sheets'
             ) AS A
-         LEFT JOIN magodmis.mtrlreceiptdetails m ON A.RvID = m.RvID
-         LEFT JOIN magodmis.shapes s ON s.shapeid = m.shapeid
+          LEFT JOIN magodmis.mtrlreceiptdetails m ON A.RvID = m.RvID
+          LEFT JOIN magodmis.shapes s ON s.shapeid = m.shapeid
 
-         UNION
+          UNION
 
-         SELECT 
-            A.*, 'Parts' AS Shape, m.Id AS Mtrl_Rv_id, m.PartId AS mtrl_code, c.material AS material,
-            m.qtyreceived AS qty, m.qtyreceived * m.unitwt AS totalWeight, m.qtyreceived * m.unitwt AS totalweightcalculated
-         FROM
-            (SELECT m.Type, m.RV_No, m.RV_Date, m.Cust_Code, m.Customer, m.CustDocuNo, m.RvID
+         
+          SELECT 
+              A.*, 
+              'Parts' AS Shape, 
+              m.Id AS Mtrl_Rv_id, 
+              m.PartId AS mtrl_code, 
+              c.material AS material,
+              m.qtyreceived AS qty, 
+              m.qtyreceived * m.unitwt AS totalWeight, 
+              m.qtyreceived * m.unitwt AS totalweightcalculated
+          FROM
+            (SELECT 
+                m.Type, 
+                m.RV_No, 
+                m.RV_Date, 
+                m.Cust_Code, 
+                m.Customer, 
+                m.CustDocuNo, 
+                m.RvID
              FROM magodmis.material_receipt_register m
              WHERE m.RV_Date = ? AND m.Type = 'Parts'
             ) AS A
-         LEFT JOIN magodmis.mtrl_part_receipt_details m ON A.RvID = m.RvID
-         LEFT JOIN magodmis.cust_bomlist c ON c.id = m.CustBOM_Id
+          LEFT JOIN magodmis.mtrl_part_receipt_details m ON A.RvID = m.RvID
+          LEFT JOIN magodmis.cust_bomlist c ON c.id = m.CustBOM_Id
         ) AS B
-      ORDER BY B.RV_No
+      ORDER BY B.RV_No;
     `;
 
     misQueryMod(query, [date, date], (err, data) => {
