@@ -2,11 +2,14 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const { createFolder } = require("../../helpers/folderhelper");
 const { infoLogger, errorLogger } = require("../../helpers/logger");
 const savePDF = express.Router();
+const globalConfig = require("../Utils/globalConfig");
 
-// Global variable to store the adjustment name
-let globalAdjustmentName = "Default_Name";
+let OrderNOO;
+let SchNoo;
+let globalAdjustmentName;
 
 // Ensure upload directory exists
 const uploadFolder =
@@ -37,7 +40,11 @@ const getFormattedDateTime = () => {
 
 // Save global adjustment name
 savePDF.post("/set-adjustment-name", (req, res) => {
-  const { adjustment } = req.body;
+  const { adjustment, OrderNo, SchNo } = req.body;
+
+  console.log("REQ", req.body);
+
+  //Path from setup details table
 
   infoLogger.info("Requested to save global adjustment name", {
     endpoint: "/set-adjustment-name",
@@ -45,14 +52,49 @@ savePDF.post("/set-adjustment-name", (req, res) => {
     adjustment,
   });
 
-  if (!adjustment) {
+  const workOrderPath = globalConfig.getAll();
+  let baseUploadFolder = workOrderPath.WORKORDER;
+
+  if (SchNo) {
+    createFolder("Schedule", SchNo, "");
+  }
+
+  OrderNOO = req.body.OrderNo;
+  SchNoo = req.body.SchNo;
+
+  if (!adjustment || !OrderNo) {
     errorLogger.error("Adjustment name is missing in request", {
       endpoint: "/set-adjustment-name",
     });
-    return res.status(400).send({ message: "Adjustment name is required." });
+    return res
+      .status(400)
+      .send({ message: "Adjustment name and OrderNo are required." });
   }
 
   globalAdjustmentName = adjustment;
+
+  let uploadFolder = path.join(baseUploadFolder, OrderNo.toString());
+
+  if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder, { recursive: true });
+  }
+
+  if (SchNo) {
+    uploadFolder = path.join(
+      // baseUploadFolder,
+      // "Wo",
+      // OrderNo.toString(),
+      // SchNo.toString()
+      baseUploadFolder,
+      // "Wo",
+      OrderNo.toString(),
+      SchNo.toString()
+    );
+
+    if (!fs.existsSync(uploadFolder)) {
+      fs.mkdirSync(uploadFolder, { recursive: true });
+    }
+  }
 
   infoLogger.info("Global adjustment name saved successfully", {
     endpoint: "/set-adjustment-name",
@@ -62,55 +104,65 @@ savePDF.post("/set-adjustment-name", (req, res) => {
   res.status(200).send({ message: "Adjustment name saved successfully." });
 });
 
-// Multer configuration
+//Function for mulrter storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadFolder); // Save files in the uploads directory
+    const orderNo = OrderNOO;
+
+    if (!orderNo) {
+      return cb(new Error("OrderNo is required to save the file."), null);
+    }
+    const workOrderPath = globalConfig.getAll();
+    let baseUploadFolder = workOrderPath.WORKORDER;
+
+    // Base folder for the order
+    // let orderPath = path.join(baseUploadFolder, "Wo", orderNo.toString());
+    let orderPath = path.join(baseUploadFolder, orderNo.toString());
+
+    // Ensure the base folder exists
+    if (!fs.existsSync(orderPath)) {
+      fs.mkdirSync(orderPath, { recursive: true });
+    }
+
+    // If SchNo exists, append it to the path
+    if (SchNoo) {
+      orderPath = path.join(orderPath, SchNoo.toString());
+
+      // Ensure the schedule folder exists
+      if (!fs.existsSync(orderPath)) {
+        fs.mkdirSync(orderPath, { recursive: true });
+      }
+    }
+
+    cb(null, orderPath);
   },
   filename: (req, file, cb) => {
-    const dateTime = getFormattedDateTime(); // Get current date and time
-
-    const ext = path.extname(file.originalname); // Retain the original file extension
-    cb(null, `${globalAdjustmentName}_${dateTime}${ext}`); // Use global adjustment name
+    const ext = path.extname(file.originalname);
+    cb(null, `${globalAdjustmentName}${ext}`);
   },
 });
 
-const upload = multer({ storage }).single("file");
-
-// Save uploaded PDF file
+// This API is for save
 savePDF.post("/save-pdf", (req, res) => {
-  infoLogger.info("Requested to save PDF file", {
-    endpoint: "/save-pdf",
-    method: req.method,
-  });
+  const upload = multer({ storage }).single("file");
 
-  // Middleware to handle the file upload
   upload(req, res, (err) => {
     if (err) {
-      errorLogger.error("File upload failed", err, {
-        endpoint: "/save-pdf",
-      });
+      console.error("File upload error:", err);
       return res
         .status(500)
         .send({ message: "File upload failed", error: err });
     }
 
-    if (!req.file) {
-      errorLogger.error("No file uploaded", {
-        endpoint: "/save-pdf",
-      });
-      return res.status(400).send("No file uploaded.");
+    const orderNo = OrderNOO;
+
+    if (!orderNo) {
+      return res.status(400).send({ message: "OrderNo is required." });
     }
 
-    infoLogger.info("PDF saved successfully", {
-      endpoint: "/save-pdf",
-      filePath: req.file.path,
-    });
-
-    res.status(200).send({
-      message: "PDF saved successfully!",
-      filePath: req.file.path,
-    });
+    res
+      .status(200)
+      .send({ message: "PDF saved successfully!", filePath: req.file.path });
   });
 });
 
