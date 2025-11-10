@@ -5,6 +5,43 @@ const cors = require("cors");
 const { logger } = require("./helpers/logger");
 const compression = require("compression");
 const app = express();
+const { setupQueryMod } = require("./helpers/dbconn");
+const pathConfig = require("./routes/Utils/globalConfig");
+
+let configObject = {};
+
+//This function is for getting Setup details (Path from DB)
+function loadGlobalSetupConfig() {
+  return new Promise((resolve, reject) => {
+    setupQueryMod(
+      `SELECT * FROM magod_setup.setupdetails`,
+      [],
+      (err, setupDetailsData) => {
+        if (err) {
+          logger.error(err);
+          return reject("Error fetching setup details");
+        }
+
+        setupDetailsData.forEach((item) => {
+          if (item.SetUpPara && item.SetUpValue) {
+            const key = item.SetUpPara.replace(/\s+/g, "_").toUpperCase();
+            configObject[key] = item.SetUpValue;
+          }
+        });
+
+        pathConfig.set(configObject);
+        resolve();
+      }
+    );
+  });
+}
+
+loadGlobalSetupConfig()
+  .then(() => {})
+  .catch((err) => {
+    console.error("Failed to load config", err);
+    process.exit(1);
+  });
 
 app.use(express.json());
 app.use(bodyParser.json());

@@ -30,10 +30,24 @@ function PrintIVListServicePart({
     });
   }
 
+  const parts = formHeader.TaskNo.split(" ");
+  // Get order number
+  const orderNum = parts[0];
+  // Get schedule number (first + second part)
+  const schNo = parts.slice(0, 2).join(" ");
+
   const savePdfToServer = async () => {
     try {
-      const adjustment = "IVListPart";
-      await axios.post(endpoints.pdfServer, { adjustment });
+      const orderNo = orderNum;
+      const ordSchNo = schNo;
+      const adjustment = "PartsIssueVoucher " + ordSchNo;
+
+      await axios.post(endpoints.pdfServer, {
+        adjustment,
+        WO: "WO",
+        OrderNo: orderNo,
+        SchNo: ordSchNo,
+      });
 
       const blob = await pdf(
         <PrintIVListServicePartTable
