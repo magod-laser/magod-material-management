@@ -218,7 +218,8 @@ function ProductionMatIssueParts() {
     });
   }
 
-  const parts = formHeader.TaskNo.split(" ");
+  const taskNo = formHeader?.TaskNo ?? "";
+  const parts = taskNo.split(" ");
   // Get order number
   const orderNum = parts[0];
   // Get schedule number (first + second part)
@@ -228,7 +229,18 @@ function ProductionMatIssueParts() {
     try {
       const orderNo = orderNum;
       const ordSchNo = schNo;
-      const adjustment = "PartsIssueVoucher " + ordSchNo;
+
+      let baseName = "";
+
+      if (fromType === "issued") {
+        baseName = "IVListIssued";
+      } else if (fromType === "closed") {
+        baseName = "IVListClosed";
+      } else if (formType === "Parts") {
+        baseName = "PartsIssueVoucher";
+      }
+
+      const adjustment = `${baseName} ${ordSchNo}`;
 
       await axios.post(endpoints.pdfServer, {
         adjustment,
@@ -295,6 +307,8 @@ function ProductionMatIssueParts() {
         formHeader={formHeader}
         tableData={tableData}
         setIsPrintModalOpen={setIsPrintModalOpen}
+        fromType={fromType}
+        formType={formType}
       />
 
       <h4 className="title">Production Material Issue :Parts</h4>

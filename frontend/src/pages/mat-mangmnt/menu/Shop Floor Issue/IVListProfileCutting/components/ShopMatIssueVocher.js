@@ -173,10 +173,38 @@ function ShopMatIssueVocher() {
     });
   }
 
+  const taskNo = formHeader?.TaskNo ?? "";
+  const parts = taskNo.split(" ");
+
+  // Get order number
+  const orderNum = parts[0];
+  // Get schedule number (first + second part)
+  const schNo = parts.slice(0, 2).join(" ");
+
   const savePdfToServer = async () => {
     try {
-      const adjustment = "IVListProfileCutting";
-      await axios.post(endpoints.pdfServer, { adjustment });
+      const orderNo = orderNum;
+      const ordSchNo = schNo;
+      let baseName = "";
+
+      if (formType === "Units") {
+        baseName = "Units";
+      } else if (formType === "Others") {
+        baseName = "ProfileCutting";
+      } else if (fromType === "current") {
+        baseName = "IVListProfileCuttingCurrent";
+      } else if (fromType === "closed") {
+        baseName = "IVListProfileCuttingClosed";
+      }
+
+      const adjustment = `${baseName} ${ordSchNo}`;
+
+      await axios.post(endpoints.pdfServer, {
+        adjustment,
+        WO: "WO",
+        OrderNo: orderNo,
+        SchNo: ordSchNo,
+      });
 
       const blob = await pdf(
         noDetails === 0 ? (
@@ -242,6 +270,8 @@ function ShopMatIssueVocher() {
         tableData={tableData}
         setIsPrintModalOpen={setIsPrintModalOpen}
         combineSheets={combineSheets}
+        formType={formType}
+        fromType={fromType}
       />
 
       {loading && (
