@@ -8,7 +8,7 @@
 .env
 /routes/savePDFServer/uploads
 /loggers
-
+/magod_mtrl
 
 iisnode
 
