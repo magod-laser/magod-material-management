@@ -163,39 +163,39 @@ const PrintDailyReportReceiptTable = (props) => (
           <View style={styles.insideBox}>
             <View style={{ display: "flex", flexDirection: "column" }}>
               {props.tableData
-              .filter((item) => item.RV_No !== "Draft")
-              .map((item, index) => {
-                return (
-                  <>
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text style={{ padding: "2px", ...styles.rvno }}>
-                        {item.RV_No}
-                      </Text>
-                      <Text style={{ padding: "2px", ...styles.customer }}>
-                        {item.Customer}
-                      </Text>
-                      <Text style={{ padding: "2px", ...styles.material }}>
-                        {item.material}
-                      </Text>
-                      <Text style={{ padding: "2px", ...styles.shape }}>
-                        {item.mtrl_code}{" "}
-                      </Text>
-                      <Text style={{ padding: "2px", ...styles.totalweight }}>
-                        {parseFloat(item.totalWeight || 0).toFixed(3)}
-                      </Text>
-                      <Text style={{ padding: "2px", ...styles.quantity }}>
-                        {parseInt(item.qty || 0)}
-                      </Text>
-                    </View>
-                  </>
-                );
-              })}
+                .filter((item) => item.RV_No !== "Draft")
+                .map((item, index) => {
+                  return (
+                    <>
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text style={{ padding: "2px", ...styles.rvno }}>
+                          {item.RV_No}
+                        </Text>
+                        <Text style={{ padding: "2px", ...styles.customer }}>
+                          {item.Customer}
+                        </Text>
+                        <Text style={{ padding: "2px", ...styles.material }}>
+                          {item.material}
+                        </Text>
+                        <Text style={{ padding: "2px", ...styles.shape }}>
+                          {item.mtrl_code}{" "}
+                        </Text>
+                        <Text style={{ padding: "2px", ...styles.totalweight }}>
+                          {parseFloat(item.totalWeight || 0).toFixed(3)}
+                        </Text>
+                        <Text style={{ padding: "2px", ...styles.quantity }}>
+                          {parseInt(item.qty || 0)}
+                        </Text>
+                      </View>
+                    </>
+                  );
+                })}
             </View>
           </View>
 
