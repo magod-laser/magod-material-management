@@ -115,7 +115,7 @@ reportRouter.get("/getDailyReportMaterialReceipt2", async (req, res, next) => {
                 m.CustDocuNo, 
                 m.RvID
              FROM magodmis.material_receipt_register m
-             WHERE m.RV_Date = ? AND m.Type = 'Sheets'
+             WHERE m.RV_Date = ? AND (m.Type = 'Sheets' OR m.Type = 'Units')
             ) AS A
           LEFT JOIN magodmis.mtrlreceiptdetails m ON A.RvID = m.RvID
           LEFT JOIN magodmis.shapes s ON s.shapeid = m.shapeid
