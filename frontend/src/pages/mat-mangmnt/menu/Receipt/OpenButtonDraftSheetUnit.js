@@ -343,7 +343,7 @@ function OpenButtonDraftSheetUnit(props) {
   }, []);
 
   // Updates selected material, sets related shape/parameters, and updates database & table
-  const changeMtrl = async (name, value) => {
+  let changeMtrl = async (name, value) => {
     const newSelectedMtrl = value ? [{ Mtrl_Code: value }] : [];
     setSelectedMtrl(newSelectedMtrl);
 
@@ -354,12 +354,18 @@ function OpenButtonDraftSheetUnit(props) {
           let Mtrlshape = mtrlData.Shape;
           setShape(Mtrlshape);
 
-          inputPart.shapeMtrlId = mtrlData.ShapeMtrlID;
+          setInputPart((prev) => ({
+            ...prev,
+            shapeMtrlId: mtrlData.ShapeMtrlID,
+          }));
 
           let gradeID =
             endpoints.getGradeID + "?gradeid=" + mtrlData.MtrlGradeID;
           getRequest(gradeID, async (gradeData) => {
-            inputPart.material = gradeData.Material;
+            setInputPart((prev) => ({
+              ...prev,
+              material: gradeData.Material,
+            }));
           });
 
           let url2 = endpoints.getRowByShape + "?shape=" + mtrlData.Shape;
@@ -370,8 +376,13 @@ function OpenButtonDraftSheetUnit(props) {
               );
               return;
             }
-            inputPart.shapeID = shapeData.ShapeID;
-            setInputPart(inputPart);
+
+            const finalShapeID = shapeData.ShapeID;
+
+            setInputPart((prev) => ({
+              ...prev,
+              shapeID: finalShapeID,
+            }));
           });
         });
 
@@ -380,7 +391,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Sheet") {
-          // Sheet
           setPara1Label("Width");
           setPara2Label("Length");
           setPara3Label("");
@@ -392,7 +402,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Plate") {
-          // Plate
           setPara1Label("Length");
           setPara2Label("Width");
           setPara3Label("");
@@ -408,7 +417,6 @@ function OpenButtonDraftSheetUnit(props) {
           material.Shape === "Tube Rectangle" ||
           material.Shape === "Tube Round"
         ) {
-          // Tube
           setPara1Label("Length");
           setPara2Label("");
           setPara3Label("");
@@ -419,7 +427,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Tiles" || material.Shape === "Strip") {
-          // Titles, Strip
           setPara1Label("");
           setPara2Label("");
           setPara3Label("");
@@ -430,7 +437,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Block") {
-          // Block
           setPara1Label("Length");
           setPara2Label("Width");
           setPara3Label("Height");
@@ -443,7 +449,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Cylinder") {
-          // Cylinder
           setPara1Label("Volume");
           setPara2Label("");
           setPara3Label("");
@@ -454,7 +459,6 @@ function OpenButtonDraftSheetUnit(props) {
         }
 
         if (material.Shape === "Units") {
-          // Units
           setPara1Label("Qty");
           setPara2Label("");
           setPara3Label("");
@@ -466,33 +470,30 @@ function OpenButtonDraftSheetUnit(props) {
       }
     });
 
-    setInputPart((preValue) => {
-      return {
-        ...preValue,
-        [name]: value,
-      };
-    });
-
-    inputPart[name] = value;
-    setInputPart(inputPart);
+    setInputPart((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     await delay(500);
 
-    postRequest(endpoints.updateMtrlReceiptDetails, inputPart, (data) => {
-      if (data.affectedRows !== 0) {
-      } else {
-        toast.error("Record Not Updated");
+    postRequest(
+      endpoints.updateMtrlReceiptDetails,
+      {
+        ...inputPart,
+        [name]: value,
+      },
+      (data) => {
+        if (data.affectedRows === 0) {
+          toast.error("Record Not Updated");
+        }
       }
-    });
+    );
 
     const newArray = materialArray.map((p) =>
-      p.id === partUniqueId
-        ? {
-            ...p,
-            [name]: value,
-          }
-        : p
+      p.id === partUniqueId ? { ...p, [name]: value } : p
     );
+
     setMaterialArray(newArray);
   };
 

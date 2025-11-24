@@ -259,18 +259,28 @@ function NewSheetsUnits(props) {
   let changeMtrl = async (name, value) => {
     const newSelectedMtrl = value ? [{ Mtrl_Code: value }] : [];
     setSelectedMtrl(newSelectedMtrl);
+
     mtrlDetails.map((material) => {
       if (material.Mtrl_Code === value) {
         let url1 = endpoints.getRowByMtrlCode + "?code=" + value;
         getRequest(url1, async (mtrlData) => {
           let Mtrlshape = mtrlData.Shape;
           setShape(Mtrlshape);
-          inputPart.shapeMtrlId = mtrlData.ShapeMtrlID;
+
+          setInputPart((prev) => ({
+            ...prev,
+            shapeMtrlId: mtrlData.ShapeMtrlID,
+          }));
+
           let gradeID =
             endpoints.getGradeID + "?gradeid=" + mtrlData.MtrlGradeID;
           getRequest(gradeID, async (gradeData) => {
-            inputPart.material = gradeData.Material;
+            setInputPart((prev) => ({
+              ...prev,
+              material: gradeData.Material,
+            }));
           });
+
           let url2 = endpoints.getRowByShape + "?shape=" + mtrlData.Shape;
           getRequest(url2, async (shapeData) => {
             if (!shapeData.ShapeID) {
@@ -280,8 +290,12 @@ function NewSheetsUnits(props) {
               return;
             }
 
-            inputPart.shapeID = shapeData.ShapeID;
-            setInputPart(inputPart);
+            const finalShapeID = shapeData.ShapeID;
+
+            setInputPart((prev) => ({
+              ...prev,
+              shapeID: finalShapeID,
+            }));
           });
         });
 
@@ -290,7 +304,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Sheet") {
-          // Sheet
           setPara1Label("Width");
           setPara2Label("Length");
           setPara3Label("");
@@ -302,7 +315,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Plate") {
-          // Plate
           setPara1Label("Length");
           setPara2Label("Width");
           setPara3Label("");
@@ -318,7 +330,6 @@ function NewSheetsUnits(props) {
           material.Shape === "Tube Rectangle" ||
           material.Shape === "Tube Round"
         ) {
-          // Tube
           setPara1Label("Length");
           setPara2Label("");
           setPara3Label("");
@@ -329,7 +340,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Tiles" || material.Shape === "Strip") {
-          // Titles, Strip
           setPara1Label("");
           setPara2Label("");
           setPara3Label("");
@@ -340,7 +350,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Block") {
-          // Block
           setPara1Label("Length");
           setPara2Label("Width");
           setPara3Label("Height");
@@ -353,7 +362,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Cylinder") {
-          // Cylinder
           setPara1Label("Volume");
           setPara2Label("");
           setPara3Label("");
@@ -364,7 +372,6 @@ function NewSheetsUnits(props) {
         }
 
         if (material.Shape === "Units") {
-          // Units
           setPara1Label("Qty");
           setPara2Label("");
           setPara3Label("");
@@ -376,34 +383,30 @@ function NewSheetsUnits(props) {
       }
     });
 
-    setInputPart((preValue) => {
-      return {
-        ...preValue,
-        [name]: value,
-      };
-    });
-
-    inputPart[name] = value;
-    setInputPart(inputPart);
+    setInputPart((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     await delay(500);
-    //update database row
-    postRequest(endpoints.updateMtrlReceiptDetails, inputPart, (data) => {
-      if (data.affectedRows !== 0) {
-      } else {
-        toast.error("Record Not Updated");
-      }
-    });
 
-    //update table grid
-    const newArray = materialArray.map((p) =>
-      p.id === partUniqueId
-        ? {
-            ...p,
-            [name]: value,
-          }
-        : p
+    postRequest(
+      endpoints.updateMtrlReceiptDetails,
+      {
+        ...inputPart,
+        [name]: value,
+      },
+      (data) => {
+        if (data.affectedRows === 0) {
+          toast.error("Record Not Updated");
+        }
+      }
     );
+
+    const newArray = materialArray.map((p) =>
+      p.id === partUniqueId ? { ...p, [name]: value } : p
+    );
+
     setMaterialArray(newArray);
   };
 
