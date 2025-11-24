@@ -350,25 +350,22 @@ function OpenButtonDraftSheetUnit(props) {
     mtrlDetails.map((material) => {
       if (material.Mtrl_Code === value) {
         let url1 = endpoints.getRowByMtrlCode + "?code=" + value;
+
         getRequest(url1, async (mtrlData) => {
           let Mtrlshape = mtrlData.Shape;
           setShape(Mtrlshape);
 
-          setInputPart((prev) => ({
-            ...prev,
-            shapeMtrlId: mtrlData.ShapeMtrlID,
-          }));
+          inputPart.shapeMtrlId = mtrlData.ShapeMtrlID;
 
           let gradeID =
             endpoints.getGradeID + "?gradeid=" + mtrlData.MtrlGradeID;
+
           getRequest(gradeID, async (gradeData) => {
-            setInputPart((prev) => ({
-              ...prev,
-              material: gradeData.Material,
-            }));
+            inputPart.material = gradeData.Material;
           });
 
           let url2 = endpoints.getRowByShape + "?shape=" + mtrlData.Shape;
+
           getRequest(url2, async (shapeData) => {
             if (!shapeData.ShapeID) {
               toast.error(
@@ -377,11 +374,11 @@ function OpenButtonDraftSheetUnit(props) {
               return;
             }
 
-            const finalShapeID = shapeData.ShapeID;
+            inputPart.shapeID = shapeData.ShapeID;
 
             setInputPart((prev) => ({
               ...prev,
-              shapeID: finalShapeID,
+              shapeID: shapeData.ShapeID,
             }));
           });
         });
@@ -470,10 +467,16 @@ function OpenButtonDraftSheetUnit(props) {
       }
     });
 
-    setInputPart((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setInputPart((preValue) => {
+      return {
+        ...preValue,
+        [name]: value,
+      };
+    });
+
+    inputPart[name] = value;
+
+    setInputPart(inputPart);
 
     await delay(500);
 
@@ -482,18 +485,27 @@ function OpenButtonDraftSheetUnit(props) {
       {
         ...inputPart,
         [name]: value,
+        shapeID: inputPart.shapeID ?? 0,
+        shapeMtrlId: inputPart.shapeMtrlId ?? 0,
+        material: inputPart.material ?? "",
       },
       (data) => {
-        if (data.affectedRows === 0) {
+        if (data.affectedRows !== 0) {
+        } else {
           toast.error("Record Not Updated");
         }
       }
     );
 
+    // UPDATE TABLE GRID
     const newArray = materialArray.map((p) =>
-      p.id === partUniqueId ? { ...p, [name]: value } : p
+      p.id === partUniqueId
+        ? {
+            ...p,
+            [name]: value,
+          }
+        : p
     );
-
     setMaterialArray(newArray);
   };
 
