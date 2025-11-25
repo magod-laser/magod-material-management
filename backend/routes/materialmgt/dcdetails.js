@@ -88,7 +88,7 @@ dcDetailsRouter.get("/getLastInsertID", async (req, res, next) => {
 
   try {
     misQueryMod(
-      "SELECT DC_ID FROM magodmis.dc_details ORDER BY DC_ID DESC LIMIT 1",
+      "SELECT DC_ID FROM magodmis.dc_register ORDER BY DC_ID DESC LIMIT 1",
       (err, data) => {
         if (err) {
           errorLogger.error("Error fetching last inserted DC_ID", err, {

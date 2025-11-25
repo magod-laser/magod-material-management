@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { HashLoader } from "react-spinners";
 import ReactPaginate from "react-paginate";
+import { formatDate } from "../../../../../utils";
 
 const { getRequest } = require("../../../../api/apiinstance");
 const { endpoints } = require("../../../../api/constants");
@@ -168,6 +169,11 @@ function ReturnListing(props) {
     setCurrentPage(selectedPage.selected);
   };
 
+  // Process the returned date in the formatter
+  function statusFormatter(cell, row, rowIndex, formatExtraData) {
+    return formatDate(new Date(cell), 3);
+  }
+
   const pageCount = Math.ceil(data.length / perPage);
   const startIndex = currentPage * perPage;
   const currentPageData = data.slice(startIndex, startIndex + perPage);
@@ -180,7 +186,7 @@ function ReturnListing(props) {
       setSelectData({
         Iv_Id: row.Iv_Id,
         IV_No: row.IV_No,
-        IV_Date: row.IV_Date,
+        IV_Date: formatDate(new Date(row.IV_Date), 3),
         Customer: row.Customer,
         TotalWeight: row.TotalWeight,
         TotalCalculatedWeight: row.TotalCalculatedWeight,
