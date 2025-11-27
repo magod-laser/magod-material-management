@@ -380,6 +380,22 @@ function OpenButtonDraftSheetUnit(props) {
               ...prev,
               shapeID: shapeData.ShapeID,
             }));
+
+            postRequest(
+              endpoints.updateMtrlReceiptDetails,
+              {
+                ...inputPart,
+                [name]: value,
+                shapeID: inputPart.shapeID,
+                shapeMtrlId: inputPart.shapeMtrlId,
+                material: inputPart.material,
+              },
+              (data) => {
+                if (data.affectedRows === 0) {
+                  toast.error("Record Not Updated");
+                }
+              }
+            );
           });
         });
 
@@ -394,9 +410,7 @@ function OpenButtonDraftSheetUnit(props) {
           setUnitLabel1("mm");
           setUnitLabel2("mm");
           setSheetRowSelect(true);
-        } else {
-          setSheetRowSelect(false);
-        }
+        } else setSheetRowSelect(false);
 
         if (material.Shape === "Plate") {
           setPara1Label("Length");
@@ -405,9 +419,7 @@ function OpenButtonDraftSheetUnit(props) {
           setUnitLabel1("mm");
           setUnitLabel2("mm");
           setPlateRowSelect(true);
-        } else {
-          setPlateRowSelect(false);
-        }
+        } else setPlateRowSelect(false);
 
         if (
           material.Shape === "Tube Square" ||
@@ -419,9 +431,7 @@ function OpenButtonDraftSheetUnit(props) {
           setPara3Label("");
           setUnitLabel1("mm");
           setTubeRowSelect(true);
-        } else {
-          setTubeRowSelect(false);
-        }
+        } else setTubeRowSelect(false);
 
         if (material.Shape === "Tiles" || material.Shape === "Strip") {
           setPara1Label("");
@@ -429,9 +439,7 @@ function OpenButtonDraftSheetUnit(props) {
           setPara3Label("");
           setUnitLabel1("");
           setTilesStripRowSelect(true);
-        } else {
-          setTilesStripRowSelect(false);
-        }
+        } else setTilesStripRowSelect(false);
 
         if (material.Shape === "Block") {
           setPara1Label("Length");
@@ -441,9 +449,7 @@ function OpenButtonDraftSheetUnit(props) {
           setUnitLabel2("mm");
           setUnitLabel3("mm");
           setBlockRowSelect(true);
-        } else {
-          setBlockRowSelect(false);
-        }
+        } else setBlockRowSelect(false);
 
         if (material.Shape === "Cylinder") {
           setPara1Label("Volume");
@@ -451,9 +457,7 @@ function OpenButtonDraftSheetUnit(props) {
           setPara3Label("");
           setUnitLabel1("CubicMtr");
           setCylinderRowSelect(true);
-        } else {
-          setCylinderRowSelect(false);
-        }
+        } else setCylinderRowSelect(false);
 
         if (material.Shape === "Units") {
           setPara1Label("Qty");
@@ -461,41 +465,17 @@ function OpenButtonDraftSheetUnit(props) {
           setPara3Label("");
           setUnitLabel1("Nos");
           setUnitRowSelect(true);
-        } else {
-          setUnitRowSelect(false);
-        }
+        } else setUnitRowSelect(false);
       }
     });
 
-    setInputPart((preValue) => {
-      return {
-        ...preValue,
-        [name]: value,
-      };
-    });
+    setInputPart((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
     inputPart[name] = value;
-
     setInputPart(inputPart);
-
-    await delay(500);
-
-    postRequest(
-      endpoints.updateMtrlReceiptDetails,
-      {
-        ...inputPart,
-        [name]: value,
-        shapeID: inputPart.shapeID ?? 0,
-        shapeMtrlId: inputPart.shapeMtrlId ?? 0,
-        material: inputPart.material ?? "",
-      },
-      (data) => {
-        if (data.affectedRows !== 0) {
-        } else {
-          toast.error("Record Not Updated");
-        }
-      }
-    );
 
     // UPDATE TABLE GRID
     const newArray = materialArray.map((p) =>
