@@ -276,43 +276,44 @@ function NewSheetsUnits(props) {
 
           getRequest(gradeID, async (gradeData) => {
             inputPart.material = gradeData.Material;
-          });
 
-          let url2 = endpoints.getRowByShape + "?shape=" + mtrlData.Shape;
+            let url2 = endpoints.getRowByShape + "?shape=" + mtrlData.Shape;
 
-          getRequest(url2, async (shapeData) => {
-            if (!shapeData.ShapeID) {
-              toast.error(
-                "ShapeID for MtrlCode doesnot exist please select other material"
-              );
-              return;
-            }
-
-            inputPart.shapeID = shapeData.ShapeID;
-
-            setInputPart((prev) => ({
-              ...prev,
-              shapeID: shapeData.ShapeID,
-            }));
-
-            postRequest(
-              endpoints.updateMtrlReceiptDetails,
-              {
-                ...inputPart,
-                [name]: value,
-                shapeID: inputPart.shapeID,
-                shapeMtrlId: inputPart.shapeMtrlId,
-                material: inputPart.material,
-              },
-              (data) => {
-                if (data.affectedRows === 0) {
-                  toast.error("Record Not Updated");
-                }
+            getRequest(url2, async (shapeData) => {
+              if (!shapeData.ShapeID) {
+                toast.error(
+                  "ShapeID for MtrlCode doesnot exist please select other material"
+                );
+                return;
               }
-            );
+
+              inputPart.shapeID = shapeData.ShapeID;
+
+              setInputPart((prev) => ({
+                ...prev,
+                shapeID: shapeData.ShapeID,
+              }));
+
+              postRequest(
+                endpoints.updateMtrlReceiptDetails,
+                {
+                  ...inputPart,
+                  [name]: value,
+                  shapeID: inputPart.shapeID,
+                  shapeMtrlId: inputPart.shapeMtrlId,
+                  material: inputPart.material,
+                },
+                (data) => {
+                  if (data.affectedRows === 0) {
+                    toast.error("Record Not Updated");
+                  }
+                }
+              );
+            });
           });
         });
 
+        // DON'T TOUCH — your UI logic remains same
         if (shape !== null && shape !== undefined && shape !== material.Shape) {
           toast.error("Please select a same type of part");
         }
