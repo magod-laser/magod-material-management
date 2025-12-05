@@ -557,6 +557,8 @@ mtrlStockListRouter.post("/updateMtrlStockLock1", async (req, res, next) => {
   const { DynamicPara1, DynamicPara2, LocationNo, Weight, MtrlStockID } =
     req.body;
 
+  console.log("updateMtrlStockLock1", req.body);
+
   infoLogger.info("Requested to unlock and update material stock", {
     endpoint: "/updateMtrlStockLock1",
     method: req.method,
