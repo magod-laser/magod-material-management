@@ -313,7 +313,6 @@ function NewSheetsUnits(props) {
           });
         });
 
-        // DON'T TOUCH — your UI logic remains same
         if (shape !== null && shape !== undefined && shape !== material.Shape) {
           toast.error("Please select a same type of part");
         }
