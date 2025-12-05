@@ -401,7 +401,8 @@ function PendingList(props) {
             parseFloat(0)
           );
 
-          totwt = Math.round(0.000001 * totwt, 2);
+          // totwt = Math.round(0.000001 * totwt, 2);
+          totwt = Number((0.000001 * totwt).toFixed(3));
 
           for (let i = 0; i < selectedSecondTableRows.length; i++) {
             if (selectedSecondTableRows[i].Rejected === 1) {
