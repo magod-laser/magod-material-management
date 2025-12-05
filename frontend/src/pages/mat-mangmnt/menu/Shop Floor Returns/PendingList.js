@@ -396,8 +396,8 @@ function PendingList(props) {
           let totwt = 0;
           totwt = getWeight(
             data,
-            parseFloat(secondTableRow.Para1),
-            parseFloat(secondTableRow.Para2),
+            parseFloat(rowValResize.ReminderPara1),
+            parseFloat(rowValResize.ReminderPara2),
             parseFloat(0)
           );
 
